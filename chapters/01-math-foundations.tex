@@ -2,6 +2,189 @@
 \label{chap:math-foundations}
 
 \section{复数、复指数与欧拉公式}
+\label{sec:complex-numbers}
+
+复数在信号与系统中不只是单纯的计算技巧。正弦信号可以写成复指数，系统的幅度变化和相位移动也能合在一次复数运算中。下面约定虚数单位为 $\iu$，即
+\[
+  \iu^2=-1.
+\]
+工程领域通常用 $\iu$（字母 $\mathrm{j}$）而不是 $\mathrm{i}$，以免与电流符号混淆。
+
+\subsection{代数形式与复平面}
+
+\begin{definition}[复数的代数形式]
+  复数 $z$ 写成
+  \[
+    z=x+\iu y, \qquad x,y\in\R,
+  \]
+  其中 $x=\operatorname{Re}\{z\}$ 是实部，$y=\operatorname{Im}\{z\}$ 是虚部。两个复数相等，当且仅当它们的实部和虚部分别相等。
+\end{definition}
+
+复数 $z=x+\iu y$ 可以看作复平面上的点 $(x,y)$，横轴是实轴，纵轴是虚轴。这个几何视角把一个复数拆成两个量：它离原点有多远，以及它指向哪个方向。
+
+\begin{definition}[模与幅角]
+  复数 $z=x+\iu y$ 的模（magnitude）为
+  \begin{equation}
+    |z|=\sqrt{x^2+y^2}.
+    \label{eq:complex-magnitude}
+  \end{equation}
+  当 $z\ne 0$ 时，满足
+  \[
+    x=|z|\cos\theta,\qquad y=|z|\sin\theta
+  \]
+  的角 $\theta$ 称为 $z$ 的幅角（argument）。若 $\theta$ 是一个幅角，则 $\theta+2k\pi$（$k\in\Z$）也是幅角。因此
+  \[
+    \arg z=\theta+2k\pi,\qquad k\in\Z.
+  \]
+  一般把区间 $(-\pi,\pi]$ 内的唯一幅角记作幅角主值 $\operatorname{Arg}z$。零的模为零，其幅角没有定义。
+\end{definition}
+
+由直角坐标求主幅角时，应根据 $(x,y)$ 所在象限判断角度。
+
+程序中通常使用双参数函数 $\operatorname{atan2}(y,x)$；它比单独计算 $\arctan(y/x)$ 更可靠。
+
+\begin{pitfall}[只用反正切求幅角]
+  $\arctan(y/x)$ 不能区分相差 $\pi$ 的两个方向，并且在 $x=0$ 时无定义。例如 $1+\iu$ 与 $-1-\iu$ 的虚实部之比相同，主幅角却分别是 $\pi/4$ 和 $-3\pi/4$。应当先判断象限，程序中则直接使用 $\operatorname{atan2}(y,x)$。
+\end{pitfall}
+
+\subsection{共轭与基本运算}
+
+\begin{definition}[复共轭]
+  $z=x+\iu y$ 的复共轭（complex conjugate）为
+  \[
+    z^*=x-\iu y.
+  \]
+  共轭在复平面上相当于关于实轴镜像。
+\end{definition}
+
+常用关系如下：
+\begin{align*}
+  z+z^*&=2\operatorname{Re}\{z\},
+  &z-z^*&=2\iu\operatorname{Im}\{z\},\\
+  zz^*&=|z|^2,
+  &\frac{1}{z}&=\frac{z^*}{|z|^2}\quad(z\ne0),\\
+  (z_1z_2)^*&=z_1^*z_2^*,
+  &|z_1z_2|&=|z_1|\,|z_2|.
+\end{align*}
+最后一式说明乘法会把两个模相乘。
+
+幅角的变化则要借助极坐标形式来看。
+
+\subsection{欧拉公式与极坐标形式}
+
+欧拉公式（Euler's formula）把复指数和三角函数联系起来：
+\begin{equation}
+  \e^{\iu\theta}=\cos\theta+\iu\sin\theta.
+  \label{eq:euler-formula}
+\end{equation}
+因此，任意非零复数都可以写成
+\begin{equation}
+  z=r\e^{\iu\theta},
+  \qquad r=|z|>0,
+  \qquad \theta\in\arg z.
+  \label{eq:complex-polar-form}
+\end{equation}
+这称为复数的极坐标形式或指数形式。$r$ 是长度，$\e^{\iu\theta}$ 是单位圆上方向为 $\theta$ 的点。
+
+\begin{intuition}
+  乘上 $\e^{\iu\theta}$ 可以理解为在复平面上逆时针旋转 $\theta$，长度不变；再乘上正实数 $r$，则把长度放大为原来的 $r$ 倍。复数乘法于是变成了“缩放再旋转”。
+\end{intuition}
+
+若
+\[
+  z_1=r_1\e^{\iu\theta_1},\qquad
+  z_2=r_2\e^{\iu\theta_2},
+\]
+则
+\begin{align*}
+  z_1z_2&=r_1r_2\e^{\iu(\theta_1+\theta_2)},\\
+  \frac{z_1}{z_2}&=\frac{r_1}{r_2}\e^{\iu(\theta_1-\theta_2)}
+  \qquad(z_2\ne0).
+\end{align*}
+也就是说，复数相乘时模相乘、幅角相加；相除时模相除、幅角相减。由于幅角只在模 $2\pi$ 的意义下确定，上面的角度关系也应按模 $2\pi$ 理解。
+
+对整数 $n$，棣莫弗公式给出
+\[
+  \bigl(r\e^{\iu\theta}\bigr)^n
+  =r^n\e^{\iu n\theta}
+  =r^n\bigl(\cos n\theta+\iu\sin n\theta\bigr).
+\]
+反过来，对正整数 $n$，非零复数 $z=r\e^{\iu\theta}$ 的 $n$ 次方根共有 $n$ 个：
+\begin{equation}
+  z_k=r^{1/n}\e^{\iu(\theta+2k\pi)/n},
+  \qquad k=0,1,\ldots,n-1.
+  \label{eq:complex-nth-roots}
+\end{equation}
+这些根的模相同，幅角依次相差 $2\pi/n$，因而均匀分布在同一个圆上。后续分析系统函数的零点和极点时，这种结构会经常出现。
+
+\begin{example}[代数形式与指数形式的转换]
+  设 $z=-1+\iu\sqrt{3}$。由\cref{eq:complex-magnitude}可得 $|z|=2$。点 $(-1,\sqrt{3})$ 位于第二象限，所以
+  \[
+    \operatorname{Arg}z=\frac{2\pi}{3},
+    \qquad
+    z=2\e^{\iu 2\pi/3}.
+  \]
+  同一个复数也可写成 $2\e^{\iu(2\pi/3+2k\pi)}$，其中 $k\in\Z$。
+\end{example}
+
+令\cref{eq:euler-formula}中的角度分别取 $\theta$ 和 $-\theta$，可以得到信号分析中常用的两组关系：
+\begin{align}
+  \cos\theta
+    &=\frac{\e^{\iu\theta}+\e^{-\iu\theta}}{2},
+  \label{eq:cos-complex-exponential}\\
+  \sin\theta
+    &=\frac{\e^{\iu\theta}-\e^{-\iu\theta}}{2\iu}.
+  \label{eq:sin-complex-exponential}
+\end{align}
+它们说明实正弦和余弦都可以分解成一对旋转方向相反的复指数。
+
+\subsection{复指数与正弦信号}
+
+对复数 $s=\sigma+\iu\omega$，复指数可以拆成
+\begin{equation}
+  \e^{st}=\e^{\sigma t}\e^{\iu\omega t}
+  =\e^{\sigma t}\bigl(\cos\omega t+\iu\sin\omega t\bigr).
+  \label{eq:complex-exponential-signal}
+\end{equation}
+其中 $\e^{\sigma t}$ 决定幅度包络，$\omega t$ 决定相位：$\sigma<0$ 时幅度衰减，$\sigma>0$ 时幅度增长，$\sigma=0$ 时信号以恒定模在复平面上旋转。若 $\omega\ne0$，纯复指数 $\e^{\iu\omega t}$ 的基本周期为
+\[
+  T_0=\frac{2\pi}{|\omega|}.
+\]
+
+带有初相位的实正弦信号也能写成复指数的实部。对 $A\geq0$，有
+\begin{equation}
+  A\cos(\omega t+\varphi)
+  =\operatorname{Re}\!\left\{A\e^{\iu\varphi}\e^{\iu\omega t}\right\}.
+  \label{eq:sinusoid-complex-form}
+\end{equation}
+复数 $A\e^{\iu\varphi}$ 同时保存振幅 $A$ 和初相位 $\varphi$。后续处理正弦稳态响应时，经常先计算右侧的复指数，再取实部。
+
+离散时间复指数写作
+\[
+  x[n]=z^n=r^n\e^{\iu\omega n},\qquad z\ne0,\quad n\in\Z.
+\]
+$r$ 控制序列随 $n$ 的增长或衰减，$\omega$ 控制每前进一步所转过的角度。由于 $n$ 只能取整数，$\omega$ 与 $\omega+2k\pi$ 描述完全相同的序列。纯复指数 $\e^{\iu\omega n}$ 为周期序列，当且仅当存在正整数 $N$ 和整数 $m$ 使
+\[
+  \omega N=2\pi m,
+\]
+也就是 $\omega/(2\pi)$ 为有理数。满足条件的最小正整数 $N$ 是基本周期。
+
+\begin{pitfall}[照搬连续时间的周期公式]
+  连续时间复指数在 $\omega\ne0$ 时总是周期信号，离散时间复指数却不一定周期。比如 $\e^{\iu n}$ 中 $\omega/(2\pi)=1/(2\pi)$ 不是有理数，因此不存在整数基本周期。
+\end{pitfall}
+
+\begin{remark}[相位只在模 $2\pi$ 下有意义]
+  $\varphi$ 与 $\varphi+2k\pi$ 描述同一个方向，也给出同一个正弦信号。比较两个相位时，需要先说明采用的主值区间；相位在 $\pi$ 与 $-\pi$ 附近发生数值跳变，并不表示信号突然改变。
+\end{remark}
+
+\begin{pitfall}[混淆相位与时间平移]
+  对 $\omega\ne0$，相位变化 $\varphi$ 可以换算为时间平移 $t_0=-\varphi/\omega$，因为
+  \[
+    \cos(\omega t+\varphi)=\cos\bigl(\omega(t-t_0)\bigr).
+  \]
+  同一个相位差在不同角频率下对应的时间平移不同，不能直接把“相差 $\varphi$”说成“延迟 $\varphi$”。
+\end{pitfall}
+
 \section{函数、序列与常用运算}
 \section{线性代数与正交展开视角}
 \section{微分方程、差分方程与收敛基础}

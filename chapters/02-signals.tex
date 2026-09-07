@@ -1,44 +1,274 @@
 \chapter{信号的描述、分类与基本运算}
 \label{chap:signals}
 
-\section{连续时间信号与离散时间信号}
+信号可以看成“自变量到信号值”的映射。时间通常是自变量，但信号值未必表示某个物理量，也可以是算法产生的数据。学习这一章时，先分清自变量和值域，再讨论信号怎样移动、翻转和分类，会少掉很多符号上的混乱。
 
-\begin{definition}[占位定义]
-  这里用于验证定义环境、中文排版与自动编号。
-  \label{def:placeholder-signal}
+\section{连续时间信号与离散时间信号}
+\label{sec:continuous-and-discrete-signals}
+
+\begin{definition}[连续时间信号]
+  \label{def:continuous-time-signal}
+  连续时间信号（continuous-time signal）是以连续变量为自变量的函数，通常记作
+  \[
+    x(t),\quad t\in\R.
+  \]
+  信号值可以是实数，也可以是复数，即 $x(t)\in\R$ 或 $x(t)\in\C$。
 \end{definition}
 
-\begin{intuition}
-  这里用于验证“直觉理解”环境。后续应解释数学表达背后的观察方式，而不是重复定义。
-\end{intuition}
+\begin{definition}[离散时间信号]
+  \label{def:discrete-time-signal}
+  离散时间信号（discrete-time signal）的自变量只取离散值。本书默认其定义域为整数集，记作
+  \[
+    x[n],\quad n\in\Z.
+  \]
+  它也称为序列（sequence），方括号用来提醒我们：$n$ 是离散下标。
+\end{definition}
 
-\section{自变量变换与信号运算}
-
-下面的占位公式用于验证章内公式编号：
-\begin{equation}
-  y(t)=x(t-t_0).
-  \label{eq:placeholder-shift}
-\end{equation}
-
-\begin{theorem}[占位定理]
-  这里用于验证定理环境及其编号。
-\end{theorem}
-
-\begin{proof}
-  此处仅验证证明环境。
-\end{proof}
-
-\begin{example}[占位示例]
-  可由\cref{def:placeholder-signal}与\cref{eq:placeholder-shift}验证交叉引用。
-\end{example}
-
-\begin{remark}
-  这里用于补充不打断主线的说明。
-\end{remark}
-
-\begin{pitfall}
-  这里用于记录第一次学习时的误解、适用条件遗漏或符号混淆。
+\begin{pitfall}[“连续时间”不等于“函数连续”]
+  连续时间描述的是自变量 $t$ 可以连续取值。阶跃信号在跳变点不连续，但\red{它仍是连续时间信号}。相应地，“离散时间”也不表示信号幅值只能取离散值；序列 $x[n]$ 完全可以取任意实数或复数。
 \end{pitfall}
 
+\begin{remark}[离散时间与数字信号]
+  离散时间只限制时间下标。数字信号通常还要求幅值经过量化，因此离散时间信号不一定是数字信号。采样负责把\red{时间离散化}，量化负责把\red{幅值离散化}，两者不是同一件事。
+\end{remark}
+
+\section{自变量变换与信号运算}
+\label{sec:independent-variable-transformations}
+
+设原信号为 $x(t)$，变换后的信号为
+\[
+  y(t)=x\bigl(g(t)\bigr).
+\]
+在时刻 $t$ 观察 $y$，实际读取的是原信号在 $g(t)$ 处的值。判断图像怎样变化时，最好\red{跟踪一个具体的特征点}，而不是只凭括号里的正负号猜方向。
+
+\subsection{时移}
+
+连续时间信号的时移写成
+\begin{equation}
+  y(t)=x(t-t_0).
+  \label{eq:continuous-time-shift}
+\end{equation}
+若 $t_0>0$，原来位于 $t=t_1$ 的特征点会出现在 $t=t_1+t_0$，所以图像\red{向右移动} $t_0$，称为延迟（delay）。$x(t+t_0)$ 则\red{向左移动} $t_0$，称为超前（advance）。
+
+离散时间信号的规则相同：
+\[
+  y[n]=x[n-n_0],\qquad n_0\in\Z.
+\]
+由于下标必须保持为整数，离散时间序列通常\red{只讨论整数点的平移}。
+
+\begin{pitfall}[括号内是减号，图像却向右]
+  在 $x(t-t_0)$ 中，令内部自变量等于原特征点 $t_1$，得到 $t-t_0=t_1$，即新位置为 $t_1+t_0$。用这个方程判断方向，比背“减右加左”更稳妥。
+\end{pitfall}
+
+\subsection{尺度变换与时间反转}
+
+尺度变换写成
+\begin{equation}
+  y(t)=x(at),\qquad a\ne0.
+  \label{eq:continuous-time-scaling}
+\end{equation}
+原来位于 $t=t_1$ 的特征点变到 $t=t_1/a$，因此：
+\begin{itemize}
+  \item $|a|>1$ 时，图像沿时间轴\red{压缩}；
+  \item $0<|a|<1$ 时，图像沿时间轴\red{扩展}；
+  \item $a<0$ 时，还会\red{关于纵轴翻转}。特别地，$x(-t)$ 是 $x(t)$ 的时间反转。
+\end{itemize}
+尺度变换只改变信号在时间轴上的位置，不改变其纵坐标取值。$Ax(t)$ 改变的是幅值，不属于自变量变换。
+
+\begin{pitfall}[离散时间不能任意缩放]
+  对序列来说，$x[2n]$ 只保留原序列的偶数下标样本；$x[n/2]$ 在奇数 $n$ 处甚至没有对应的整数下标，除非另外规定插值或补零方式。因此，离散时间尺度变换不能直接照搬连续时间图像的伸缩规则。
+\end{pitfall}
+
+\subsection{一般仿射变换}
+
+对
+\begin{equation}
+  y(t)=x(at+b)
+  =x\!\left(a\left(t+\frac{b}{a}\right)\right),
+  \qquad a\ne0,
+  \label{eq:affine-time-transformation}
+\end{equation}
+缩放、反转和时移同时出现。若原信号在 $t=\tau$ 处有一个特征点，则它在新信号中的位置满足
+\begin{equation}
+  at+b=\tau,
+  \qquad
+  t=\frac{\tau-b}{a}.
+  \label{eq:feature-point-mapping}
+\end{equation}
+这个对应关系可以一次处理全部变换，也能避开“先平移还是先缩放”的争论。
+
+\begin{example}[画出复合变换的关键位置]
+  设 $y(t)=x(-2t+4)=x\bigl(-2(t-2)\bigr)$。原信号在 $t=\tau$ 处的特征点满足
+  \[
+    -2t+4=\tau,
+    \qquad
+    t=2-\frac{\tau}{2}.
+  \]
+  因而原点 $\tau=0$ 移到 $t=2$；原来相距 $2$ 的两点在新图像中只相距 $1$，且左右顺序颠倒。图像经历了二倍压缩、时间反转和向右平移，但实际作图时直接映射特征点更不容易出错。
+\end{example}
+
+\begin{intuition}
+  $y(t)=x(g(t))$ 改变的是“以什么速度、方向读取原信号”。若 $g(t)$ 增长得更快，就更快扫过原信号，图像看起来被压缩；若 $g(t)$ 随 $t$ 减小，就从后向前读取，图像发生反转。
+\end{intuition}
+
 \section{周期性、对称性、能量与功率}
+\label{sec:signal-properties}
+
+\subsection{周期信号}
+
+\begin{definition}[连续时间周期信号]
+  \label{def:continuous-time-periodic-signal}
+  若存在 $T>0$，使得对任意 $t\in\R$ 都有
+  \begin{equation}
+    x(t+T)=x(t),
+    \label{eq:continuous-time-periodicity}
+  \end{equation}
+  则 $x(t)$ 是连续时间周期信号，$T$ 是它的一个周期。若所有正周期中存在最小值，则称其为基波周期（fundamental period），记作 $T_0$。
+\end{definition}
+
+\begin{definition}[离散时间周期信号]
+  \label{def:discrete-time-periodic-signal}
+  若存在正整数 $N$，使得对任意 $n\in\Z$ 都有
+  \begin{equation}
+    x[n+N]=x[n],
+    \label{eq:discrete-time-periodicity}
+  \end{equation}
+  则 $x[n]$ 是离散时间周期信号。满足条件的最小正整数称为基波周期，记作 $N_0$。
+\end{definition}
+
+若 $T$ 是连续时间信号的周期，则 $mT$（$m\in\Z_{>0}$）也是周期；离散时间信号也有相同结论。常数连续时间信号比较特殊：任意正数都是它的周期，因此\red{没有最小正周期}。
+
+\begin{example}[复指数信号的周期性]
+  连续时间复指数 $\e^{\iu\omega_0t}$ 在 $\omega_0\ne0$ 时的基本周期为
+  \[
+    T_0=\frac{2\pi}{|\omega_0|}.
+  \]
+  离散时间复指数 $\e^{\iu\omega_0n}$ 只有在 $\omega_0/(2\pi)$ 为有理数时才是周期序列。这一区别来自\red{离散时间周期必须是整数}。
+\end{example}
+
+\begin{remark}[多个周期信号相加]
+  两个连续时间周期信号之和不一定周期。只有当\red{它们的周期之比为有理数}时，才能找到公共周期。离散时间周期均为整数，因此有限个离散时间周期信号之和仍然周期，其周期可取各周期的公倍数。
+\end{remark}
+
+\subsection{奇信号与偶信号}
+
+\begin{definition}[偶信号]
+  \label{def:even-signal}
+  若连续时间信号满足
+  \[
+    x(-t)=x(t),\qquad t\in\R,
+  \]
+  则称其为偶信号（even signal）。对离散时间信号，把上式换成 $x[-n]=x[n]$。
+\end{definition}
+
+\begin{definition}[奇信号]
+  \label{def:odd-signal}
+  若连续时间信号满足
+  \[
+    x(-t)=-x(t),\qquad t\in\R,
+  \]
+  则称其为奇信号（odd signal）。离散时间形式为 $x[-n]=-x[n]$。只要奇信号在原点有定义，就必有 $x(0)=0$ 或 $x[0]=0$。
+\end{definition}
+
+偶信号关于纵轴对称，奇信号关于原点反对称。这里的判断只涉及时间反转，即使 $x$ 是复信号，也\red{不对信号值取共轭}。
+
+\begin{theorem}[奇偶分解]
+  任意信号都可以\red{唯一分解为一个偶分量与一个奇分量之和}：
+  \begin{align}
+    x(t)&=x_{\mathrm e}(t)+x_{\mathrm o}(t),
+    \label{eq:even-odd-decomposition}\\
+    x_{\mathrm e}(t)&=\frac{x(t)+x(-t)}{2},
+    &x_{\mathrm o}(t)&=\frac{x(t)-x(-t)}{2}.
+    \label{eq:even-odd-components}
+  \end{align}
+  对离散时间信号，只需把 $t$ 换成 $n$。
+\end{theorem}
+
+\begin{example}[分解多项式信号]
+  对 $x(t)=2+t+t^2$，有
+  \[
+    x_{\mathrm e}(t)=2+t^2,
+    \qquad
+    x_{\mathrm o}(t)=t.
+  \]
+  两部分相加正好还原 $x(t)$。检查结果也很直接：$2+t^2$ 关于纵轴对称，而 $t$ 关于原点反对称。
+\end{example}
+
+\begin{pitfall}[把“关于某点对称”当作偶信号]
+  奇偶性\red{默认相对于原点判断}。一个信号可能关于 $t=t_0$ 对称，但只要它不满足 $x(-t)=x(t)$，就不是偶信号。遇到平移后的对称图像，应先看清对称中心。
+\end{pitfall}
+
+\subsection{能量信号与功率信号}
+
+信号的能量由 $|x|^2$ 在全部时间上的累积给出。连续时间和离散时间分别定义为
+\begin{equation}
+  E_x=
+  \begin{cases}
+    \displaystyle\int_{-\infty}^{\infty}|x(t)|^2\dd t,
+      &\text{连续时间},\\[0.8em]
+    \displaystyle\sum_{n=-\infty}^{\infty}|x[n]|^2,
+      &\text{离散时间}.
+  \end{cases}
+  \label{eq:signal-energy}
+\end{equation}
+能量描述总累积量。平均功率关心长期平均，因此先在有限对称区间内取平均，再让区间不断扩大：
+\begin{equation}
+  P_x=
+  \begin{cases}
+    \displaystyle\lim_{T\to\infty}\frac{1}{2T}
+      \int_{-T}^{T}|x(t)|^2\dd t,
+      &\text{连续时间},\\[1em]
+    \displaystyle\lim_{N\to\infty}\frac{1}{2N+1}
+      \sum_{n=-N}^{N}|x[n]|^2,
+      &\text{离散时间},
+  \end{cases}
+  \label{eq:average-signal-power}
+\end{equation}
+前提是相应的积分、求和与极限存在。
+
+\begin{definition}[能量信号与功率信号]
+  \label{def:energy-and-power-signals}
+  若 $0<E_x<\infty$，则称 $x$ 为能量信号（energy signal）；若 $0<P_x<\infty$，则称 $x$ 为功率信号（power signal）。按照这里采用的严格不等式，\red{零信号}既不归入能量信号，也不归入功率信号。
+\end{definition}
+
+非零能量信号的\red{平均功率为零}。若周期信号在一个周期内的能量有限且非零，则它的\red{总能量无限}，平均功率有限且非零。周期信号的平均功率可以在任意一个完整周期上计算：
+\begin{align}
+  P_x&=\frac{1}{T_0}\int_{t_0}^{t_0+T_0}|x(t)|^2\dd t,
+  &&\text{连续时间},
+  \label{eq:periodic-ct-power}\\
+  P_x&=\frac{1}{N_0}\sum_{n=n_0}^{n_0+N_0-1}|x[n]|^2,
+  &&\text{离散时间}.
+  \label{eq:periodic-dt-power}
+\end{align}
+起点 $t_0$ 或 $n_0$ 可以任取，因为完整周期内的累积量相同。
+
+\begin{example}[有限时宽脉冲的能量]
+  设 $A\ne0$、$T_1>0$，且
+  \[
+    x(t)=
+    \begin{cases}
+      A,&|t|\leq T_1/2,\\
+      0,&\text{其他}.
+    \end{cases}
+  \]
+  由\cref{eq:signal-energy}可得
+  \[
+    E_x=\int_{-T_1/2}^{T_1/2}|A|^2\dd t=|A|^2T_1,
+    \qquad P_x=0.
+  \]
+  因此它是\red{能量信号}。
+\end{example}
+
+\begin{example}[正弦信号的平均功率]
+  对 $x(t)=A\cos(\omega_0t+\varphi)$，其中 $A>0$、$\omega_0\ne0$，在一个周期内计算可得
+  \[
+    P_x=\frac{A^2}{2}.
+  \]
+  结果与初相位 $\varphi$ 无关。该信号持续时间无限、总能量发散，因此\red{是功率信号而不是能量信号}。
+\end{example}
+
+\begin{pitfall}[能量信号和功率信号不是一对互补标签]
+  有些信号既没有有限非零能量，也没有有限非零平均功率。例如 $x(t)=t$ 的能量和平均功率都发散。判断时应回到\cref{eq:signal-energy,eq:average-signal-power}计算，不能因为它“不是能量信号”就直接断定它是功率信号。
+\end{pitfall}
+
 \section{基本信号与信号分解}

@@ -1,29 +1,38 @@
-% 环境编号随章重置，共享同一编号序列，便于检索。
+% 定理、定义和例题参与编号；三者各自按章独立计数。
 \newtheoremstyle{knowledgeplain}
   {0.8em}{0.8em}{\itshape}{}% 上下间距、正文字体、缩进
-  {\bfseries}{。}{0.5em}{}% 标题字体、标点、标题后间距
+  {\bfseries}{}{0.5em}{}% 标题字体、标点、标题后间距
 
 \newtheoremstyle{knowledgedefinition}
   {0.8em}{0.8em}{\normalfont}{}
-  {\bfseries}{。}{0.5em}{}
+  {\bfseries}{}{0.5em}{}
 
 \newtheoremstyle{knowledgeremark}
   {0.6em}{0.6em}{\normalfont}{}
-  {\bfseries}{。}{0.5em}{}
+  {\bfseries}{}{0.5em}{}
 
 \theoremstyle{knowledgeplain}
 \newtheorem{theorem}{定理}[chapter]
 
 \theoremstyle{knowledgedefinition}
-\newtheorem{definition}[theorem]{定义}
-\newtheorem{example}[theorem]{例题}
+\newtheorem{definition}{定义}[chapter]
+\newtheorem{example}{例题}[chapter]
 
 \theoremstyle{knowledgeremark}
-\newtheorem{intuition}[theorem]{直觉理解}
-\newtheorem{remark}[theorem]{补充说明}
-\newtheorem{pitfall}[theorem]{常见误区}
+\newtheorem*{intuition}{直觉理解}
+\newtheorem*{remark}{补充说明}
+\newtheorem*{pitfall}{常见误区}
 
 \renewcommand{\proofname}{证明}
+
+% cleveref 的多项引用连接词改为中文。
+% 这些命令由 cleveref 在文档开始时定义，因此在钩子中覆盖。
+\AtBeginDocument{%
+  \renewcommand{\crefpairconjunction}{和}%
+  \renewcommand{\crefmiddleconjunction}{、}%
+  \renewcommand{\creflastconjunction}{和}%
+  \renewcommand{\crefrangeconjunction}{至}%
+}
 
 \crefname{chapter}{第}{章}
 \Crefname{chapter}{第}{章}
@@ -41,9 +50,3 @@
 \Crefname{definition}{定义}{定义}
 \crefname{example}{例题}{例题}
 \Crefname{example}{例题}{例题}
-\crefname{intuition}{直觉理解}{直觉理解}
-\Crefname{intuition}{直觉理解}{直觉理解}
-\crefname{remark}{补充说明}{补充说明}
-\Crefname{remark}{补充说明}{补充说明}
-\crefname{pitfall}{常见误区}{常见误区}
-\Crefname{pitfall}{常见误区}{常见误区}
