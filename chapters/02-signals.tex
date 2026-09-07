@@ -1,3 +1,5 @@
+% !TeX root = ../main.tex
+
 \chapter{信号的描述、分类与基本运算}
 \label{chap:signals}
 
@@ -111,6 +113,15 @@
   $y(t)=x(g(t))$ 改变的是“以什么速度、方向读取原信号”。若 $g(t)$ 增长得更快，就更快扫过原信号，图像看起来被压缩；若 $g(t)$ 随 $t$ 减小，就从后向前读取，图像发生反转。
 \end{intuition}
 
+\cref{fig:time-transformations}把三种基本变换放在一起比较，峰值与支撑区间的位置变化和前面的特征点映射一致。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.88\textwidth]{02-signals/time-transformations.pdf}
+  \caption{同一连续时间信号经过时移、压缩和反转后的图像。比较峰值与端点的位置，比只看公式中的正负号更直观。}
+  \label{fig:time-transformations}
+\end{figure}
+
 \section{周期性、对称性、能量与功率}
 \label{sec:signal-properties}
 
@@ -194,6 +205,15 @@
   两部分相加正好还原 $x(t)$。检查结果也很直接：$2+t^2$ 关于纵轴对称，而 $t$ 关于原点反对称。
 \end{example}
 
+\cref{fig:even-odd-decomposition}画出了这个例子的两部分。偶分量保留左右对称的部分，奇分量则保留反对称的部分。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.92\textwidth]{02-signals/even-odd-decomposition.pdf}
+  \caption{$x(t)=2+t+t^2$ 及其偶分量、奇分量。偶分量关于纵轴对称，奇分量关于原点反对称。}
+  \label{fig:even-odd-decomposition}
+\end{figure}
+
 \begin{pitfall}[把“关于某点对称”当作偶信号]
   奇偶性\red{默认相对于原点判断}。一个信号可能关于 $t=t_0$ 对称，但只要它不满足 $x(-t)=x(t)$，就不是偶信号。遇到平移后的对称图像，应先看清对称中心。
 \end{pitfall}
@@ -272,3 +292,340 @@
 \end{pitfall}
 
 \section{基本信号与信号分解}
+\label{sec:elementary-signals}
+
+\subsection{连续时间单位阶跃信号}
+
+\begin{definition}[单位阶跃信号]
+  \label{def:ct-unit-step}
+  连续时间单位阶跃信号（unit step signal）定义为
+  \begin{equation}
+    \stepfun(t)=
+    \begin{cases}
+      0,&t<0,\\
+      \dfrac{1}{2},&t=0,\\
+      1,&t>0.
+    \end{cases}
+    \label{eq:ct-unit-step}
+  \end{equation}
+\end{definition}
+
+$\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之后为一，因此常用来表示信号\red{从某一时刻开始出现}。类似地，$\stepfun(t_0-t)$ 在 $t=t_0$ 之后关闭。
+
+\begin{remark}[零点取值约定]
+  不同教材可能把 $\stepfun(0)$ 定义为 $0$、$1/2$ 或 $1$。单个点通常不影响普通积分，也不改变大多数连续时间系统结论。我们采用 $\stepfun(0)=1/2$，因为这一约定满足
+  \[
+    \stepfun(t)+\stepfun(-t)=1
+  \]
+  并且与后续傅里叶分析中的对称处理一致。使用其他资料时，应先检查它在原点采用的约定。
+\end{remark}
+
+两个移位阶跃之差可以\red{截取一个时间区间}。若 $t_1<t_2$，则
+\begin{equation}
+  x(t)=A\bigl[\stepfun(t-t_1)-\stepfun(t-t_2)\bigr]
+  \label{eq:rectangular-pulse-with-steps}
+\end{equation}
+在区间 $(t_1,t_2)$ 内等于 $A$，在区间外等于零；两个端点的值由阶跃的零点约定决定。
+
+\begin{example}[用阶跃信号表示有限时宽脉冲]
+  一个从 $t=-2$ 开始、到 $t=3$ 结束、幅值为 $4$ 的脉冲可写成
+  \[
+    x(t)=4\bigl[\stepfun(t+2)-\stepfun(t-3)\bigr].
+  \]
+  第一项在 $t=-2$ 打开信号，第二项在 $t=3$ 把它关闭。
+\end{example}
+
+\begin{pitfall}[只看阶跃函数前的正负号]
+  判断阶跃发生在哪里，应\red{令括号内的自变量等于零}。例如 $\stepfun(2t-4)$ 在 $t=2$ 跳变，而不是在 $t=4$。若还要判断跳变方向，再检查括号内自变量在跳变点两侧的正负。
+\end{pitfall}
+
+\subsection{连续时间单位冲激信号}
+
+\begin{definition}[单位冲激信号]
+  \label{def:ct-unit-impulse}
+  连续时间单位冲激信号（unit impulse signal），也称狄拉克冲激（Dirac delta），记作 $\impulse(t)$。它在 $t\ne0$ 处为零，并具有单位面积：
+  \begin{equation}
+    \int_{-\infty}^{\infty}\impulse(t)\dd t=1.
+    \label{eq:unit-area-impulse}
+  \end{equation}
+  更准确地说，$\impulse(t)$ 是\red{广义函数}。它通过与普通函数积分时产生的结果来定义，而不是通过 $t=0$ 处的某个有限函数值来定义。
+\end{definition}
+
+移位冲激 $\impulse(t-t_0)$ 集中在 $t=t_0$。若 $x(t)$ 在 $t_0$ 附近连续，则冲激的抽样性质（sifting property）为
+\begin{equation}
+  \int_{-\infty}^{\infty}
+    x(t)\impulse(t-t_0)\dd t=x(t_0).
+  \label{eq:ct-impulse-sifting}
+\end{equation}
+冲激只保留 $x(t)$ 在 $t_0$ 处的值，其余位置不参与积分。
+
+\begin{intuition}
+  可以把冲激想成一个越来越窄、越来越高，但面积始终为一的脉冲。例如
+  \[
+    \impulse_\varepsilon(t)=
+    \begin{cases}
+      1/\varepsilon,&|t|<\varepsilon/2,\\
+      0,&\text{其他}
+    \end{cases}
+  \]
+  的面积恒为一。当 $\varepsilon\to0$ 时，它不会收敛为普通意义下的函数，却能在积分中表现出\cref{eq:ct-impulse-sifting}的抽样效果。
+\end{intuition}
+
+\begin{theorem}[单位冲激的常用性质]
+  若 $x(t)$ 在 $t_0$ 附近连续，且 $a\ne0$，则冲激满足
+  \begin{align}
+    \impulse(-t)&=\impulse(t),
+    \label{eq:impulse-even}\\
+    \impulse(at)&=\frac{1}{|a|}\impulse(t),
+    \label{eq:impulse-scaling}\\
+    x(t)\impulse(t-t_0)&=x(t_0)\impulse(t-t_0).
+    \label{eq:impulse-multiplication}
+  \end{align}
+  因而
+  \begin{equation}
+    \impulse(at-b)
+    =\frac{1}{|a|}\impulse\!\left(t-\frac{b}{a}\right).
+    \label{eq:shifted-scaled-impulse}
+  \end{equation}
+\end{theorem}
+
+\cref{fig:continuous-step-impulse}给出了单位阶跃和单位冲激的常用画法。冲激箭头的高度不表示普通函数值，读图时应看它旁边标注的面积或权重。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.82\textwidth]{02-signals/continuous-step-impulse.pdf}
+  \caption{连续时间单位阶跃与单位冲激。冲激用带箭头的竖线表示，箭头标注的是单位面积，不是有限高度。}
+  \label{fig:continuous-step-impulse}
+\end{figure}
+
+缩放冲激时出现 $1/|a|$，是因为时间轴压缩后必须补偿面积。\red{绝对值不能省略}；$a<0$ 带来的时间反转不会把单位面积变成负数。
+
+单位阶跃和单位冲激之间有微分、积分关系：
+\begin{align}
+  \frac{\dd}{\dd t}\stepfun(t)&=\impulse(t),
+  \label{eq:step-derivative-impulse}\\
+  \stepfun(t)&=\int_{-\infty}^{t}\impulse(\tau)\dd\tau.
+  \label{eq:impulse-integral-step}
+\end{align}
+第一式应在广义函数意义下理解。普通函数的导数无法描述阶跃在一个瞬间完成的跳变，冲激正好记录了这次跳变的位置和大小。
+
+更一般地，若信号在 $t=t_k$ 处发生大小为 $A_k$ 的跳变，那么它的广义导数中会出现 $A_k\impulse(t-t_k)$。向上跳变对应正冲激，向下跳变对应负冲激。
+
+\begin{pitfall}[把冲激当成“函数值为无穷大”]
+  写成“$\impulse(0)=\infty$”只能帮助形成粗略图像，不能作为计算规则。冲激的重点是位置、权重和积分面积。遇到冲激时，应使用\red{抽样性质或尺度性质}，而不是代入 $t=0$ 计算函数值。
+\end{pitfall}
+
+\begin{example}[带尺度和位移的冲激]
+  化简 $\impulse(3t-6)$。由\cref{eq:shifted-scaled-impulse}可得
+  \[
+    \impulse(3t-6)
+    =\frac{1}{3}\impulse(t-2).
+  \]
+  它位于 $t=2$，权重为 $1/3$，所以在全时间轴上的积分为 $1/3$。
+\end{example}
+
+\subsection{单位阶跃序列与单位冲激序列}
+
+\begin{definition}[单位阶跃序列]
+  \label{def:dt-unit-step}
+  离散时间单位阶跃序列定义为
+  \begin{equation}
+    \stepfun[n]=
+    \begin{cases}
+      1,&n\geq0,\\
+      0,&n<0.
+    \end{cases}
+    \label{eq:dt-unit-step}
+  \end{equation}
+\end{definition}
+
+\begin{definition}[单位冲激序列]
+  \label{def:dt-unit-impulse}
+  离散时间单位冲激序列（unit impulse sequence），也称单位样值序列或 Kronecker delta，定义为
+  \begin{equation}
+    \impulse[n]=
+    \begin{cases}
+      1,&n=0,\\
+      0,&n\ne0.
+    \end{cases}
+    \label{eq:dt-unit-impulse}
+  \end{equation}
+\end{definition}
+
+\cref{fig:discrete-step-impulse}直接画出了两个序列的样值。与连续时间冲激的示意箭头不同，离散冲激在原点处确实取值为一。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.82\textwidth]{02-signals/discrete-step-impulse.pdf}
+  \caption{离散时间单位阶跃序列与单位冲激序列。每个圆点都对应一个整数下标处的实际样值。}
+  \label{fig:discrete-step-impulse}
+\end{figure}
+
+与连续时间冲激不同，$\impulse[n]$ \red{是普通序列}，在 $n=0$ 处的值就是 $1$，切记区分！移位后的 $\impulse[n-n_0]$ 只在 $n=n_0$ 处取 $1$，因此
+\begin{equation}
+  \sum_{k=-\infty}^{\infty}
+    x[k]\impulse[k-n_0]=x[n_0].
+  \label{eq:dt-impulse-sifting}
+\end{equation}
+
+离散单位阶跃与单位冲激通过一阶差分联系起来：
+\begin{align}
+  \impulse[n]&=\stepfun[n]-\stepfun[n-1],
+  \label{eq:dt-step-difference-impulse}\\
+  \stepfun[n]&=\sum_{k=-\infty}^{n}\impulse[k].
+  \label{eq:dt-impulse-sum-step}
+\end{align}
+连续时间中用微分找出瞬时跳变；离散时间没有两个相邻样本之间的取值，所以\red{对应操作变成差分}。
+
+\begin{example}[离散矩形脉冲]
+  长度为 $N$、从 $n=0$ 开始的离散矩形脉冲可以写成
+  \begin{equation}
+    x[n]=\stepfun[n]-\stepfun[n-N],
+    \qquad N\in\Z_{>0}.
+    \label{eq:dt-rectangular-pulse}
+  \end{equation}
+  它在 $n=0,1,\ldots,N-1$ 时等于 $1$，一共包含 $N$ 个非零样本。右端点是 $N-1$，不是 $N$。
+\end{example}
+
+\begin{pitfall}[混用连续冲激与离散冲激的尺度规则]
+  连续时间冲激满足 $\impulse(at)=\impulse(t)/|a|$。离散序列的下标只能取整数，$\impulse[an]$ 会改变哪些下标被访问，\red{不能机械套用同一公式}。例如对任意非零整数 $a$，$\impulse[an]=\impulse[n]$，并不会多出 $1/|a|$。
+\end{pitfall}
+
+\subsection{用单位冲激分解信号}
+
+单位冲激可以选中某一个时刻的信号值。\red{把所有时刻的贡献叠加起来}，就能还原原信号。连续时间信号满足
+\begin{equation}
+  x(t)=\int_{-\infty}^{\infty}
+    x(\tau)\impulse(t-\tau)\dd\tau,
+  \label{eq:ct-impulse-decomposition}
+\end{equation}
+离散时间信号满足
+\begin{equation}
+  x[n]=\sum_{k=-\infty}^{\infty}
+    x[k]\impulse[n-k].
+  \label{eq:dt-impulse-decomposition}
+\end{equation}
+
+\begin{intuition}
+  在\cref{eq:dt-impulse-decomposition}中，$\impulse[n-k]$ 是位于 $n=k$ 的单位冲激，乘上 $x[k]$ 后高度变为该处的样值。对所有 $k$ 求和，就是把序列逐点重新拼起来。连续时间公式表达的是同一件事，只是求和变成了积分。
+\end{intuition}
+
+\begin{example}[用冲激表示有限长序列]
+  若序列只有
+  \[
+    x[0]=2,\qquad x[1]=-1,\qquad x[2]=3
+  \]
+  三个非零样值，则
+  \[
+    x[n]=2\impulse[n]-\impulse[n-1]+3\impulse[n-2].
+  \]
+  每个移位冲激负责一个下标，前面的\red{系数就是该下标处的信号值}。
+\end{example}
+
+\begin{remark}[与 LTI 系统的联系]
+  冲激分解把一般信号写成许多移位冲激的加权叠加。后续研究 LTI 系统时，只要知道系统对单位冲激的响应，就能借助线性和时不变性得到系统对任意输入的响应。这正是\red{冲激响应与卷积表示的起点}。
+\end{remark}
+
+\subsection{抽样函数}
+\label{subsec:sampling-function}
+
+\begin{definition}[抽样函数]
+  \label{def:sampling-function}
+  抽样函数（sampling function）定义为
+  \begin{equation}
+    \Sa(t)=
+    \begin{cases}
+      \dfrac{\sin t}{t},&t\ne0,\\[0.6em]
+      1,&t=0.
+    \end{cases}
+    \label{eq:sampling-function}
+  \end{equation}
+  原点处的值来自极限 $\lim_{t\to0}\sin t/t=1$，不是把 $t=0$ 直接代入分式得到的。
+\end{definition}
+
+抽样函数在原点取得主瓣峰值 $1$，并在
+\[
+  t=k\pi,
+  \qquad k\in\Z\setminus\{0\}
+\]
+处过零。远离原点后，振荡仍在继续，但振幅包络按 $1/|t|$ 衰减。因此 $\Sa(t)$ 是偶信号，却不是周期信号。
+
+两种常见定义及其零点位置见\cref{fig:sampling-functions}。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.88\textwidth]{02-signals/sampling-functions.pdf}
+  \caption{非归一化抽样函数 $\Sa(t)$ 与归一化抽样函数 $\sinc(t)$。黑点标出非零零点；两种定义形状相同，横轴尺度相差 $\pi$。}
+  \label{fig:sampling-functions}
+\end{figure}
+
+英文资料更常使用归一化抽样函数
+\begin{equation}
+  \sinc(t)=
+  \begin{cases}
+    \dfrac{\sin(\pi t)}{\pi t},&t\ne0,\\[0.6em]
+    1,&t=0,
+  \end{cases}
+  \qquad
+  \sinc(t)=\Sa(\pi t).
+  \label{eq:normalized-sinc}
+\end{equation}
+$\sinc(t)$ 的非零零点位于整数处，而 $\Sa(t)$ 的非零零点位于 $k\pi$。看到 `sinc` 时，必须先确认作者是否把 $\pi$ 放进了函数定义。
+
+\begin{theorem}[抽样函数的常用性质]
+  抽样函数满足
+  \begin{align}
+    \Sa(-t)&=\Sa(t),
+    \label{eq:sampling-function-even}\\
+    \lim_{|t|\to\infty}\Sa(t)&=0,
+    \label{eq:sampling-function-decay}\\
+    \int_{-\infty}^{\infty}\Sa(t)\dd t&=\pi,
+    \label{eq:sampling-function-area}\\
+    \int_{-\infty}^{\infty}|\Sa(t)|^2\dd t&=\pi.
+    \label{eq:sampling-function-energy}
+  \end{align}
+  对应地，归一化函数满足
+  \[
+    \int_{-\infty}^{\infty}\sinc(t)\dd t=1,
+    \qquad
+    \int_{-\infty}^{\infty}|\sinc(t)|^2\dd t=1.
+  \]
+  第一个广义积分不是绝对收敛的；第二个积分说明抽样函数是能量信号。
+\end{theorem}
+
+尺度和时移决定主瓣的位置与宽度。对 $B>0$，
+\begin{equation}
+  x(t)=A\Sa\bigl(B(t-t_0)\bigr)
+  \label{eq:scaled-shifted-sampling-function}
+\end{equation}
+在 $t=t_0$ 处取值 $A$，非零零点位于
+\[
+  t=t_0+\frac{k\pi}{B},
+  \qquad k\in\Z\setminus\{0\}.
+\]
+$B$ 越大，零点间距越小，主瓣越窄。由能量的尺度变换可得
+\begin{equation}
+  E_x=\frac{|A|^2\pi}{B}.
+  \label{eq:scaled-sampling-function-energy}
+\end{equation}
+
+\begin{example}[读取抽样函数的峰值、零点与能量]
+  设
+  \[
+    x(t)=3\Sa\bigl(2(t-1)\bigr).
+  \]
+  它的峰值位于 $t=1$，峰值为 $3$；非零零点为
+  \[
+    t=1+\frac{k\pi}{2},
+    \qquad k\in\Z\setminus\{0\}.
+  \]
+  由\cref{eq:scaled-sampling-function-energy}可得 $E_x=9\pi/2$。
+\end{example}
+
+\begin{intuition}
+  改变 $B$ 会在时间轴上压缩或拉伸抽样函数。主瓣变窄时，旁瓣和零点也按相同比例靠近中心。后续进入傅里叶变换后会看到，这种“时间越窄、频域越宽”的对应关系正是理想低通滤波和带限信号重建中出现抽样函数的原因。
+\end{intuition}
+
+\begin{pitfall}[“抽样函数”不等于“对信号抽样”]
+  $\Sa(t)$ 是一个确定的连续时间函数；对信号抽样则是从连续信号中取出离散样值的操作。两者名称相近，但不是同一个概念。真正讨论采样周期、采样频率和频谱混叠时，应转到\cref{chap:sampling}。
+\end{pitfall}
