@@ -1,0 +1,49 @@
+% 环境编号随章重置，共享同一编号序列，便于检索。
+\newtheoremstyle{knowledgeplain}
+  {0.8em}{0.8em}{\itshape}{}% 上下间距、正文字体、缩进
+  {\bfseries}{。}{0.5em}{}% 标题字体、标点、标题后间距
+
+\newtheoremstyle{knowledgedefinition}
+  {0.8em}{0.8em}{\normalfont}{}
+  {\bfseries}{。}{0.5em}{}
+
+\newtheoremstyle{knowledgeremark}
+  {0.6em}{0.6em}{\normalfont}{}
+  {\bfseries}{。}{0.5em}{}
+
+\theoremstyle{knowledgeplain}
+\newtheorem{theorem}{定理}[chapter]
+
+\theoremstyle{knowledgedefinition}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{example}[theorem]{例题}
+
+\theoremstyle{knowledgeremark}
+\newtheorem{intuition}[theorem]{直觉理解}
+\newtheorem{remark}[theorem]{补充说明}
+\newtheorem{pitfall}[theorem]{常见误区}
+
+\renewcommand{\proofname}{证明}
+
+\crefname{chapter}{第}{章}
+\Crefname{chapter}{第}{章}
+\crefname{section}{第}{节}
+\Crefname{section}{第}{节}
+\crefname{equation}{式}{式}
+\Crefname{equation}{式}{式}
+\crefname{figure}{图}{图}
+\Crefname{figure}{图}{图}
+\crefname{table}{表}{表}
+\Crefname{table}{表}{表}
+\crefname{theorem}{定理}{定理}
+\Crefname{theorem}{定理}{定理}
+\crefname{definition}{定义}{定义}
+\Crefname{definition}{定义}{定义}
+\crefname{example}{例题}{例题}
+\Crefname{example}{例题}{例题}
+\crefname{intuition}{直觉理解}{直觉理解}
+\Crefname{intuition}{直觉理解}{直觉理解}
+\crefname{remark}{补充说明}{补充说明}
+\Crefname{remark}{补充说明}{补充说明}
+\crefname{pitfall}{常见误区}{常见误区}
+\Crefname{pitfall}{常见误区}{常见误区}

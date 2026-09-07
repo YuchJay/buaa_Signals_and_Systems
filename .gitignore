@@ -1,0 +1,36 @@
+# LaTeX 中间文件
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+*.xdv
+
+# 构建目录与生成的主文档
+build/
+main.pdf
+
+# 编辑器与操作系统文件
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Python 辅助绘图缓存
+__pycache__/
+*.py[cod]
+.venv/

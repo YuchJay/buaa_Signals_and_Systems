@@ -1,0 +1,28 @@
+% 页面与基础数学
+\usepackage[a4paper,margin=2.6cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{amsthm}
+\usepackage{bm}
+
+% 图片、表格与列表
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{booktabs}
+\usepackage{enumitem}
+
+% 链接与交叉引用：hyperref 应靠后加载，cleveref 紧随其后。
+\usepackage{xcolor}
+\definecolor{linkgray}{RGB}{45,45,45}
+\usepackage[
+  unicode,
+  colorlinks=true,
+  linkcolor=linkgray,
+  citecolor=linkgray,
+  urlcolor=linkgray
+]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+\setlist{nosep}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+\numberwithin{equation}{chapter}
