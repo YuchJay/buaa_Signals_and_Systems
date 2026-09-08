@@ -17,4 +17,4 @@ latexmk -xelatex -interaction=nonstopmode -halt-on-error main.tex
 git diff --check
 ```
 
-参考资料目录 `material/`、`materials/` 只供本地辨读，不纳入 Git。正文引用的绘图脚本和最终图片需要纳入版本控制。
+参考资料目录 `materials/` 只供本地辨读，不纳入 Git。正文引用的绘图脚本和最终图片需要纳入版本控制。

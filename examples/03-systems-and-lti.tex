@@ -1,0 +1,114 @@
+% !TeX root = ../main.tex
+% 来源：materials/chapter1.pdf，第 7--14 页；题目在原笔记判据与例子上重组。
+
+\section{本章例题集}
+\label{sec:systems-worked-examples}
+
+\begin{workedexample}[含输入乘积的系统是否线性]
+  \label{ex:systems-linearity-product-integral}
+  判断连续时间系统
+  \[
+    y(t)=x(t)\int_{-\infty}^{t}x(\tau)\dd\tau
+  \]
+  是否线性。不能只使用零输入检验。
+\end{workedexample}
+
+\begin{solution}
+  记 $\mathcal{T}\{x\}$ 为题给系统。对任意常数 $a$，有
+  \begin{align*}
+    \mathcal{T}\{a x\}(t)
+      &=(a x(t))\int_{-\infty}^{t}a x(\tau)\dd\tau\\
+      &=a^2x(t)\int_{-\infty}^{t}x(\tau)\dd\tau
+       =a^2\mathcal{T}\{x\}(t).
+  \end{align*}
+  线性系统的齐次性要求结果为 $a\mathcal{T}\{x\}(t)$。只要选取一个使 $\mathcal{T}\{x\}$ 不恒为零的输入以及 $a\notin\{0,1\}$，两者便不相等，所以该系统非线性。
+
+  例如取 $x(t)=\e^{-t}\stepfun(t)$、$a=2$，系统对缩放后输入的响应是原响应的 $4$ 倍，而线性所要求的是 $2$ 倍。这个矛盾已足以否定线性。缩放路径的比较见\cref{fig:ex-linearity-product-integral-answer}。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.78\textwidth]{03-systems-and-lti/examples/linearity-product-integral-answer.pdf}
+    \caption{例题 \ref{ex:systems-linearity-product-integral} 的齐次性检验。输入因子出现两次，使输出随幅度按平方缩放。}
+    \label{fig:ex-linearity-product-integral-answer}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  线性判别不必总把可加性与齐次性全部展开；要否定线性，只需找到一项失败。遇到输入的乘积、平方或其他非线性组合时，先做\red{幅度缩放检验}往往最省力。零输入产生零输出只是必要条件，本题恰好说明它不是充分条件。
+\end{technique}
+
+\begin{workedexample}[反转并平移的离散系统]
+  \label{ex:systems-time-invariance-reversal}
+  判断离散时间系统
+  \[
+    y[n]=x[3-n]
+  \]
+  是否时不变，并说明时间反转为何会影响判定。
+\end{workedexample}
+
+\begin{solution}
+  设输入延迟 $n_0$ 后为 $x_s[n]=x[n-n_0]$。先平移输入再通过系统，得到
+  \[
+    y_1[n]=x_s[3-n]=x[3-n-n_0].
+  \]
+  先通过系统再把输出延迟 $n_0$，则
+  \[
+    y_2[n]=y[n-n_0]
+      =x\bigl[3-(n-n_0)\bigr]
+      =x[3-n+n_0].
+  \]
+  除 $n_0=0$ 或极特殊输入外，$y_1[n]\ne y_2[n]$，所以系统是时变系统。
+
+  用一个冲激输入也能构造直观反例。若 $x[n]=\impulse[n]$，原输出为 $\impulse[n-3]$。将输入延迟 $1$ 后再过系统，输出冲激移到 $n=2$；而将原输出延迟 $1$，冲激应移到 $n=4$。两条路径朝相反方向移动，如\cref{fig:ex-time-invariance-reversal-answer} 所示。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.88\textwidth]{03-systems-and-lti/examples/time-invariance-reversal-answer.pdf}
+    \caption{例题 \ref{ex:systems-time-invariance-reversal} 在 $x[n]=\impulse[n]$、$n_0=1$ 时的两条检验路径。输出位置不同，故系统时变。}
+    \label{fig:ex-time-invariance-reversal-answer}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  含 $n$ 的反转系统最容易在括号展开时丢失符号。应把“平移输入再过系统”和“原输出整体平移”分开写完后再比较；特别注意 $y[n-n_0]$ 要把输出公式中的\red{每一个下标变量整体替换}为 $n-n_0$。构造单冲激反例还能把代数差异转化为位置差异。
+\end{technique}
+
+\begin{workedexample}[变上限累加系统的因果性]
+  \label{ex:systems-causality-variable-limit}
+  判断离散时间系统
+  \[
+    y[n]=\sum_{k=-\infty}^{2n}x[k]
+  \]
+  是否因果。若非因果，请给出两个在当前及过去完全相同、却产生不同当前输出的输入。
+\end{workedexample}
+
+\begin{solution}
+  在观察时刻 $n_0=2$，输出为
+  \[
+    y[2]=\sum_{k=-\infty}^{4}x[k],
+  \]
+  其中包含未来样值 $x[3]$ 和 $x[4]$，因此已经提示系统非因果。为了严格构造反例，取
+  \[
+    x_1[k]=0,
+    \qquad
+    x_2[k]=\impulse[k-3].
+  \]
+  两个输入对所有 $k\le2$ 完全相同，但
+  \[
+    y_1[2]=0,
+    \qquad
+    y_2[2]=1.
+  \]
+  当前及过去相同却得到不同的当前输出，违背\cref{def:causal-system}，所以该系统非因果。依赖区间见\cref{fig:ex-causality-variable-limit-answer}。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.74\textwidth]{03-systems-and-lti/examples/causality-variable-limit-answer.pdf}
+    \caption{例题 \ref{ex:systems-causality-variable-limit} 在 $n_0=2$ 时所读取的输入区间。上限 $2n_0=4$ 越过当前时刻。}
+    \label{fig:ex-causality-variable-limit-answer}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  对变上限求和或积分，先固定一个观察时刻，再把上限算成具体数；只要读取区间越过当前时刻，就可能非因果。需要严格证明时，令两个输入只在某个\red{被系统读取的未来时刻}不同，便能直接违反因果性的成对输入定义。
+\end{technique}

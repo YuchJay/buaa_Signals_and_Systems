@@ -1,7 +1,176 @@
+% !TeX root = ../main.tex
+
 \chapter{系统性质与 LTI 结构}
 \label{chap:systems-and-lti}
 
 \section{系统的数学描述}
-\section{线性、时不变性与其他基本性质}
+\label{sec:system-description}
+
+系统（system）把输入信号映射为输出信号。用算子 $\mathcal{T}$ 表示这一关系，可写成
+\begin{equation}
+  y(t)=\mathcal{T}\{x(t)\},
+  \qquad
+  y[n]=\mathcal{T}\{x[n]\}.
+  \label{eq:system-operator}
+\end{equation}
+研究系统性质时，真正的对象是映射规则 $\mathcal{T}$，而非某一组特定的输入、输出波形。
+\begin{pitfall}[不能用一组输入输出判断系统性质]
+  看到某个输入恰好得到成比例的输出，并不能证明系统线性；看到某个输入平移后输出也恰好平移，也不能证明系统时不变。定义中的判据都要求对\red{任意允许的输入}成立。要证明性质通常需要一般推导，要否定性质只需构造一个反例。
+\end{pitfall}
+
+\section{线性系统}
+\label{sec:linear-systems}
+
+\begin{definition}[线性系统]
+  \label{def:linear-system}
+  设
+  \[
+    \mathcal{T}\{x_1\}=y_1,
+    \qquad
+    \mathcal{T}\{x_2\}=y_2.
+  \]
+  若对任意输入 $x_1,x_2$ 和任意常数 $a,b$，都有
+  \begin{equation}
+    \mathcal{T}\{a x_1+b x_2\}
+    =a\mathcal{T}\{x_1\}+b\mathcal{T}\{x_2\}
+    =a y_1+b y_2,
+    \label{eq:linearity-test}
+  \end{equation}
+  则称 $\mathcal{T}$ 为线性系统（linear system）。这一条件也称为叠加原理（superposition principle）。
+\end{definition}
+
+\cref{eq:linearity-test}可以拆成两个缺一不可的条件：
+\begin{align*}
+  \mathcal{T}\{a x\}&=a\mathcal{T}\{x\},
+  &&\text{齐次性（homogeneity）},\\
+  \mathcal{T}\{x_1+x_2\}&=\mathcal{T}\{x_1\}+\mathcal{T}\{x_2\},
+  &&\text{可加性（additivity）}.
+\end{align*}
+因此，判断线性最稳妥的方法是直接代入一般的 $a x_1+b x_2$。特别地，令 $a=b=0$ 可得线性系统必满足
+\begin{equation}
+  \mathcal{T}\{0\}=0.
+  \label{eq:zero-input-zero-output}
+\end{equation}
+所以\red{零输入必须产生零输出}是线性的必要条件；若系统公式含有与输入无关的常数项，往往可立即否定线性。但反过来，满足\cref{eq:zero-input-zero-output} 并不足以证明线性。
+
+\begin{intuition}
+  线性系统不会在不同输入分量之间制造新的乘积、幂次或非线性函数。先把输入拆成若干简单分量，分别求响应后再相加，必须与一次把完整输入送入系统得到相同结果。这正是以后用冲激分解研究 LTI 系统的基础。
+\end{intuition}
+
+\begin{example}[增益、微分与累加]
+  系统 $y(t)=3x(t)$ 满足齐次性和可加性，因而线性。微分系统
+  \[
+    y(t)=\frac{\dd x(t)}{\dd t}
+  \]
+  也线性，因为求导可分配到线性组合上。离散差分系统
+  \[
+    y[n]=x[n]-x[n-1]
+  \]
+  与累加系统
+  \[
+    y[n]=\sum_{k=-\infty}^{n}x[k]
+  \]
+  同样满足\cref{eq:linearity-test}。这些例子说明：系统是否线性取决于\red{运算对线性组合的作用}，而不取决于系统公式看起来是否复杂。
+\end{example}
+
+\begin{example}[常数偏置与平方]
+  对 $y(t)=x(t)+1$，零输入产生 $y(t)=1$，所以系统非线性。对 $y(t)=x^2(t)$，虽然零输入产生零输出，但
+  \[
+    \mathcal{T}\{2x\}=4x^2\ne2x^2=2\mathcal{T}\{x\},
+  \]
+  齐次性不成立，系统仍非线性。这也说明\red{零输入检验只能用于否定}，不能单独用于证明。
+\end{example}
+
+\begin{pitfall}[把“可加”误当成“线性”]
+  只验证 $\mathcal{T}\{x_1+x_2\}=\mathcal{T}\{x_1\}+\mathcal{T}\{x_2\}$ 还不够；系统还必须允许任意幅度缩放。遇到平方、绝对值、指数或输入之间的乘积时，优先检查齐次性，通常能迅速找到矛盾。
+\end{pitfall}
+
+\section{时不变系统}
+\label{sec:time-invariant-systems}
+
+\begin{definition}[时不变系统]
+  \label{def:time-invariant-system}
+  若 $\mathcal{T}\{x(t)\}=y(t)$，并且对任意实数 $t_0$ 都有
+  \begin{equation}
+    \mathcal{T}\{x(t-t_0)\}=y(t-t_0),
+    \label{eq:ct-time-invariance}
+  \end{equation}
+  则称该连续时间系统为时不变系统（time-invariant system）。离散时间系统的判据为：对任意整数 $n_0$，
+  \begin{equation}
+    \mathcal{T}\{x[n-n_0]\}=y[n-n_0].
+    \label{eq:dt-time-invariance}
+  \end{equation}
+\end{definition}
+
+时不变性的含义是：输入延迟多少，输出就只延迟同样多，除此之外形状和幅值都不改变。实际判断时应严格比较两条路径：
+\begin{enumerate}
+  \item 先把输入换成 $x(t-t_0)$，再代入系统，得到 $y_1(t)=\mathcal{T}\{x(t-t_0)\}$；
+  \item 先由原输入得到 $y(t)$，再把输出中的\red{每一个显含时间变量}替换为 $t-t_0$，得到 $y_2(t)=y(t-t_0)$。
+\end{enumerate}
+若对任意输入和任意 $t_0$ 都有 $y_1=y_2$，系统才时不变。离散时间完全类似。
+
+\begin{example}[延迟与非线性不冲突]
+  对 $y(t)=x(t-1)$，输入 $x(t-t_0)$ 产生 $x(t-t_0-1)$，恰好等于 $y(t-t_0)$，所以系统时不变。系统
+  \[
+    y(t)=\e^{x(t+1)}
+  \]
+  虽然非线性且使用未来输入，但输入平移后得到 $\e^{x(t-t_0+1)}=y(t-t_0)$，因此仍然时不变。可见\red{时不变与线性、因果性彼此独立}。
+\end{example}
+
+\begin{example}[显含时间与时间缩放]
+  对 $y(t)=t x(t)$，输入平移后得到 $t x(t-t_0)$，而输出平移为 $(t-t_0)x(t-t_0)$，一般不相等，所以系统时变。对 $y(t)=x(2t)$，两条路径分别给出
+  \[
+    x(2t-t_0),
+    \qquad
+    x(2t-2t_0),
+  \]
+  也一般不相等。因此，系统内部的时间尺度变换通常会破坏时不变性。
+\end{example}
+
+\begin{pitfall}[只平移了输入，没有平移完整输出]
+  检验 $y(t)=t x(t)$ 时，$y(t-t_0)$ 中的显式因子 $t$ 也必须变为 $t-t_0$。若只把 $x(t)$ 改成 $x(t-t_0)$，就把“输入平移后过系统”误写成了“原输出整体平移”，两条路径自然无法被正确比较。触发检查是：输出公式中是否还有裸露的 $t$ 或 $n$。
+\end{pitfall}
+
+\section{因果系统}
+\label{sec:causal-systems}
+
+\begin{definition}[因果系统]
+  \label{def:causal-system}
+  若对任意时刻 $t_0$，只要两个输入在所有 $t\le t_0$ 上相同，相应输出在 $t_0$ 也必相同，则称连续时间系统为因果系统（causal system）。等价地，$y(t_0)$ 只能依赖输入在\red{当前与过去}的取值，不能依赖 $t>t_0$ 的输入。
+
+  对离散时间系统，把条件改为两个输入在所有 $n\le n_0$ 上相同；此时 $y[n_0]$ 只能依赖 $x[k]$（$k\le n_0$）。
+\end{definition}
+
+这个定义比“公式里有没有加号”更可靠。判断时固定观察时刻 $t_0$ 或 $n_0$，列出计算该时刻输出所需的全部输入时刻：只要其中存在一个严格晚于观察时刻的输入，且确实影响输出，就能判定系统非因果。
+
+\begin{example}[延迟、超前与无记忆运算]
+  $y(t)=x(t-1)$ 只读取过去输入，是因果系统；$y(t)=x(t+1)$ 读取未来输入，是非因果系统。$y(t)=x^2(t)$ 只依赖当前输入，因此虽非线性却因果。一般地，任何输出只依赖 $x(t)$ 或 $x[n]$ 当前值的\red{无记忆系统必然因果}。
+\end{example}
+
+\begin{example}[积分与累加的上限]
+  系统
+  \[
+    y(t)=\int_{-\infty}^{t}x(\tau)\dd\tau,
+    \qquad
+    y[n]=\sum_{k=-\infty}^{n}x[k]
+  \]
+  只汇总当前及过去输入，因而因果。若把上限改成 $t+1$ 或 $n+1$，当前输出就会使用未来输入，系统变为非因果。对积分、求和系统，\red{先比较上限与观察时刻}通常最快。
+\end{example}
+
+\begin{example}[时间缩放系统]
+  对 $y(t)=x(2t)$，在 $t_0>0$ 时需要读取 $x(2t_0)$，而 $2t_0>t_0$，所以系统非因果。只需找到这一个违反定义的时刻即可；不要求系统在每个时刻都依赖未来。
+\end{example}
+
+\begin{pitfall}[用输入的具体波形代替依赖关系]
+  某个特定输入可能在未来恒为零，使非因果系统看起来没有“利用未来”。但因果性是系统映射对所有输入的性质。正确检查应关注输出公式\red{可能读取哪些输入时刻}，而不是某一条输入曲线恰好取什么值。
+\end{pitfall}
+
 \section{连续时间与离散时间 LTI 系统}
+
+同时满足线性和时不变性的系统称为线性时不变系统（linear time-invariant system，LTI）。线性允许把输入分解后分别求响应，时不变性又允许把对一个基本信号的响应整体平移；两者结合后，系统可以由对单位冲激的响应完整描述。下一章将在卷积框架下展开这一结构。
+
+需要强调的是，\red{LTI 不自动意味着因果}。例如 $y(t)=x(t+1)$ 是 LTI 系统，却使用未来输入。因果性仍需作为第三项性质单独检查。
+
 \section{冲激响应与系统表示}
+
+本节将在下一章结合卷积给出完整推导。这里先记录核心路线：把输入写成移位冲激的连续或离散叠加，再利用线性与时不变性，把每个冲激的响应组合成总输出。
