@@ -17,7 +17,7 @@
   \[
     z=x+\iu y, \qquad x,y\in\R,
   \]
-  其中 $x=\operatorname{Re}\{z\}$ 是实部，$y=\operatorname{Im}\{z\}$ 是虚部。两个复数相等，当且仅当它们的实部和虚部分别相等。
+  其中 $x=\operatorname{Re}\{z\}$ 是实部，$y=\operatorname{Im}\{z\}$ 是虚部。两个复数相等，当且仅当\red{它们的实部和虚部分别相等}。
 \end{definition}
 
 复数 $z=x+\iu y$ 可以看作复平面上的点 $(x,y)$，横轴是实轴，纵轴是虚轴。这个几何视角把一个复数拆成两个量：它离原点有多远，以及它指向哪个方向。
@@ -36,7 +36,7 @@
   \[
     \arg z=\theta+2k\pi,\qquad k\in\Z.
   \]
-  一般把区间 $(-\pi,\pi]$ 内的唯一幅角记作幅角主值 $\operatorname{Arg}z$。零的模为零，其幅角没有定义。
+  一般把区间 $(-\pi,\pi]$ 内的唯一幅角记作幅角主值 $\operatorname{Arg}z$。零的模为零，其\red{幅角没有定义}。
 \end{definition}
 
 由直角坐标求主幅角时，应根据 $(x,y)$ 所在象限判断角度。
@@ -44,7 +44,7 @@
 程序中通常使用双参数函数 $\operatorname{atan2}(y,x)$；它比单独计算 $\arctan(y/x)$ 更可靠。
 
 \begin{pitfall}[只用反正切求幅角]
-  $\arctan(y/x)$ 不能区分相差 $\pi$ 的两个方向，并且在 $x=0$ 时无定义。例如 $1+\iu$ 与 $-1-\iu$ 的虚实部之比相同，主幅角却分别是 $\pi/4$ 和 $-3\pi/4$。应当先判断象限，程序中则直接使用 $\operatorname{atan2}(y,x)$。
+  $\arctan(y/x)$ 不能区分相差 $\pi$ 的两个方向，并且在 $x=0$ 时无定义。例如 $1+\iu$ 与 $-1-\iu$ 的虚实部之比相同，主幅角却分别是 $\pi/4$ 和 $-3\pi/4$。\red{应当先判断象限}，程序中则直接使用 $\operatorname{atan2}(y,x)$。
 \end{pitfall}
 
 \subsection{共轭与基本运算}
@@ -54,7 +54,7 @@
   \[
     z^*=x-\iu y.
   \]
-  共轭在复平面上相当于关于实轴镜像。
+  共轭在复平面上\red{相当于关于实轴镜像}。
 \end{definition}
 
 常用关系如下：
@@ -87,7 +87,7 @@
 这称为复数的极坐标形式或指数形式。$r$ 是长度，$\e^{\iu\theta}$ 是单位圆上方向为 $\theta$ 的点。
 
 \begin{intuition}
-  乘上 $\e^{\iu\theta}$ 可以理解为在复平面上逆时针旋转 $\theta$，长度不变；再乘上正实数 $r$，则把长度放大为原来的 $r$ 倍。复数乘法于是变成了“缩放再旋转”。
+  乘上 $\e^{\iu\theta}$ 可以理解为在复平面上逆时针旋转 $\theta$，长度不变；再乘上正实数 $r$，则把长度放大为原来的 $r$ 倍。复数乘法于是变成了\red{“缩放再旋转”}。
 \end{intuition}
 
 若
@@ -101,7 +101,7 @@
   \frac{z_1}{z_2}&=\frac{r_1}{r_2}\e^{\iu(\theta_1-\theta_2)}
   \qquad(z_2\ne0).
 \end{align*}
-也就是说，复数相乘时模相乘、幅角相加；相除时模相除、幅角相减。由于幅角只在模 $2\pi$ 的意义下确定，上面的角度关系也应按模 $2\pi$ 理解。
+也就是说，复数相乘时\red{模相乘、幅角相加}；相除时\red{模相除、幅角相减}。由于幅角只在模 $2\pi$ 的意义下确定，上面的角度关系也应按模 $2\pi$ 理解。
 
 对整数 $n$，棣莫弗公式给出
 \[
@@ -115,7 +115,7 @@
   \qquad k=0,1,\ldots,n-1.
   \label{eq:complex-nth-roots}
 \end{equation}
-这些根的模相同，幅角依次相差 $2\pi/n$，因而均匀分布在同一个圆上。后续分析系统函数的零点和极点时，这种结构会经常出现。
+这些根的模相同，幅角依次相差 $2\pi/n$，因而\red{均匀分布在同一个圆上}。后续分析系统函数的零点和极点时，这种结构会经常出现。
 
 \begin{example}[代数形式与指数形式的转换]
   设 $z=-1+\iu\sqrt{3}$。由\cref{eq:complex-magnitude}可得 $|z|=2$。点 $(-1,\sqrt{3})$ 位于第二象限，所以
@@ -136,7 +136,7 @@
     &=\frac{\e^{\iu\theta}-\e^{-\iu\theta}}{2\iu}.
   \label{eq:sin-complex-exponential}
 \end{align}
-它们说明实正弦和余弦都可以分解成一对旋转方向相反的复指数。
+它们说明实正弦和余弦都可以分解成\red{一对旋转方向相反的复指数}。
 
 \subsection{复指数与正弦信号}
 
@@ -157,24 +157,24 @@
   =\operatorname{Re}\!\left\{A\e^{\iu\varphi}\e^{\iu\omega t}\right\}.
   \label{eq:sinusoid-complex-form}
 \end{equation}
-复数 $A\e^{\iu\varphi}$ 同时保存振幅 $A$ 和初相位 $\varphi$。后续处理正弦稳态响应时，经常先计算右侧的复指数，再取实部。
+复数 $A\e^{\iu\varphi}$ 同时保存振幅 $A$ 和初相位 $\varphi$。后续处理正弦稳态响应时，经常\red{先计算右侧的复指数，再取实部}。
 
 离散时间复指数写作
 \[
   x[n]=z^n=r^n\e^{\iu\omega n},\qquad z\ne0,\quad n\in\Z.
 \]
-$r$ 控制序列随 $n$ 的增长或衰减，$\omega$ 控制每前进一步所转过的角度。由于 $n$ 只能取整数，$\omega$ 与 $\omega+2k\pi$ 描述完全相同的序列。纯复指数 $\e^{\iu\omega n}$ 为周期序列，当且仅当存在正整数 $N$ 和整数 $m$ 使
+$r$ 控制序列随 $n$ 的增长或衰减，$\omega$ 控制每前进一步所转过的角度。由于 $n$ 只能取整数，$\omega$ 与 $\omega+2k\pi$ \red{描述完全相同的序列}。纯复指数 $\e^{\iu\omega n}$ 为周期序列，当且仅当存在正整数 $N$ 和整数 $m$ 使
 \[
   \omega N=2\pi m,
 \]
 也就是 $\omega/(2\pi)$ 为有理数。满足条件的最小正整数 $N$ 是基本周期。
 
 \begin{pitfall}[照搬连续时间的周期公式]
-  连续时间复指数在 $\omega\ne0$ 时总是周期信号，离散时间复指数却不一定周期。比如 $\e^{\iu n}$ 中 $\omega/(2\pi)=1/(2\pi)$ 不是有理数，因此不存在整数基本周期。
+  连续时间复指数在 $\omega\ne0$ 时总是周期信号，离散时间复指数却\red{不一定周期}。比如 $\e^{\iu n}$ 中 $\omega/(2\pi)=1/(2\pi)$ 不是有理数，因此不存在整数基本周期。
 \end{pitfall}
 
 \begin{remark}[相位只在模 $2\pi$ 下有意义]
-  $\varphi$ 与 $\varphi+2k\pi$ 描述同一个方向，也给出同一个正弦信号。比较两个相位时，需要先说明采用的主值区间；相位在 $\pi$ 与 $-\pi$ 附近发生数值跳变，并不表示信号突然改变。
+  $\varphi$ 与 $\varphi+2k\pi$ 描述同一个方向，也给出同一个正弦信号。比较两个相位时，需要先说明采用的主值区间；相位在 $\pi$ 与 $-\pi$ 附近发生数值跳变，\red{并不表示信号突然改变}。
 \end{remark}
 
 \begin{pitfall}[混淆相位与时间平移]
@@ -182,7 +182,7 @@ $r$ 控制序列随 $n$ 的增长或衰减，$\omega$ 控制每前进一步所�
   \[
     \cos(\omega t+\varphi)=\cos\bigl(\omega(t-t_0)\bigr).
   \]
-  同一个相位差在不同角频率下对应的时间平移不同，不能直接把“相差 $\varphi$”说成“延迟 $\varphi$”。
+  同一个相位差在不同角频率下\red{对应的时间平移不同}，不能直接把“相差 $\varphi$”说成“延迟 $\varphi$”。
 \end{pitfall}
 
 \section{函数、序列与常用运算}

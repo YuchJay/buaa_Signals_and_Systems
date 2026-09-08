@@ -1,4 +1,4 @@
-% 定理、定义和例题参与编号；三者各自按章独立计数。
+% 定理、定义、正文示例和章后例题参与编号；四者各自按章独立计数。
 \newtheoremstyle{knowledgeplain}
   {0.8em}{0.8em}{\itshape}{}% 上下间距、正文字体、缩进
   {\bfseries}{}{0.5em}{}% 标题字体、标点、标题后间距
@@ -16,12 +16,15 @@
 
 \theoremstyle{knowledgedefinition}
 \newtheorem{definition}{定义}[chapter]
-\newtheorem{example}{例题}[chapter]
+\newtheorem{example}{示例}[chapter]
+\newtheorem{workedexample}{例题}[chapter]
 
 \theoremstyle{knowledgeremark}
 \newtheorem*{intuition}{直觉理解}
 \newtheorem*{remark}{补充说明}
 \newtheorem*{pitfall}{常见误区}
+\newtheorem*{solution}{解答}
+\newtheorem*{technique}{解题技巧}
 
 \renewcommand{\proofname}{证明}
 
@@ -48,5 +51,7 @@
 \Crefname{theorem}{定理}{定理}
 \crefname{definition}{定义}{定义}
 \Crefname{definition}{定义}{定义}
-\crefname{example}{例题}{例题}
-\Crefname{example}{例题}{例题}
+\crefname{example}{示例}{示例}
+\Crefname{example}{示例}{示例}
+\crefname{workedexample}{例题}{例题}
+\Crefname{workedexample}{例题}{例题}

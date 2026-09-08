@@ -37,3 +37,9 @@ __pycache__/
 
 # 本地参考资料（PDF、草稿等，不纳入版本控制）
 material/
+materials/
+
+# PDF 与手写稿辨读、页面渲染产生的本地中间文件
+.pdf-work/
+rendered-pages/
+ocr-output/

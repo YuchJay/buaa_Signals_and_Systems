@@ -10,7 +10,7 @@ buaa_Signals_and_Systems/
 ├── .latexmkrc                  # latexmk 默认使用 XeLaTeX
 ├── .gitignore                  # 忽略构建产物和本地文件
 ├── README.md                   # 项目说明、构建与协作约定
-├── SS.md                       # 本次初始化需求原文
+├── AGENTS.md                   # 新对话接手时的必读入口
 ├── config/
 │   ├── packages.tex            # 稳定、通用宏包与全局排版配置
 │   ├── commands.tex            # 数学符号和变换记号的唯一来源
@@ -30,10 +30,13 @@ buaa_Signals_and_Systems/
 │   ├── 11-system-analysis.tex  # 系统函数、频率响应与极零分析
 │   └── 12-connections-and-review.tex # 跨域联系与综合复习
 ├── figures/                    # 图片及可复现绘图源文件
+├── examples/                   # 各章末尾的例题集正文
+├── scripts/figures/            # 可复现绘图脚本
 ├── bibliography/
 │   └── references.bib          # 经实际阅读和引用的文献条目
 └── docs/
-    └── style-guide.md          # 知识库写作与引用规范
+    ├── style-guide.md          # 知识库写作与引用规范
+    └── project-status/         # 当前进度、长期决定与接手说明
 ```
 
 ## 章节设计思路
@@ -63,6 +66,8 @@ latexmk -c
 ## 写作约定
 
 完整规则见 [`docs/style-guide.md`](docs/style-guide.md)。新增章节应保持“问题—定义—直觉—推导—例子—误区—关联”的学习主线。全局符号只在 `config/commands.tex` 中维护；图片按章节建立子目录。
+
+开启新对话或更换维护者时，先阅读 [`docs/project-status/CURRENT.md`](docs/project-status/CURRENT.md)，再按 [`AGENTS.md`](AGENTS.md) 的说明继续工作。
 
 ## Git 约定
 
