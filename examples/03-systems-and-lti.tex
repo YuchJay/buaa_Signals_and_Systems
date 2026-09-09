@@ -112,3 +112,127 @@
 \begin{technique}
   对变上限求和或积分，先固定一个观察时刻，再把上限算成具体数；只要读取区间越过当前时刻，就可能非因果。需要严格证明时，令两个输入只在某个\red{被系统读取的未来时刻}不同，便能直接违反因果性的成对输入定义。
 \end{technique}
+
+\begin{workedexample}[时间缩放系统是否无记忆]
+  \label{ex:systems-memoryless-time-scaling}
+  判断离散时间系统
+  \[
+    y[n]=x[2n]
+  \]
+  是否无记忆。若有记忆，请用两条输入信号严格说明，而不要只说“下标不一样”。
+\end{workedexample}
+
+\begin{solution}
+  在观察时刻 $n_0=1$，系统输出为
+  \[
+    y[1]=x[2].
+  \]
+  它读取的不是当前样值 $x[1]$，已经说明系统有记忆。为了直接对应\cref{def:memoryless-system}，取
+  \[
+    x_1[n]=0,
+    \qquad
+    x_2[n]=\impulse[n-2].
+  \]
+  两个输入的当前值相同，即 $x_1[1]=x_2[1]=0$，但相应输出满足
+  \[
+    y_1[1]=x_1[2]=0,
+    \qquad
+    y_2[1]=x_2[2]=1.
+  \]
+  当前输入相同却得到不同的当前输出，因此该系统不是无记忆系统。\cref{fig:ex-memoryless-time-scaling-answer}把 $n_0=1$ 与实际读取位置 $2n_0=2$ 标在同一条时间轴上。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.72\textwidth]{03-systems-and-lti/examples/memoryless-time-scaling-answer.pdf}
+    \caption{例题 \ref{ex:systems-memoryless-time-scaling} 在 $n_0=1$ 时的输入依赖位置。系统越过当前样值读取 $x[2]$。}
+    \label{fig:ex-memoryless-time-scaling-answer}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  判断无记忆性时，固定输出时刻并列出它实际读取的输入下标。若两者不同，可让两条输入在当前点相同、只在被读取的另一个点不同，从而构造严格反例。个别时刻碰巧满足下标相同不算数，判据必须对\red{全部输出时刻}成立。
+\end{technique}
+
+\begin{workedexample}[积分器与微分器的可逆性]
+  \label{ex:systems-invertibility-calculus}
+  在适合使下列运算存在的信号类上，分别判断系统
+  \[
+    \mathcal{T}_1\{x\}(t)=\int_{-\infty}^{t}x(\tau)\dd\tau,
+    \qquad
+    \mathcal{T}_2\{x\}(t)=\frac{\dd x(t)}{\dd t}
+  \]
+  是否可逆。若结论依赖附加条件，应明确指出。
+\end{workedexample}
+
+\begin{solution}
+  对积分器，设
+  \[
+    y(t)=\int_{-\infty}^{t}x(\tau)\dd\tau.
+  \]
+  在 $x$ 足够规则且积分存在时，由微积分基本定理可唯一恢复
+  \[
+    x(t)=\frac{\dd y(t)}{\dd t}.
+  \]
+  因而积分器在这一信号类上可逆，逆系统是微分器。
+
+  对微分器，任取非零常数 $C$，输入 $x_1(t)$ 与 $x_2(t)=x_1(t)+C$ 不同，但
+  \[
+    \frac{\dd x_2(t)}{\dd t}
+      =\frac{\dd x_1(t)}{\dd t}.
+  \]
+  多条相差常数的输入产生同一输出，所以微分器在一般可微信号上不可逆，如\cref{fig:ex-invertibility-calculus-answer} 所示。若另外给定 $x(t_0)=x_0$，则可由
+  \[
+    x(t)=x_0+\int_{t_0}^{t}y(\tau)\dd\tau
+  \]
+  唯一恢复输入；此时附加的初值补回了微分时丢失的常量信息。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.84\textwidth]{03-systems-and-lti/examples/invertibility-calculus-answer.pdf}
+    \caption{例题 \ref{ex:systems-invertibility-calculus} 的信息流。积分器可由微分恢复；微分器会丢失加性常数，除非另给初值。}
+    \label{fig:ex-invertibility-calculus-answer}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  可逆性判别有两条互补路线：能写出唯一的恢复公式，就验证它确实还原任意输入；怀疑不可逆时，则寻找两个不同输入产生同一输出。积分、微分题中尤其要追问恢复公式是否还含有\red{未确定的积分常数}。
+\end{technique}
+
+\begin{workedexample}[累加器与差分器的稳定性]
+  \label{ex:systems-stability-sum-difference}
+  对 $n\ge0$，设输入在 $n<0$ 时为零。判断下列两个离散时间系统是否 BIBO 稳定：
+  \[
+    \mathcal{S}_1\{x\}[n]=\sum_{k=0}^{n}x[k],
+    \qquad
+    \mathcal{S}_2\{x\}[n]=x[n]-x[n-1].
+  \]
+  稳定者须给出输出上界，不稳定者须给出有界输入反例。
+\end{workedexample}
+
+\begin{solution}
+  对累加器，取有界输入 $x[n]=\stepfun[n]$。当 $n\ge0$ 时，$|x[n]|\le1$，但
+  \[
+    y_1[n]=\sum_{k=0}^{n}1=n+1,
+  \]
+  随 $n$ 无界增长。因此，一个有界反例已经证明 $\mathcal{S}_1$ 不稳定。
+
+  对差分器，设任意输入满足 $|x[n]|\le M_x<\infty$，则
+  \[
+    |y_2[n]|
+      =|x[n]-x[n-1]|
+      \le |x[n]|+|x[n-1]|
+      \le2M_x.
+  \]
+  取 $M_y=2M_x$ 即得到与 $n$ 无关的有限输出界，所以 $\mathcal{S}_2$ 稳定。对同一个阶跃输入，累加器产生斜坡，而差分器只在跳变处产生单位冲激，见\cref{fig:ex-stability-sum-difference-answer}。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.88\textwidth]{03-systems-and-lti/examples/stability-sum-difference-answer.pdf}
+    \caption{例题 \ref{ex:systems-stability-sum-difference} 对单位阶跃输入的响应。累加器输出持续增长，差分器输出保持有界。}
+    \label{fig:ex-stability-sum-difference-answer}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  稳定性题要分清证明责任：证明稳定必须从一般的输入界推出统一输出界；证明不稳定只需精心选择一个有界输入。累加结构优先尝试常值或阶跃输入，有限差分结构则优先使用\red{三角不等式估计上界}。
+\end{technique}

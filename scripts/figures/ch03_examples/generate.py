@@ -3,6 +3,7 @@
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
 
@@ -117,11 +118,103 @@ def causality_figure():
     save(fig, "causality-variable-limit-answer.pdf")
 
 
+def memoryless_figure():
+    fig, ax = plt.subplots(figsize=(6.4, 1.95))
+    ax.add_patch(FancyArrowPatch((-0.5, 0), (3.2, 0), arrowstyle="->", mutation_scale=12, color=INK))
+    for n in [0, 1, 2, 3]:
+        ax.vlines(n, -0.10, 0.10, color=INK, linewidth=1)
+        ax.text(n, -0.20, rf"${n}$", ha="center", va="top")
+    ax.plot(1, 0, "o", color=INK, markersize=6)
+    ax.plot(2, 0, "o", color=ACCENT, markersize=6)
+    ax.annotate(
+        "",
+        xy=(2, 0.08),
+        xytext=(1, 0.08),
+        arrowprops={"arrowstyle": "->", "color": ACCENT, "connectionstyle": "arc3,rad=-0.35"},
+    )
+    ax.text(1, 0.48, r"output time $n_0=1$", ha="center", color=INK)
+    ax.text(2, 0.48, r"input read at $2n_0=2$", ha="center", color=ACCENT)
+    ax.text(1.5, 0.72, r"$y[1]=x[2]$", ha="center", color=ACCENT, fontsize=11)
+    ax.set_xlim(-0.6, 3.3)
+    ax.set_ylim(-0.42, 0.85)
+    ax.axis("off")
+    save(fig, "memoryless-time-scaling-answer.pdf")
+
+
+def invertibility_figure():
+    fig, axes = plt.subplots(1, 2, figsize=(7.4, 2.25))
+
+    ax = axes[0]
+    box(ax, (0.02, 0.38), 0.22, 0.24, r"$x(t)$")
+    box(ax, (0.39, 0.38), 0.22, 0.24, r"$\int_{-\infty}^{t}$")
+    box(ax, (0.76, 0.38), 0.22, 0.24, r"$y(t)$")
+    arrow(ax, (0.24, 0.50), (0.39, 0.50))
+    arrow(ax, (0.61, 0.50), (0.76, 0.50))
+    ax.add_patch(
+        FancyArrowPatch(
+            (0.87, 0.33),
+            (0.13, 0.33),
+            arrowstyle="->",
+            mutation_scale=12,
+            color=ACCENT,
+            connectionstyle="arc3,rad=-0.35",
+        )
+    )
+    ax.text(0.50, 0.08, r"inverse: $x(t)=\mathrm{d}y(t)/\mathrm{d}t$", ha="center", color=ACCENT)
+    ax.set_title("integrator", color=MUTED)
+    finish_diagram(ax)
+
+    ax = axes[1]
+    box(ax, (0.02, 0.60), 0.25, 0.20, r"$x(t)$")
+    box(ax, (0.02, 0.20), 0.25, 0.20, r"$x(t)+C$")
+    box(ax, (0.42, 0.38), 0.20, 0.24, r"$\mathrm{d}/\mathrm{d}t$")
+    box(ax, (0.76, 0.38), 0.22, 0.24, r"$y(t)$", edge=ACCENT)
+    arrow(ax, (0.27, 0.70), (0.42, 0.54))
+    arrow(ax, (0.27, 0.30), (0.42, 0.46))
+    arrow(ax, (0.62, 0.50), (0.76, 0.50), color=ACCENT)
+    ax.text(0.50, 0.08, "constant information is lost", ha="center", color=ACCENT)
+    ax.set_title("differentiator", color=MUTED)
+    finish_diagram(ax)
+
+    fig.tight_layout(pad=0.8)
+    save(fig, "invertibility-calculus-answer.pdf")
+
+
+def stability_figure():
+    indices = np.arange(-1, 9)
+    accumulator = np.where(indices >= 0, indices + 1, 0)
+    difference = np.where(indices == 0, 1, 0)
+
+    fig, axes = plt.subplots(1, 2, figsize=(7.4, 2.45))
+    for ax, values, title in [
+        (axes[0], accumulator, r"accumulator: $(n+1)u[n]$"),
+        (axes[1], difference, r"difference: $\delta[n]$"),
+    ]:
+        markerline, stemlines, _ = ax.stem(indices, values, basefmt=" ")
+        plt.setp(markerline, color=ACCENT, markersize=4)
+        plt.setp(stemlines, color=ACCENT, linewidth=1.3)
+        ax.axhline(0, color=INK, linewidth=0.8)
+        ax.set_xlim(-1.5, 8.7)
+        ax.set_xticks([-1, 0, 2, 4, 6, 8])
+        ax.spines[["top", "right", "left", "bottom"]].set_visible(False)
+        ax.set_xlabel(r"$n$", loc="right")
+        ax.set_title(title)
+    axes[0].set_ylim(-0.5, 9.8)
+    axes[0].set_yticks([0, 2, 4, 6, 8])
+    axes[1].set_ylim(-0.1, 1.25)
+    axes[1].set_yticks([0, 1])
+    fig.tight_layout(pad=0.7)
+    save(fig, "stability-sum-difference-answer.pdf")
+
+
 def main():
     linearity_figure()
     time_invariance_figure()
     causality_figure()
-    print(f"Generated 3 figures in {OUTPUT_DIR}")
+    memoryless_figure()
+    invertibility_figure()
+    stability_figure()
+    print(f"Generated 6 figures in {OUTPUT_DIR}")
 
 
 if __name__ == "__main__":
