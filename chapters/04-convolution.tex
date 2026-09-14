@@ -1,8 +1,391 @@
+% !TeX root = ../main.tex
+
 \chapter{卷积：LTI 系统的时域核心}
 \label{chap:convolution}
 
-\section{卷积的由来}
-\section{连续时间卷积}
+\section{LTI 系统的时域分析目标}
+\label{sec:lti-time-domain-goal}
+
+同时满足线性和时不变性的系统称为线性时不变系统（linear time-invariant system，LTI）。线性保证输入的缩放与叠加可以分别处理，时不变性保证同一种基本输入平移后，其响应只作相同平移。两项性质结合后，分析问题可归结为：\red{已知一个基本输入的响应}，能否推出任意输入的响应？
+
+对离散时间系统，最合适的基本输入是单位脉冲 $\impulse[n]$。第二章已经说明，任意离散信号都能拆成若干加权、移位的单位脉冲；因此只要知道系统对 $\impulse[n]$ 的响应，就能借助线性和时不变性逐项拼出总响应。这正是 LTI 系统比一般系统容易分析的原因。
+
+\begin{remark}[LTI 与其他系统性质]
+  LTI 只说明系统同时线性且时不变，\red{并不自动保证因果或稳定}。例如超前系统 $y(t)=x(t+1)$ 是 LTI 系统，却是非因果系统；因果性与稳定性仍须分别检查。
+\end{remark}
+
+\section{单位脉冲响应}
+\label{sec:discrete-impulse-response}
+
+\begin{definition}[单位脉冲响应]
+  \label{def:discrete-impulse-response}
+  离散时间 LTI 系统对单位脉冲 $\impulse[n]$ 的输出称为单位脉冲响应（unit impulse response），记作 $h[n]$：
+  \begin{equation}
+    \impulse[n]\longrightarrow\boxed{\text{LTI 系统}}\longrightarrow h[n].
+    \label{eq:discrete-impulse-response-flow}
+  \end{equation}
+\end{definition}
+
+由齐次性，输入幅度乘以常数 $a$，响应也乘以 $a$；由时不变性，输入延迟 $n_0$，响应也延迟 $n_0$。合并两条性质可得
+\begin{equation}
+  a\impulse[n-n_0]
+  \longrightarrow\boxed{\text{同一 LTI 系统}}\longrightarrow
+  a h[n-n_0].
+  \label{eq:scaled-shifted-impulse-response}
+\end{equation}
+因此，$h[n]$ 同时给出了所有加权、移位脉冲的响应。对离散时间 LTI 系统而言，\red{单位脉冲响应是系统的唯一指纹}：两个 LTI 系统若具有相同的 $h[n]$，就会对任意可作脉冲分解的输入产生相同输出。
+
+\begin{example}[缩放与移位]
+  若 $\impulse[n]\longrightarrow h[n]$，则
+  \[
+    2\impulse[n]\longrightarrow2h[n],
+    \qquad
+    \impulse[n-1]\longrightarrow h[n-1].
+  \]
+  前者只使用齐次性，后者只使用时不变性。两种操作同时出现时，幅度与时移分别传递到响应上。
+\end{example}
+
+\begin{pitfall}[把输入平移方向写反]
+  $\impulse[n-n_0]$ 表示向右延迟 $n_0$，其响应应为 $h[n-n_0]$。若把它写成 $h[n+n_0]$，就把延迟误成了超前。触发检查是：正的 $n_0$ 是否使脉冲位置从 $0$ 移到 $n_0$。
+\end{pitfall}
+
+\section{由基本响应组合有限输入的响应}
+\label{sec:lti-finite-superposition}
+
+设有限长输入已经分解为
+\[
+  x[n]=a_1\impulse[n-n_1]+\cdots+a_m\impulse[n-n_m].
+\]
+根据\cref{eq:scaled-shifted-impulse-response}，每一项 $a_j\impulse[n-n_j]$ 的响应都是 $a_jh[n-n_j]$；再由可加性，系统的总输出就是这些响应的逐点叠加：
+\begin{equation}
+  y[n]=a_1h[n-n_1]+\cdots+a_mh[n-n_m].
+  \label{eq:finite-lti-response-superposition}
+\end{equation}
+这一步还没有引入一般卷积和公式，其核心只是\red{分解、移位、缩放、叠加}。
+
+\begin{intuition}
+  把 $h[n]$ 看成一个响应模板。输入在 $n_j$ 处有一个幅度为 $a_j$ 的样值，就复制一份向右移 $n_j$、再乘以 $a_j$ 的模板；把所有模板按相同输出下标对齐相加，就得到最终响应。
+\end{intuition}
+
+\subsection{支撑区间}
+
+若 $x[n]$ 的非零区间为 $a_1\le n\le b_1$，$h[n]$ 的非零区间为 $a_2\le n\le b_2$，并且两端样值均非零，则叠加结果的非零区间为
+\begin{equation}
+  a_1+a_2\le n\le b_1+b_2.
+  \label{eq:finite-response-support}
+\end{equation}
+记两序列长度分别为 $N_1=b_1-a_1+1$ 与 $N_2=b_2-a_2+1$，则输出长度为
+\begin{equation}
+  N_y=N_1+N_2-1.
+  \label{eq:finite-response-length}
+\end{equation}
+计算前先做这一步，可以迅速确定列表范围；计算后再核对首尾下标，能够发现漏移、错移等问题。口诀是\red{左端相加、右端相加}。
+
+\subsection{列表叠加法}
+
+对每个非零输入样值，写出一行相应的缩放、移位 $h[n]$；每一列对应同一个输出下标，最后逐列相加。若 $x[n]$ 与 $h[n]$ 都有 $N$ 个非零样值，直接列表需要 $N^2$ 次乘法与 $(N-1)^2$ 次加法，计算量为 $O(N^2)$。列表法适合手算短序列，并能清楚展示每个输出样值由哪些移位响应叠加而来。
+
+\begin{pitfall}[只按表格位置相加]
+  各行必须按真实下标对齐，不能只按“第几个数”对齐。先用\cref{eq:finite-response-support} 写出输出下标，再放置每一行；否则即使数值乘法全对，也可能得到整体错位的结果。
+\end{pitfall}
+
 \section{离散时间卷积}
-\section{卷积性质与系统性质}
-\section{微分方程和差分方程描述}
+\label{sec:discrete-convolution}
+
+任意离散信号都可按单位脉冲分解为
+\[
+  x[n]=\sum_{k=-\infty}^{\infty}x[k]\impulse[n-k].
+\]
+若同一 LTI 系统满足 $\impulse[n]\longrightarrow h[n]$，则时不变性与齐次性分别给出
+\[
+  \impulse[n-k]\longrightarrow h[n-k],
+  \qquad
+  x[k]\impulse[n-k]\longrightarrow x[k]h[n-k].
+\]
+最后由可加性叠加各个 $k$ 对应的响应，得到
+\begin{equation}
+  \boxed{
+    y[n]=(x\conv h)[n]
+    =\sum_{k=-\infty}^{\infty}x[k]h[n-k]
+  }.
+  \label{eq:discrete-convolution-sum}
+\end{equation}
+右端称为 $x[n]$ 与 $h[n]$ 的卷积和（convolution sum）。因此，\red{LTI 系统的输出等于输入与单位脉冲响应的卷积}。
+
+\begin{intuition}
+  对固定的输出时刻 $n$，$x[k]h[n-k]$ 衡量输入样值 $x[k]$ 对该时刻输出的贡献；对所有 $k$ 求和，就是把每个输入脉冲激发出的移位响应累加起来。卷积并非额外假设，而是“脉冲分解 $+$ LTI”自然推出的结果。
+\end{intuition}
+
+\subsection{图解法：翻转、平移、相乘、求和}
+
+把 $k$ 当作横轴变量，计算固定 $n$ 处的卷积和时，可按以下顺序处理 $h$：
+\begin{enumerate}
+  \item 写出 $h[k]$；
+  \item 关于纵轴翻转为 $h[-k]$；
+  \item 再平移为 $h[n-k]$；
+  \item 与 $x[k]$ 逐点相乘，并对全部 $k$ 求和。
+\end{enumerate}
+\Cref{fig:discrete-convolution-operations} 把前三步放在同一坐标尺度下。改变 $n$，就是让翻转后的 $h$ 沿 $k$ 轴滑动；两序列没有重叠时，对应的输出为零。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.92\textwidth]{04-convolution/discrete-convolution-operations.pdf}
+  \caption{离散卷积中 $h[k]\to h[-k]\to h[n-k]$ 的操作顺序；图中以 $n=2$ 为例。}
+  \label{fig:discrete-convolution-operations}
+\end{figure}
+
+\begin{pitfall}[翻转对象或操作顺序错误]
+  从\cref{eq:discrete-convolution-sum} 直接读出，保留的是 $x[k]$，需要处理的是 $h[n-k]$。因此判据是\red{翻转的是 $h$，不是 $x$}，并且必须\red{先翻转、后平移}：$h[k]\to h[-k]\to h[n-k]$。若先把 $h[k]$ 平移成 $h[k-n]$ 再翻转，会得到 $h[-k-n]$，方向错误。
+\end{pitfall}
+
+\begin{example}[两个等长矩形序列的卷积]
+  \label{eg:rectangular-sequence-convolution}
+  设
+  \[
+    x[n]=h[n]=\stepfun[n]-\stepfun[n-5],
+  \]
+  即二者在 $0\leq n\leq4$ 上均为 $1$，其余位置为零。对给定 $n$，卷积和等于 $x[k]$ 与 $h[n-k]$ 的重叠样点数，因此
+  \[
+    y[n]=
+    \begin{cases}
+      n+1, & 0\leq n\leq4,\\
+      9-n, & 5\leq n\leq8,\\
+      0, & \text{其他}.
+    \end{cases}
+  \]
+  如\cref{fig:rectangular-sequence-convolution} 所示，重叠样点数先从 $1$ 增至 $5$，再减至 $1$；两个长度为 $5$ 的序列卷积后长度为 $9$，也与\cref{eq:finite-response-length} 一致。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.78\textwidth]{04-convolution/rectangular-sequence-convolution.pdf}
+    \caption{两个五点矩形序列卷积所得的三角序列。}
+    \label{fig:rectangular-sequence-convolution}
+  \end{figure}
+\end{example}
+
+\section{连续时间卷积}
+\label{sec:continuous-convolution}
+
+连续时间 LTI 系统也可由单位冲激响应完全描述。记
+\begin{equation}
+  \impulse(t)\longrightarrow\boxed{\text{连续时间 LTI 系统}}\longrightarrow h(t),
+  \label{eq:continuous-impulse-response-flow}
+\end{equation}
+则移位、缩放的冲激满足
+\[
+  x(\tau)\impulse(t-\tau)
+  \longrightarrow\boxed{\text{同一 LTI 系统}}\longrightarrow
+  x(\tau)h(t-\tau).
+\]
+
+连续时间单位冲激 $\impulse(t)$ 不是在 $t=0$ 处取某个普通“无穷大数值”的常规函数，而是由积分作用定义的\red{广义函数}。为理解离散求和如何过渡到积分，可先取宽度为 $\Delta$、面积为 $1$ 的窄脉冲
+\[
+  \impulse_\Delta(t)=
+  \begin{cases}
+    1/\Delta, & 0\leq t<\Delta,\\
+    0, & \text{其他},
+  \end{cases}
+\]
+并用它构造阶梯近似
+\begin{equation}
+  x_\Delta(t)
+  =\sum_{k=-\infty}^{\infty}
+  x(k\Delta)\impulse_\Delta(t-k\Delta)\Delta.
+  \label{eq:continuous-step-approximation}
+\end{equation}
+\Cref{fig:continuous-impulse-approximation} 展示了 $\Delta$ 变小时，单位面积窄脉冲变得更窄、更高；这里的极限应按积分作用理解，而不是按 $t=0$ 处的函数值理解。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.76\textwidth]{04-convolution/continuous-impulse-approximation.pdf}
+  \caption{单位面积窄脉冲 $\impulse_\Delta(t)$：宽度减半时，高度加倍。}
+  \label{fig:continuous-impulse-approximation}
+\end{figure}
+
+设系统对 $\impulse_\Delta(t)$ 的响应为 $h_\Delta(t)$。对\cref{eq:continuous-step-approximation} 逐项使用线性与时不变性，可得
+\[
+  y_\Delta(t)=\sum_{k=-\infty}^{\infty}
+  x(k\Delta)h_\Delta(t-k\Delta)\Delta.
+\]
+当窄脉冲极限与系统响应的极限可以交换时，$h_\Delta(t)$ 过渡到 $h(t)$，上式的黎曼和过渡为积分，从而得到
+\begin{equation}
+  \boxed{
+    y(t)=(x\conv h)(t)
+    =\int_{-\infty}^{\infty}x(\tau)h(t-\tau)\dd\tau
+  }.
+  \label{eq:continuous-convolution-integral}
+\end{equation}
+右端称为卷积积分（convolution integral）。与离散情形一样，图解时仍遵循\red{翻转、平移、相乘、积分}，只是最后一步由求和改为求面积。
+
+\begin{remark}[离散与连续卷积的对应]
+  两个公式具有完全相同的结构：
+  \[
+    \begin{array}{c|c|c}
+      & \text{基本分解} & \text{LTI 输出}\\ \hline
+      \text{离散时间}
+        & x[n]=\displaystyle\sum_k x[k]\impulse[n-k]
+        & y[n]=\displaystyle\sum_k x[k]h[n-k]\\[6pt]
+      \text{连续时间}
+        & x(t)=\displaystyle\int x(\tau)\impulse(t-\tau)\dd\tau
+        & y(t)=\displaystyle\int x(\tau)h(t-\tau)\dd\tau
+    \end{array}
+  \]
+  区别只在于连续时间信号由不可数多个移位冲激叠加，因此求和由积分取代。
+\end{remark}
+
+\section{连续时间单位冲激的基本性质}
+\label{sec:continuous-impulse-properties}
+
+单位冲激的核心不是“峰值有多高”，而是它在积分中的作用。以下性质均应按广义函数的意义理解。
+
+\subsection{单位面积与抽样性质}
+
+单位冲激满足
+\begin{equation}
+  \int_{-\infty}^{\infty}\impulse(t)\dd t=1.
+  \label{eq:continuous-impulse-unit-area}
+\end{equation}
+更一般地，只要积分区间内部包含 $0$，冲激的积分就是 $1$；若按相反方向跨过 $0$，积分为 $-1$；区间不包含 $0$ 时积分为 $0$。
+
+若 $x(t)$ 在 $t_0$ 附近连续，则冲激会抽取其在 $t_0$ 处的值：
+\begin{equation}
+  \boxed{
+    \int_{-\infty}^{\infty}x(t)\impulse(t-t_0)\dd t=x(t_0)
+  }.
+  \label{eq:continuous-impulse-sifting}
+\end{equation}
+特别地，取 $t_0=0$ 即有 $\int x(t)\impulse(t)\dd t=x(0)$。做含冲激积分时，最直接的判据是\red{先找冲激所在位置，再代入被抽样函数}。
+
+\subsection{冲激与普通函数的乘积}
+
+同样在广义函数意义下，若 $x(t)$ 在 $t_0$ 附近连续，则
+\begin{equation}
+  \boxed{
+    x(t)\impulse(t-t_0)=x(t_0)\impulse(t-t_0)
+  }.
+  \label{eq:continuous-impulse-product}
+\end{equation}
+验证时可将等式两边分别乘任意连续函数 $\varphi(t)$ 并积分。由\cref{eq:continuous-impulse-sifting}，两边都得到
+\[
+  x(t_0)\varphi(t_0),
+\]
+因而它们对所有测试函数具有相同作用。这里的关键是\red{只保留冲激位置处的函数值}，不能把 $\impulse(t-t_0)$ 当作普通函数逐点约掉。
+
+\begin{pitfall}[把单位冲激当成普通函数]
+  写“$\impulse(0)=\infty$，所以代入计算”并不能定义冲激，也无法进行可靠的代数运算。正确检查始终回到单位面积与抽样性质：冲激只在积分中集中权重，其结论由它对测试函数的作用决定。
+\end{pitfall}
+
+\subsection{尺度变换与复合函数中的冲激}
+
+对任意非零实数 $a$，单位冲激满足尺度变换性质
+\begin{equation}
+  \boxed{
+    \impulse(at)=\frac{1}{|a|}\impulse(t)
+  },
+  \qquad a\neq0.
+  \label{eq:continuous-impulse-scaling}
+\end{equation}
+绝对值不能省略。若 $a<0$，变量代换会把积分上下限反向，恰好抵消微分中的负号；因此压缩或翻转冲激后都必须保持单位面积。更一般地，
+\begin{equation}
+  \impulse(at+b)
+  =\frac{1}{|a|}\impulse\!\left(t+\frac{b}{a}\right).
+  \label{eq:impulse-affine-scaling}
+\end{equation}
+判定时应当\red{先求冲激位置，再除以尺度绝对值}。
+
+这个结论可以推广到非线性复合。设 $f(t)$ 的实零点 $t_i$ 都是孤立的单零点，即
+\[
+  f(t_i)=0,
+  \qquad
+  f'(t_i)\neq0,
+\]
+并且这些零点组成有限或可数的离散集合，则
+\begin{equation}
+  \boxed{
+    \impulse\bigl(f(t)\bigr)
+    =\sum_{i}\frac{1}{|f'(t_i)|}\impulse(t-t_i)
+  }.
+  \label{eq:impulse-composite-function}
+\end{equation}
+每个零点附近都可用 $f(t)\approx f'(t_i)(t-t_i)$ 线性化，再应用\cref{eq:continuous-impulse-scaling}。因此计算口诀是\red{找全零点、代入导数、取绝对值}。
+
+\begin{example}[二次多项式中的冲激]
+  \label{eg:quadratic-composite-impulse}
+  设 $f(t)=t^2-3t+2=(t-1)(t-2)$。零点为 $t_1=1$、$t_2=2$，且
+  \[
+    |f'(1)|=|-1|=1,
+    \qquad
+    |f'(2)|=|1|=1.
+  \]
+  因而
+  \[
+    \impulse(t^2-3t+2)=\impulse(t-1)+\impulse(t-2).
+  \]
+  右端冲激必须位于 $1$ 和 $2$；若写成 $\impulse(t+1)+\impulse(t+2)$，其位置会变成 $-1$ 和 $-2$，可据此立即发现符号错误。
+\end{example}
+
+\begin{pitfall}[直接套用复合冲激公式]
+  \Cref{eq:impulse-composite-function} 要求零点是孤立单零点。若某处同时满足 $f(t_i)=0$ 与 $f'(t_i)=0$，分母为零，局部线性化失效；若 $f$ 在一段区间恒为零，零点也无法逐项编号。遇到这两种情形时，不能直接套用该式。
+\end{pitfall}
+
+\section{卷积的交换律}
+\label{sec:convolution-commutativity}
+
+只要相关求和或积分存在，离散与连续卷积都满足交换律：
+\begin{equation}
+  \boxed{x\conv h=h\conv x}.
+  \label{eq:convolution-commutativity}
+\end{equation}
+以连续时间为例，从
+\[
+  (x\conv h)(t)
+  =\int_{-\infty}^{\infty}x(\tau)h(t-\tau)\dd\tau
+\]
+出发，令 $u=t-\tau$，则 $\dd u=-\dd\tau$；交换积分上下限后得到
+\[
+  (x\conv h)(t)
+  =\int_{-\infty}^{\infty}h(u)x(t-u)\dd u
+  =(h\conv x)(t).
+\]
+离散情形同理，可令 $m=n-k$ 完成换元。交换律说明卷积计算时可以\red{选择较容易翻转和平移的一项}，尽管推导 LTI 输出时 $h$ 具有单位脉冲响应这一特定物理身份。
+
+\begin{remark}[单位脉冲响应决定 LTI 系统]
+  若两个 LTI 系统的单位脉冲响应满足 $h_1=h_2$，则对任意适用输入 $x$，都有 $x\conv h_1=x\conv h_2$。这再次说明：在 LTI 前提下，\red{相同的单位脉冲响应意味着相同的输入输出关系}。
+\end{remark}
+
+\section{单位冲激的逼近表示}
+\label{sec:impulse-approximations}
+
+单位冲激可以由许多不同的普通函数族在广义函数意义下逼近。除了\cref{eq:continuous-step-approximation} 使用的单边窄脉冲，也可以采用关于原点对称、宽度为 $\Delta$、高度为 $1/\Delta$ 的矩形脉冲。只要对每个测试函数 $\varphi$ 都有
+\[
+  \lim_{\Delta\to0}
+  \int_{-\infty}^{\infty}\varphi(t)\impulse_\Delta(t)\dd t
+  =\varphi(0),
+\]
+就可以写成 $\impulse_\Delta\to\impulse$。判据是\red{极限后的积分作用等于在零点抽样}，而不是脉冲图形是否逐点收敛。
+
+另一组重要的冲激逼近是
+\begin{equation}
+  \boxed{
+    \lim_{\Omega\to\infty}
+    \frac{\sin(\Omega t)}{\pi t}
+    =\impulse(t)
+  }
+  \quad\text{（广义函数意义）}.
+  \label{eq:sinc-impulse-limit}
+\end{equation}
+具体地，在适当的测试函数条件下，\cref{eq:sinc-impulse-limit} 表示
+\[
+  \lim_{\Omega\to\infty}
+  \int_{-\infty}^{\infty}
+  \varphi(t)\frac{\sin(\Omega t)}{\pi t}\dd t
+  =\varphi(0).
+\]
+\Cref{fig:sinc-impulse-sequence} 显示主瓣随 $\Omega$ 增大而变窄、峰值升高，旁瓣则快速振荡。这个极限\red{不是普通的逐点极限}：判断它是否趋于冲激，必须回到对测试函数的积分作用。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.84\textwidth]{04-convolution/sinc-impulse-sequence.pdf}
+  \caption{冲激逼近 $\sin(\Omega t)/(\pi t)$；$\Omega$ 增大时主要积分贡献向原点集中。}
+  \label{fig:sinc-impulse-sequence}
+\end{figure}

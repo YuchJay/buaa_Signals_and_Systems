@@ -67,12 +67,12 @@ def finish_diagram(ax):
 def linearity_figure():
     fig, ax = plt.subplots(figsize=(7.0, 2.25))
     box(ax, (0.03, 0.38), 0.18, 0.24, r"$x(t)$")
-    box(ax, (0.39, 0.38), 0.22, 0.24, r"$\mathcal{T}$")
+    box(ax, (0.39, 0.38), 0.22, 0.24, "system")
     box(ax, (0.77, 0.38), 0.20, 0.24, r"$y(t)$")
     arrow(ax, (0.21, 0.50), (0.39, 0.50), r"$\times a$")
     arrow(ax, (0.61, 0.50), (0.77, 0.50), r"$\times a^2$", color=ACCENT)
-    ax.text(0.5, 0.82, r"$\mathcal{T}\{a x\}=a^2\mathcal{T}\{x\}$", ha="center", color=ACCENT, fontsize=11)
-    ax.text(0.5, 0.16, r"linearity would require $\times a$ at the output", ha="center", color=MUTED)
+    ax.text(0.5, 0.82, r"$a x\ \longrightarrow\ a^2 y$", ha="center", color=ACCENT, fontsize=11)
+    ax.text(0.5, 0.16, r"linearity would require $a x\ \longrightarrow\ a y$", ha="center", color=MUTED)
     finish_diagram(ax)
     save(fig, "linearity-product-integral-answer.pdf")
 
@@ -93,8 +93,8 @@ def stem(ax, n, *, color=ACCENT, label=None):
 
 def time_invariance_figure():
     fig, axes = plt.subplots(1, 2, figsize=(7.4, 2.35), sharey=True)
-    stem(axes[0], 2, label=r"shift input, then apply $\mathcal{T}$: $\delta[n-2]$")
-    stem(axes[1], 4, label=r"apply $\mathcal{T}$, then shift output: $\delta[n-4]$")
+    stem(axes[0], 2, label=r"shift input, then pass through system: $\delta[n-2]$")
+    stem(axes[1], 4, label=r"pass through system, then shift output: $\delta[n-4]$")
     fig.tight_layout(pad=0.7)
     save(fig, "time-invariance-reversal-answer.pdf")
 

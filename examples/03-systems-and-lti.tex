@@ -14,14 +14,18 @@
 \end{workedexample}
 
 \begin{solution}
-  记 $\mathcal{T}\{x\}$ 为题给系统。对任意常数 $a$，有
+  记输入为 $x(t)$ 时的输出为
+  \[
+    y(t)=x(t)\int_{-\infty}^{t}x(\tau)\dd\tau.
+  \]
+  将输入缩放为 $a x(t)$ 后，系统产生的输出为
   \begin{align*}
-    \mathcal{T}\{a x\}(t)
+    y_a(t)
       &=(a x(t))\int_{-\infty}^{t}a x(\tau)\dd\tau\\
       &=a^2x(t)\int_{-\infty}^{t}x(\tau)\dd\tau
-       =a^2\mathcal{T}\{x\}(t).
+       =a^2y(t).
   \end{align*}
-  线性系统的齐次性要求结果为 $a\mathcal{T}\{x\}(t)$。只要选取一个使 $\mathcal{T}\{x\}$ 不恒为零的输入以及 $a\notin\{0,1\}$，两者便不相等，所以该系统非线性。
+  线性系统的齐次性要求输出为 $a y(t)$。只要选取一个使 $y(t)$ 不恒为零的输入以及 $a\notin\{0,1\}$，$a^2y(t)$ 与 $a y(t)$ 便不相等，所以该系统非线性。
 
   例如取 $x(t)=\e^{-t}\stepfun(t)$、$a=2$，系统对缩放后输入的响应是原响应的 $4$ 倍，而线性所要求的是 $2$ 倍。这个矛盾已足以否定线性。缩放路径的比较见\cref{fig:ex-linearity-product-integral-answer}。
 
@@ -157,9 +161,12 @@
   \label{ex:systems-invertibility-calculus}
   在适合使下列运算存在的信号类上，分别判断系统
   \[
-    \mathcal{T}_1\{x\}(t)=\int_{-\infty}^{t}x(\tau)\dd\tau,
-    \qquad
-    \mathcal{T}_2\{x\}(t)=\frac{\dd x(t)}{\dd t}
+    x(t)\longrightarrow\boxed{\text{积分器}}\longrightarrow
+    y_1(t)=\int_{-\infty}^{t}x(\tau)\dd\tau,
+  \]
+  \[
+    x(t)\longrightarrow\boxed{\text{微分器}}\longrightarrow
+    y_2(t)=\frac{\dd x(t)}{\dd t}
   \]
   是否可逆。若结论依赖附加条件，应明确指出。
 \end{workedexample}
@@ -202,9 +209,12 @@
   \label{ex:systems-stability-sum-difference}
   对 $n\ge0$，设输入在 $n<0$ 时为零。判断下列两个离散时间系统是否 BIBO 稳定：
   \[
-    \mathcal{S}_1\{x\}[n]=\sum_{k=0}^{n}x[k],
-    \qquad
-    \mathcal{S}_2\{x\}[n]=x[n]-x[n-1].
+    x[n]\longrightarrow\boxed{\text{累加器}}\longrightarrow
+    y_1[n]=\sum_{k=0}^{n}x[k],
+  \]
+  \[
+    x[n]\longrightarrow\boxed{\text{差分器}}\longrightarrow
+    y_2[n]=x[n]-x[n-1].
   \]
   稳定者须给出输出上界，不稳定者须给出有界输入反例。
 \end{workedexample}
@@ -214,7 +224,7 @@
   \[
     y_1[n]=\sum_{k=0}^{n}1=n+1,
   \]
-  随 $n$ 无界增长。因此，一个有界反例已经证明 $\mathcal{S}_1$ 不稳定。
+  随 $n$ 无界增长。因此，一个有界反例已经证明累加器不稳定。
 
   对差分器，设任意输入满足 $|x[n]|\le M_x<\infty$，则
   \[
@@ -223,7 +233,7 @@
       \le |x[n]|+|x[n-1]|
       \le2M_x.
   \]
-  取 $M_y=2M_x$ 即得到与 $n$ 无关的有限输出界，所以 $\mathcal{S}_2$ 稳定。对同一个阶跃输入，累加器产生斜坡，而差分器只在跳变处产生单位冲激，见\cref{fig:ex-stability-sum-difference-answer}。
+  取 $M_y=2M_x$ 即得到与 $n$ 无关的有限输出界，所以差分器稳定。对同一个阶跃输入，累加器产生斜坡，而差分器只在跳变处产生单位冲激，见\cref{fig:ex-stability-sum-difference-answer}。
 
   \begin{figure}[htbp]
     \centering

@@ -1,0 +1,115 @@
+% !TeX root = ../main.tex
+% 来源：materials/chapter2.pdf，第 1--2 页；在原笔记例题上补全代数表达与下标检查。
+
+\section{本章例题集}
+\label{sec:convolution-worked-examples}
+
+\begin{workedexample}[由单位脉冲响应求有限输入的输出]
+  \label{ex:lti-response-from-impulse-response}
+  已知某离散时间 LTI 系统的单位脉冲响应为
+  \[
+    h[n]=\impulse[n+1]+\impulse[n]+2\impulse[n-1]-\impulse[n-2],
+  \]
+  输入为
+  \[
+    x[n]=3\impulse[n+1]+2\impulse[n]+\impulse[n-1]-\impulse[n-2].
+  \]
+  不使用一般卷积和公式，仅利用线性、时不变性与叠加求输出 $y[n]$。已知序列见\cref{fig:ex-lti-superposition-given}。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.86\textwidth]{04-convolution/examples/lti-superposition-given.pdf}
+    \caption{例题 \ref{ex:lti-response-from-impulse-response} 的输入 $x[n]$ 与单位脉冲响应 $h[n]$。}
+    \label{fig:ex-lti-superposition-given}
+  \end{figure}
+\end{workedexample}
+
+\begin{solution}
+  由 $\impulse[n]\longrightarrow h[n]$ 以及线性、时不变性，输入的四个脉冲分量分别产生
+  \[
+    3h[n+1],\qquad 2h[n],\qquad h[n-1],\qquad -h[n-2].
+  \]
+  因此
+  \[
+    y[n]=3h[n+1]+2h[n]+h[n-1]-h[n-2].
+  \]
+
+  $x[n]$ 与 $h[n]$ 都在 $-1\le n\le2$ 非零，所以输出应在 $-2\le n\le4$ 非零，共 $4+4-1=7$ 个样值。按输出下标对齐各分量：
+  \[
+  \begin{array}{c|rrrrrrr}
+    n&-2&-1&0&1&2&3&4\\ \hline
+    3h[n+1]&3&3&6&-3&0&0&0\\
+    2h[n]&0&2&2&4&-2&0&0\\
+    h[n-1]&0&0&1&1&2&-1&0\\
+    -h[n-2]&0&0&0&-1&-1&-2&1\\ \hline
+    y[n]&3&5&9&1&-1&-3&1
+  \end{array}
+  \]
+  故输出可写成
+  \[
+    y[n]=3\impulse[n+2]+5\impulse[n+1]+9\impulse[n]
+    +\impulse[n-1]-\impulse[n-2]-3\impulse[n-3]+\impulse[n-4].
+  \]
+  输出波形见\cref{fig:ex-lti-superposition-answer}。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.72\textwidth]{04-convolution/examples/lti-superposition-answer.pdf}
+    \caption{例题 \ref{ex:lti-response-from-impulse-response} 的输出。首尾下标分别为 $-2$ 与 $4$，与支撑区间检查一致。}
+    \label{fig:ex-lti-superposition-answer}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  先把输入写成加权移位脉冲之和，再把每个脉冲替换成对应的缩放移位 $h[n]$，最后按\red{相同输出下标对齐}并逐列相加。动笔列表前先计算首尾下标和输出长度，可同时约束表格宽度并检查最终结果。
+\end{technique}
+
+\begin{workedexample}[右边指数序列与单位阶跃的卷积]
+  \label{ex:geometric-step-convolution}
+  已知离散时间 LTI 系统的输入与单位脉冲响应分别为
+  \[
+    x[n]=a^n\stepfun[n],
+    \qquad
+    h[n]=\stepfun[n],
+  \]
+  其中 $a$ 为常数。用卷积和求输出 $y[n]$，并分别讨论 $a\neq1$ 与 $a=1$。\Cref{fig:ex-geometric-step-given} 以 $a=1/2$ 为例示意题设信号。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.86\textwidth]{04-convolution/examples/geometric-step-given.pdf}
+    \caption{例题 \ref{ex:geometric-step-convolution} 的输入与单位脉冲响应示意图（取 $a=1/2$）。}
+    \label{fig:ex-geometric-step-given}
+  \end{figure}
+\end{workedexample}
+
+\begin{solution}
+  由卷积和公式，
+  \[
+    y[n]
+    =\sum_{k=-\infty}^{\infty}a^k\stepfun[k]\stepfun[n-k].
+  \]
+  两个阶跃因子分别要求 $k\geq0$ 与 $k\leq n$。因此，当 $n<0$ 时不存在满足条件的整数 $k$，输出为零；当 $n\geq0$ 时，求和范围缩为 $0\leq k\leq n$：
+  \[
+    y[n]=\sum_{k=0}^{n}a^k.
+  \]
+  若 $a\neq1$，有限等比数列给出
+  \[
+    y[n]=\frac{1-a^{n+1}}{1-a}\stepfun[n].
+  \]
+  若 $a=1$，则每一项都为 $1$，故
+  \[
+    y[n]=(n+1)\stepfun[n].
+  \]
+  以 $a=1/2$ 为例，输出从 $1$ 起逐渐趋近于 $2$，见\cref{fig:ex-geometric-step-answer}。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.72\textwidth]{04-convolution/examples/geometric-step-answer.pdf}
+    \caption{例题 \ref{ex:geometric-step-convolution} 在 $a=1/2$ 时的输出；虚线为极限值 $2$。}
+    \label{fig:ex-geometric-step-answer}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  含阶跃的卷积和先不要急于套等比公式。先把每个阶跃翻译成对求和变量 $k$ 的不等式，再求这些条件的交集；本题由 $k\geq0$ 与 $k\leq n$ 得到 $0\leq k\leq n$，同时自然暴露出 $n<0$ 时无重叠。最后再根据公比是否为 $1$ 分情况求和。
+\end{technique}
