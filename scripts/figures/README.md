@@ -14,4 +14,10 @@ uv run --with numpy --with matplotlib scripts/figures/ch02_signals/generate.py
 uv run --with numpy --with matplotlib scripts/figures/ch02_examples/generate.py
 ```
 
+第五章傅里叶级数插图：
+
+```bash
+uv run --with matplotlib scripts/figures/ch05_fourier_series/generate.py
+```
+
 图像优先输出为矢量 PDF。正文只引用生成结果，不手工修改 PDF；需要调整样式或数据时修改脚本并重新运行。

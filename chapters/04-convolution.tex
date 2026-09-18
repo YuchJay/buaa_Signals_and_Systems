@@ -8,7 +8,7 @@
 
 同时满足线性和时不变性的系统称为线性时不变系统（linear time-invariant system，LTI）。线性保证输入的缩放与叠加可以分别处理，时不变性保证同一种基本输入平移后，其响应只作相同平移。两项性质结合后，分析问题可归结为：\red{已知一个基本输入的响应}，能否推出任意输入的响应？
 
-对离散时间系统，最合适的基本输入是单位脉冲 $\impulse[n]$。第二章已经说明，任意离散信号都能拆成若干加权、移位的单位脉冲；因此只要知道系统对 $\impulse[n]$ 的响应，就能借助线性和时不变性逐项拼出总响应。这正是 LTI 系统比一般系统容易分析的原因。
+对离散时间系统，最合适的基本输入是单位脉冲 $\impulse[n]$。第二章已经说明，任意离散信号都能拆成若干加权、移位的单位脉冲；因此只要知道系统对 $\impulse[n]$ 的响应，就能借助线性和时不变性\red{逐项拼出总响应}。这正是 LTI 系统比一般系统容易分析的原因。
 
 \begin{remark}[LTI 与其他系统性质]
   LTI 只说明系统同时线性且时不变，\red{并不自动保证因果或稳定}。例如超前系统 $y(t)=x(t+1)$ 是 LTI 系统，却是非因果系统；因果性与稳定性仍须分别检查。
@@ -42,7 +42,7 @@
     \qquad
     \impulse[n-1]\longrightarrow h[n-1].
   \]
-  前者只使用齐次性，后者只使用时不变性。两种操作同时出现时，幅度与时移分别传递到响应上。
+  前者只使用齐次性，后者只使用时不变性。两种操作同时出现时，\red{幅度与时移分别传递到响应上}。
 \end{example}
 
 \begin{pitfall}[把输入平移方向写反]
@@ -86,7 +86,7 @@
 对每个非零输入样值，写出一行相应的缩放、移位 $h[n]$；每一列对应同一个输出下标，最后逐列相加。若 $x[n]$ 与 $h[n]$ 都有 $N$ 个非零样值，直接列表需要 $N^2$ 次乘法与 $(N-1)^2$ 次加法，计算量为 $O(N^2)$。列表法适合手算短序列，并能清楚展示每个输出样值由哪些移位响应叠加而来。
 
 \begin{pitfall}[只按表格位置相加]
-  各行必须按真实下标对齐，不能只按“第几个数”对齐。先用\cref{eq:finite-response-support} 写出输出下标，再放置每一行；否则即使数值乘法全对，也可能得到整体错位的结果。
+  各行必须\red{按真实下标对齐}，不能只按“第几个数”对齐。先用\cref{eq:finite-response-support} 写出输出下标，再放置每一行；否则即使数值乘法全对，也可能得到整体错位的结果。
 \end{pitfall}
 
 \section{离散时间卷积}
@@ -113,7 +113,7 @@
 右端称为 $x[n]$ 与 $h[n]$ 的卷积和（convolution sum）。因此，\red{LTI 系统的输出等于输入与单位脉冲响应的卷积}。
 
 \begin{intuition}
-  对固定的输出时刻 $n$，$x[k]h[n-k]$ 衡量输入样值 $x[k]$ 对该时刻输出的贡献；对所有 $k$ 求和，就是把每个输入脉冲激发出的移位响应累加起来。卷积并非额外假设，而是“脉冲分解 $+$ LTI”自然推出的结果。
+  对固定的输出时刻 $n$，$x[k]h[n-k]$ 衡量输入样值 $x[k]$ 对该时刻输出的贡献；对所有 $k$ 求和，就是把每个输入脉冲激发出的移位响应累加起来。卷积\red{并非额外假设}，而是“脉冲分解 $+$ LTI”自然推出的结果。
 \end{intuition}
 
 \subsection{图解法：翻转、平移、相乘、求和}
@@ -125,7 +125,7 @@
   \item 再平移为 $h[n-k]$；
   \item 与 $x[k]$ 逐点相乘，并对全部 $k$ 求和。
 \end{enumerate}
-\Cref{fig:discrete-convolution-operations} 把前三步放在同一坐标尺度下。改变 $n$，就是让翻转后的 $h$ 沿 $k$ 轴滑动；两序列没有重叠时，对应的输出为零。
+\Cref{fig:discrete-convolution-operations} 把前三步放在同一坐标尺度下。改变 $n$，就是让翻转后的 $h$ 沿 $k$ 轴滑动；两序列\red{没有重叠时，对应的输出为零}。
 
 \begin{figure}[htbp]
   \centering
@@ -135,7 +135,7 @@
 \end{figure}
 
 \begin{pitfall}[翻转对象或操作顺序错误]
-  从\cref{eq:discrete-convolution-sum} 直接读出，保留的是 $x[k]$，需要处理的是 $h[n-k]$。因此判据是\red{翻转的是 $h$，不是 $x$}，并且必须\red{先翻转、后平移}：$h[k]\to h[-k]\to h[n-k]$。若先把 $h[k]$ 平移成 $h[k-n]$ 再翻转，会得到 $h[-k-n]$，方向错误。
+  从\cref{eq:discrete-convolution-sum} 直接读出，保留的是 $x[k]$，需要处理的是 $h[n-k]$。因此判据是\red{翻转的是脉冲响应，不是输入}，并且必须\red{先翻转、后平移}：$h[k]\to h[-k]\to h[n-k]$。若先把 $h[k]$ 平移成 $h[k-n]$ 再翻转，会得到 $h[-k-n]$，方向错误。
 \end{pitfall}
 
 \begin{example}[两个等长矩形序列的卷积]
@@ -230,7 +230,7 @@
         & y(t)=\displaystyle\int x(\tau)h(t-\tau)\dd\tau
     \end{array}
   \]
-  区别只在于连续时间信号由不可数多个移位冲激叠加，因此求和由积分取代。
+  区别只在于连续时间信号由不可数多个移位冲激叠加，因此\red{求和由积分取代}。
 \end{remark}
 
 \section{连续时间单位冲激的基本性质}
@@ -325,11 +325,13 @@
 \end{example}
 
 \begin{pitfall}[直接套用复合冲激公式]
-  \Cref{eq:impulse-composite-function} 要求零点是孤立单零点。若某处同时满足 $f(t_i)=0$ 与 $f'(t_i)=0$，分母为零，局部线性化失效；若 $f$ 在一段区间恒为零，零点也无法逐项编号。遇到这两种情形时，不能直接套用该式。
+  \Cref{eq:impulse-composite-function} 要求零点是孤立单零点。若某处同时满足 $f(t_i)=0$ 与 $f'(t_i)=0$，\red{分母为零，局部线性化失效}；若 $f$ 在一段区间恒为零，零点也无法逐项编号。遇到这两种情形时，不能直接套用该式。
 \end{pitfall}
 
-\section{卷积的交换律}
-\label{sec:convolution-commutativity}
+\section{卷积的代数性质}
+\label{sec:convolution-algebraic-properties}
+
+\subsection{交换律}
 
 只要相关求和或积分存在，离散与连续卷积都满足交换律：
 \begin{equation}
@@ -352,6 +354,57 @@
 \begin{remark}[单位脉冲响应决定 LTI 系统]
   若两个 LTI 系统的单位脉冲响应满足 $h_1=h_2$，则对任意适用输入 $x$，都有 $x\conv h_1=x\conv h_2$。这再次说明：在 LTI 前提下，\red{相同的单位脉冲响应意味着相同的输入输出关系}。
 \end{remark}
+
+\subsection{结合律与串联系统}
+
+只要相关求和或积分存在，并且允许交换求和或积分次序，卷积满足结合律：
+\begin{equation}
+  \boxed{
+    (x\conv h_1)\conv h_2
+    =x\conv(h_1\conv h_2)
+  }.
+  \label{eq:convolution-associativity}
+\end{equation}
+以连续时间为例，左端可写成
+\begin{align*}
+  \bigl[(x\conv h_1)\conv h_2\bigr](t)
+  &=\int_{-\infty}^{\infty}
+    \left[\int_{-\infty}^{\infty}
+      x(u)h_1(\tau-u)\dd u
+    \right]h_2(t-\tau)\dd\tau\\
+  &=\int_{-\infty}^{\infty}x(u)
+    \left[\int_{-\infty}^{\infty}
+      h_1(\tau-u)h_2(t-\tau)\dd\tau
+    \right]\dd u\\
+  &=\bigl[x\conv(h_1\conv h_2)\bigr](t).
+\end{align*}
+第二步交换了积分次序；若有关积分不绝对收敛，\red{不能不加检查地使用这一步}。
+
+结合交换律，两个 LTI 系统串联时可以交换先后次序：
+\[
+  x(t)\longrightarrow\boxed{h_1(t)}
+  \longrightarrow\boxed{h_2(t)}\longrightarrow y(t),
+  \qquad
+  x(t)\longrightarrow\boxed{h_2(t)}
+  \longrightarrow\boxed{h_1(t)}\longrightarrow y(t).
+\]
+两条串联链的总单位冲激响应分别为 $h_1\conv h_2$ 与 $h_2\conv h_1$，因而等效。判定串联系统时可以\red{先卷积各级冲激响应}，再与输入卷积；也可以选择更容易计算的级次顺序。
+
+\subsection{分配律与并联系统}
+
+卷积对加法满足分配律：
+\begin{equation}
+  \boxed{
+    x\conv(h_1+h_2)
+    =x\conv h_1+x\conv h_2
+  }.
+  \label{eq:convolution-distributivity}
+\end{equation}
+离散情形同样成立。它说明两个 LTI 系统并联、输出相加时，总单位脉冲响应为 $h_1+h_2$：
+\[
+  y=x\conv h_1+x\conv h_2=x\conv(h_1+h_2).
+\]
+因此，\red{串联对应卷积，并联对应相加}。这也是把复杂 LTI 网络逐级化简为一个等效单位脉冲响应的基本规则。
 
 \section{单位冲激的逼近表示}
 \label{sec:impulse-approximations}
@@ -389,3 +442,231 @@
   \caption{冲激逼近 $\sin(\Omega t)/(\pi t)$；$\Omega$ 增大时主要积分贡献向原点集中。}
   \label{fig:sinc-impulse-sequence}
 \end{figure}
+
+\subsection{冲激逼近结论的验证}
+
+下面说明\cref{eq:sinc-impulse-limit} 为什么在积分作用下成立。设测试函数 $\varphi$ 在原点附近连续可微、整体分段光滑，并且支撑包含在 $[-R,R]$ 内。由狄利克雷积分
+\begin{equation}
+  \lim_{\Omega\to\infty}
+  \int_{-R}^{R}\frac{\sin(\Omega t)}{\pi t}\dd t=1,
+  \label{eq:truncated-dirichlet-integral}
+\end{equation}
+可将待验证的积分拆成
+\begin{align*}
+  \int_{-\infty}^{\infty}
+  \varphi(t)\frac{\sin(\Omega t)}{\pi t}\dd t
+  &={}
+  \int_{-R}^{R}
+  \frac{\varphi(t)-\varphi(0)}{\pi t}\sin(\Omega t)\dd t \\
+  &\quad+
+  \varphi(0)
+  \int_{-R}^{R}\frac{\sin(\Omega t)}{\pi t}\dd t.
+\end{align*}
+令
+\[
+  q(t)=
+  \begin{cases}
+    \dfrac{\varphi(t)-\varphi(0)}{\pi t}, & t\neq0,\\[6pt]
+    \dfrac{\varphi'(0)}{\pi}, & t=0,
+  \end{cases}
+\]
+则 $q$ 在 $[-R,R]$ 上可积。由黎曼--勒贝格引理，第一项随 $\Omega\to\infty$ 趋于 $0$；由\cref{eq:truncated-dirichlet-integral}，第二项趋于 $\varphi(0)$。因此
+\[
+  \lim_{\Omega\to\infty}
+  \int_{-\infty}^{\infty}
+  \varphi(t)\frac{\sin(\Omega t)}{\pi t}\dd t
+  =\varphi(0),
+\]
+正好与单位冲激的抽样作用相同。证明的关键不是函数值越来越像一根箭头，而是\red{先减去零点值，再用振荡抵消剩余项}。
+
+\begin{remark}[黎曼--勒贝格引理在这里的作用]
+  若 $q$ 可积，则其与越来越高频的正弦或余弦相乘后积分趋于零。直观上，正负振荡在短区间内不断抵消；它负责消去上式中不含 $\varphi(0)$ 的部分。
+\end{remark}
+
+\section{常用卷积关系}
+\label{sec:common-convolution-relations}
+
+\subsection{矩形脉冲的阶跃表示}
+
+位于区间 $[a,b)$、高度为 $1$ 的矩形脉冲可写成
+\begin{equation}
+  p(t)=\stepfun(t-a)-\stepfun(t-b),
+  \qquad a<b.
+  \label{eq:rectangle-step-representation}
+\end{equation}
+这个写法把端点直接编码在两个阶跃的跳变位置中，便于平移、求导和卷积。高度为 $A$ 时，只需在右端整体乘 $A$。
+
+\begin{example}[两个错位矩形脉冲的卷积]
+  设
+  \[
+    x(t)=\stepfun(t-1)-\stepfun(t-3),
+    \qquad
+    h(t)=\stepfun(t+1)-\stepfun(t-1).
+  \]
+  两个矩形的宽度均为 $2$，支撑分别为 $[1,3]$ 与 $[-1,1]$。卷积值等于两个区间的重叠长度，因此
+  \[
+    (x\conv h)(t)=
+    \begin{cases}
+      t, & 0\leq t\leq2,\\
+      4-t, & 2<t\leq4,\\
+      0, & \text{其他}.
+    \end{cases}
+  \]
+  输出是支撑在 $[0,4]$、峰值为 $2$ 且峰值位置为 $t=2$ 的三角脉冲。计算前用“左右端点相加”即可先确定输出支撑。
+\end{example}
+
+\subsection{与单位阶跃卷积：积分器与累加器}
+
+由卷积定义，连续时间信号与单位阶跃卷积为
+\begin{equation}
+  (x\conv\stepfun)(t)
+  =\int_{-\infty}^{t}x(\tau)\dd\tau.
+  \label{eq:convolution-with-step-continuous}
+\end{equation}
+因此单位脉冲响应为 $\stepfun(t)$ 的 LTI 系统是从 $-\infty$ 起算的积分器。离散时间对应关系为
+\begin{equation}
+  (x\conv\stepfun)[n]
+  =\sum_{k=-\infty}^{n}x[k],
+  \label{eq:convolution-with-step-discrete}
+\end{equation}
+即累加器。两式都可用判据\red{阶跃把上限截到当前时刻}来记忆，但真正计算时仍应从阶跃条件求出积分或求和范围。
+
+\subsection{冲激偶与卷积求导}
+
+单位冲激的一阶导数称为冲激偶（impulse doublet），记作
+\begin{equation}
+  \impulse'(t)=\frac{\dd\impulse(t)}{\dd t}.
+  \label{eq:impulse-doublet-definition}
+\end{equation}
+它不是普通函数的导数，而是按对测试函数的作用定义。若 $x$ 在 $t_0$ 附近可微，则分部积分给出
+\begin{equation}
+  \boxed{
+    \int_{-\infty}^{\infty}
+    x(t)\impulse'(t-t_0)\dd t
+    =-x'(t_0)
+  }.
+  \label{eq:impulse-doublet-sifting}
+\end{equation}
+\red{负号来自分部积分，不能遗漏}。令 $x(t)=1$，立即得到
+\begin{equation}
+  \int_{-\infty}^{\infty}\impulse'(t)\dd t=0.
+  \label{eq:impulse-doublet-zero-area}
+\end{equation}
+这表示冲激偶的正、负作用相互抵消；判断时应抓住\red{冲激抽样函数值，冲激偶抽样负导数}。
+
+在适当的可微与收敛条件下，卷积的导数可作用到任一因子上：
+\begin{equation}
+  \boxed{
+    \frac{\dd}{\dd t}(x\conv h)
+    =x'\conv h
+    =x\conv h'
+  }.
+  \label{eq:differentiation-of-convolution}
+\end{equation}
+特别地，$x\conv\impulse'=x'$。这说明单位冲激响应为 $\impulse'(t)$ 的 LTI 系统就是理想微分器。
+
+\subsection{卷积中的时移合成}
+
+若分别将两个卷积因子平移 $a$ 与 $b$，则
+\begin{equation}
+  x(t-a)\conv h(t-b)
+  =(x\conv h)(t-a-b).
+  \label{eq:convolution-shift-composition}
+\end{equation}
+两项时移量在输出端相加。原笔记中的特殊情形
+\begin{equation}
+  x(t+t_0)\conv h(t-t_0)=x(t)\conv h(t)
+  \label{eq:opposite-shifts-cancel}
+\end{equation}
+正是 $a=-t_0$、$b=t_0$，两项时移相互抵消。口诀是\red{卷积两端的时移量相加}，不要把卷积误当成逐点乘法。
+
+\begin{example}[乘积、积分与卷积不可混淆]
+  对同一个 $x(t+2)$ 与 $\impulse(t-3)$，三种运算给出不同结果：
+  \begin{align*}
+    x(t+2)\impulse(t-3)
+      &=x(5)\impulse(t-3),\\
+    \int_{-\infty}^{\infty}x(t+2)\impulse(t-3)\dd t
+      &=x(5),\\
+    x(t+2)\conv\impulse(t-3)
+      &=x(t-1).
+  \end{align*}
+  前两式由冲激在 $t=3$ 处抽样；第三式是“与移位冲激卷积”，它把整个信号向右平移 $3$，所以 $x(t+2)$ 变为 $x(t-1)$。动笔前应先辨认运算符：\red{乘积保留冲激，积分留下数值，卷积平移信号}。
+\end{example}
+
+\section{由单位脉冲响应判断 LTI 系统性质}
+\label{sec:lti-properties-from-impulse-response}
+
+\subsection{BIBO 稳定性的充要条件}
+
+\begin{theorem}[LTI 系统的 BIBO 稳定判据]
+  \label{thm:lti-bibo-impulse-response}
+  连续时间 LTI 系统 BIBO 稳定，当且仅当
+  \begin{equation}
+    \int_{-\infty}^{\infty}|h(t)|\dd t<\infty.
+    \label{eq:ct-lti-bibo-condition}
+  \end{equation}
+  离散时间 LTI 系统 BIBO 稳定，当且仅当
+  \begin{equation}
+    \sum_{n=-\infty}^{\infty}|h[n]|<\infty.
+    \label{eq:dt-lti-bibo-condition}
+  \end{equation}
+\end{theorem}
+
+先证充分性。若 $|x(t)|\leq M$，则
+\begin{align*}
+  |y(t)|
+  &=\left|\int_{-\infty}^{\infty}h(\tau)x(t-\tau)\dd\tau\right|\\
+  &\leq\int_{-\infty}^{\infty}|h(\tau)|\,|x(t-\tau)|\dd\tau\\
+  &\leq M\int_{-\infty}^{\infty}|h(\tau)|\dd\tau<\infty.
+\end{align*}
+所以任何有界输入都产生有界输出。
+
+再证必要性。对实值系统，取有界输入
+\[
+  x(t)=\operatorname{sgn}h(-t),
+\]
+其中 $h(-t)=0$ 时可令 $x(t)=0$。在 $t=0$ 处，
+\[
+  y(0)=\int_{-\infty}^{\infty}x(\tau)h(-\tau)\dd\tau
+  =\int_{-\infty}^{\infty}|h(-\tau)|\dd\tau.
+\]
+若系统稳定，右端必须有限，故 $h$ 必须绝对可积。离散时间证明完全类似，把积分改为求和即可。因而稳定性判断的直接判据是\red{连续看绝对可积，离散看绝对可和}。
+
+\begin{pitfall}[只检查冲激响应是否有界]
+  $h(t)$ 本身有界并不足以保证稳定。例如 $h(t)=\stepfun(t)$ 有界，但其绝对积分发散；有界常值输入会使输出不断累积。触发检查是：\red{不要只看峰值}，必须计算整个 $|h|$ 的面积或样值绝对值之和。
+\end{pitfall}
+
+\subsection{因果性的充要条件}
+
+\begin{theorem}[LTI 系统的因果判据]
+  \label{thm:lti-causality-impulse-response}
+  连续时间 LTI 系统因果，当且仅当
+  \begin{equation}
+    h(t)=0,
+    \qquad t<0.
+    \label{eq:ct-lti-causality-condition}
+  \end{equation}
+  离散时间 LTI 系统因果，当且仅当
+  \begin{equation}
+    h[n]=0,
+    \qquad n<0.
+    \label{eq:dt-lti-causality-condition}
+  \end{equation}
+\end{theorem}
+
+先看充分性。在时刻 $t_0$，
+\[
+  y(t_0)=\int_{-\infty}^{\infty}x(\tau)h(t_0-\tau)\dd\tau.
+\]
+当 $\tau>t_0$ 时有 $t_0-\tau<0$，由\cref{eq:ct-lti-causality-condition}，$h(t_0-\tau)=0$，所以
+\begin{equation}
+  y(t_0)=\int_{-\infty}^{t_0}x(\tau)h(t_0-\tau)\dd\tau.
+  \label{eq:causal-lti-output-past-only}
+\end{equation}
+输出只依赖当前及过去输入，因此系统因果。
+
+反过来，单位冲激 $\impulse(t)$ 在 $t<0$ 时尚未发生。因果系统在此之前不能产生由该输入引起的响应，而它对单位冲激的响应正是 $h(t)$，故必有 $h(t)=0$（$t<0$）。离散情形同理。判定时只需检查\red{冲激响应是否在零时刻之前非零}。
+
+\begin{remark}[与第三章一般判据的关系]
+  第三章判断一般系统的因果性与稳定性时，需要直接检查输入输出关系；对 LTI 系统，全部信息已经压缩到单位脉冲响应中。因此本节两条定理是一般判据在 LTI 结构下的专门化，也是后续用变换域分析系统时最常用的时域检查。
+\end{remark}

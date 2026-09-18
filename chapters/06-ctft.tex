@@ -1,7 +1,98 @@
 \chapter{连续时间傅里叶变换}
 \label{chap:ctft}
 
+傅里叶级数把周期信号分解为离散谐波；当周期趋于无穷大时，基频趋于零，离散谱线变成连续频谱，这就得到连续时间傅里叶变换（continuous-time Fourier transform, CTFT）。本章先建立变换定义和基本变换对，下一节再系统整理变换性质。
+
 \section{从傅里叶级数到傅里叶变换}
-\section{变换对、性质与对偶性}
-\section{频率响应与连续时间 LTI 系统}
-\section{幅频、相频与滤波观点}
+\label{sec:ctft-definition}
+
+周期信号的复指数级数为
+\begin{equation}
+  x(t)=\sum_{k=-\infty}^{\infty}a_k\e^{\iu k\omega_0t},\qquad
+  a_k=\frac{1}{T_0}\int_{t_0}^{t_0+T_0}x(t)\e^{-\iu k\omega_0t}\dd t.
+  \label{eq:ctft-periodic-series-start}
+\end{equation}
+令 $T_0\to\infty$，则 $\omega_0=2\pi/T_0\to0$，频率采样点 $\omega=k\omega_0$ 变得连续。定义
+\begin{equation}
+  X(\iu\omega)=\int_{-\infty}^{\infty}x(t)\e^{-\iu\omega t}\dd t,
+  \label{eq:ctft-definition}
+\end{equation}
+逆变换为
+\begin{equation}
+  x(t)=\frac{1}{2\pi}\int_{-\infty}^{\infty}X(\iu\omega)\e^{\iu\omega t}\dd\omega.
+  \label{eq:ctft-inverse}
+\end{equation}
+记号 $x(t)\xleftrightarrow{\ \mathcal F\ }X(\iu\omega)$ 表示一对正、逆傅里叶变换。$\iu\omega$ 是频域变量的记号，画频谱时横轴仍是实频率 $\omega$。
+
+\begin{pitfall}[混淆级数系数与变换]
+  傅里叶级数系数 $a_k$ 含有 $1/T_0$，只在离散谐波 $k\omega_0$ 上定义；傅里叶变换 $X(\iu\omega)$ 是连续频率函数。过渡时必须同时记住 $a_k=X(\iu k\omega_0)/T_0$ 和求和到积分的替换。
+\end{pitfall}
+
+\section{基本变换对与典型计算}
+\label{sec:ctft-basic-pairs}
+
+以下变换对直接由定义、逆变换或分布意义下的极限得到。$\Sa(u)=\sin(u)/u$ 沿用第二章的非归一化定义。
+
+\begin{example}[右侧指数衰减]
+  对 $a>0$，令 $x(t)=\e^{-at}\stepfun(t)$，则
+  \[
+    X(\iu\omega)=\int_0^{\infty}\e^{-(a+\iu\omega)t}\dd t
+    =\frac{1}{a+\iu\omega}
+    =\frac{a-\iu\omega}{a^2+\omega^2}.
+  \]
+  因而 $|X(\iu\omega)|=1/\sqrt{a^2+\omega^2}$，这是低通型频谱的基本例子。
+\end{example}
+
+\begin{example}[单位冲激与直流常数]
+  冲激抽样性质给出
+  \begin{equation}
+    \impulse(t)\xleftrightarrow{\ \mathcal F\ }1,
+    \qquad
+    1\xleftrightarrow{\ \mathcal F\ }2\pi\impulse(\omega).
+    \label{eq:ctft-impulse-constant-pairs}
+  \end{equation}
+  第二式说明直流分量位于 $\omega=0$ 的冲激谱线上，而不是普通的有限高度曲线。
+\end{example}
+
+\begin{example}[对称矩形脉冲]
+  设 $x(t)=E$（$|t|<\tau/2$），其余为零。直接积分得到
+  \begin{align*}
+    X(\iu\omega)&=E\int_{-\tau/2}^{\tau/2}\e^{-\iu\omega t}\dd t
+    =\frac{2E\sin(\omega\tau/2)}{\omega}
+    =E\tau\Sa\left(\frac{\omega\tau}{2}\right).
+  \end{align*}
+  因而
+  \begin{equation}
+    E\,\mathbf{1}_{|t|<\tau/2}
+    \xleftrightarrow{\ \mathcal F\ }
+    E\tau\Sa\left(\frac{\omega\tau}{2}\right).
+    \label{eq:ctft-rectangle-pair}
+  \end{equation}
+  脉冲越窄，频谱主瓣越宽；脉冲面积 $E\tau$ 等于 $X(0)$。
+\end{example}
+
+对应的逆向变换对为
+\begin{equation}
+  \frac{\sin(\omega_c t)}{\pi t}
+  \xleftrightarrow{\ \mathcal F\ }
+  \begin{cases}1,&|\omega|<\omega_c,\\0,&|\omega|>\omega_c,\end{cases}
+  \label{eq:ctft-sinc-rectangle-pair}
+\end{equation}
+边界点的取值不影响普通积分意义下的变换。
+
+\begin{example}[单位阶跃的变换]
+  单位阶跃不是绝对可积信号。用截断积分并在分布意义下取极限，得到
+  \begin{equation}
+    \stepfun(t)\xleftrightarrow{\ \mathcal F\ }
+    \frac{1}{\iu\omega}+\pi\impulse(\omega).
+    \label{eq:ctft-step-pair}
+  \end{equation}
+  其中 $1/(\iu\omega)$ 按主值理解，$\pi\impulse(\omega)$ 对应阶跃的直流成分。
+\end{example}
+
+\begin{example}[有限区间矩形的尺度计算]
+  若矩形脉冲宽度为 $6$、高度为 $2$，由\cref{eq:ctft-rectangle-pair} 得
+  $X(\iu\omega)=4\sin(3\omega)/\omega=12\Sa(3\omega)$；若宽度为 $2$、高度为 $1$，则 $X(\iu\omega)=2\Sa(\omega)$。先确定宽度和面积，再代入矩形变换对，比重新积分更不易出错。
+\end{example}
+
+本节至此只建立傅里叶变换的定义、逆变换及基本变换对；线性、时移、调制、微分、尺度变换、卷积等系统性质留待下一节统一推导。

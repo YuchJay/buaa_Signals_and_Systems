@@ -1,8 +1,154 @@
 \chapter{周期信号的傅里叶级数}
 \label{chap:fourier-series}
 
-\section{正交表示与频域观点}
-\section{连续时间傅里叶级数}
-\section{离散时间傅里叶级数}
-\section{收敛、对称性与性质}
-\section{周期信号通过 LTI 系统}
+本章先回答一个核心问题：一个周期信号能否用一组结构简单、彼此正交的正弦或复指数表示？答案是肯定的。傅里叶级数把时域中的周期信号拆成离散的谐波线谱，为后续傅里叶变换、LTI 系统的频率响应和滤波分析提供基础。
+
+\section{本章的数学准备}
+\label{sec:fourier-inner-product-foundations}
+
+第一章的\cref{sec:inner-product-foundations} 已建立内积、正交基、投影系数和 Gram--Schmidt 正交化。本章只需把这些通用工具应用到周期区间上的傅里叶基；这样既避免重复定义，也便于后续变换章节沿用同一套符号。
+
+\section{周期信号的三角傅里叶级数}
+\label{sec:trigonometric-fourier-series}
+
+设 $x(t)$ 以 $T_0>0$ 为周期，即 $x(t+T_0)=x(t)$，基本角频率为
+\begin{equation}
+  \omega_0=\frac{2\pi}{T_0}.
+  \label{eq:fundamental-angular-frequency}
+\end{equation}
+三角形式的傅里叶级数写作
+\begin{equation}
+  x(t)=B_0+\sum_{n=1}^{\infty}
+  \bigl[B_n\cos(n\omega_0t)+C_n\sin(n\omega_0t)\bigr].
+  \label{eq:trigonometric-fourier-series}
+\end{equation}
+系数可在任意完整周期上计算；取 $[t_0,t_0+T_0]$ 时，
+\begin{align}
+  B_0&=\frac{1}{T_0}\int_{t_0}^{t_0+T_0}x(t)\dd t,\\
+  B_n&=\frac{2}{T_0}\int_{t_0}^{t_0+T_0}x(t)\cos(n\omega_0t)\dd t,\\
+  C_n&=\frac{2}{T_0}\int_{t_0}^{t_0+T_0}x(t)\sin(n\omega_0t)\dd t.
+  \label{eq:trigonometric-fourier-coefficients}
+\end{align}
+其中 $B_0$ 是一个周期内的平均值，$B_n,C_n$ 分别记录余弦和正弦谐波的权重。取积分区间时最重要的是\red{完整覆盖一个周期}，不必拘泥于从 $0$ 开始。
+
+\subsection{收敛条件与跳变点}
+
+常用的 Dirichlet 条件可概括为：在一个周期内，信号应绝对可积；只有有限个极值；只有有限个有限幅度的间断点。满足这些条件时，傅里叶级数在连续点收敛到 $x(t)$，在跳变点 $t_0$ 收敛到左右极限的平均值：
+\begin{equation}
+  \lim_{N\to\infty}S_N(t_0)
+  =\frac{x(t_0^-)+x(t_0^+)}{2}.
+  \label{eq:fourier-jump-convergence}
+\end{equation}
+所以级数在跳变处出现 Gibbs 现象并不表示计算错误；部分和会在跳变附近振荡，振荡宽度随项数增加而缩小，但过冲幅度不会完全消失。判断收敛时应区分\red{连续点取函数值，跳变点取左右平均}。
+
+\begin{example}[对称矩形波的傅里叶级数]
+  设 $x(t)$ 以 $T$ 为周期，在每个周期中心附近满足
+  \[
+    x(t)=
+    \begin{cases}
+      1, & |t|<T_1,\\
+      0, & T_1<|t|<T/2,
+    \end{cases}
+    \qquad 0<T_1<T/2.
+  \]
+  该信号为偶信号，所以 $C_n=0$。取 $[-T/2,T/2]$ 为一个周期，得到
+  \begin{align*}
+    B_0&=\frac{2T_1}{T},\\
+    B_n&=\frac{2}{T}\int_{-T_1}^{T_1}\cos(n\omega_0t)\dd t
+    =\frac{2\sin(n\omega_0T_1)}{n\pi},\\
+    C_n&=0.
+  \end{align*}
+  因而
+  \[
+    x(t)=\frac{2T_1}{T}
+    +\sum_{n=1}^{\infty}
+    \frac{2\sin(2\pi nT_1/T)}{n\pi}\cos(n\omega_0t).
+  \]
+  图中同时画出原矩形波和有限项部分和。偶对称性使正弦系数消失，是计算前最值得先检查的结构。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.86\textwidth]{05-fourier-series/rectangular-fourier-series.pdf}
+    \caption{对称矩形波及其傅里叶级数有限项逼近；跳变点附近出现 Gibbs 振荡。}
+    \label{fig:rectangular-fourier-series}
+  \end{figure}
+\end{example}
+
+\section{复指数形式与系数转换}
+\label{sec:complex-fourier-series}
+
+利用欧拉公式，三角级数也可写成复指数形式：
+\begin{equation}
+  \boxed{
+    x(t)=\sum_{k=-\infty}^{\infty}A_k\e^{\iu k\omega_0t}
+  },
+  \qquad
+  A_k=\frac{1}{T_0}\int_{t_0}^{t_0+T_0}
+  x(t)\e^{-\iu k\omega_0t}\dd t.
+  \label{eq:complex-fourier-series}
+\end{equation}
+复指数形式把正、负频率统一在一个整数下标中，通常更适合推导和变换。其系数本身是复数，模表示该谐波的强度，辐角则包含相位信息。
+
+对实信号，$A_{-k}=\overline{A_k}$。三角系数与复系数的关系为
+\begin{align}
+  B_0&=A_0,\\
+  B_k&=A_k+A_{-k},\\
+  C_k&=\iu(A_k-A_{-k}),\qquad k>0,
+  \label{eq:fourier-coefficient-conversion-forward}
+\end{align}
+反过来，
+\begin{equation}
+  A_k=\frac{B_k-\iu C_k}{2},
+  \qquad
+  A_{-k}=\frac{B_k+\iu C_k}{2},
+  \qquad k>0.
+  \label{eq:fourier-coefficient-conversion-inverse}
+\end{equation}
+若信号是偶函数，则 $C_k=0$；若信号是奇函数，则 $B_0=B_k=0$。这些对称性可以在积分前直接消去一半系数。
+
+\section{正交基、傅里叶基与其他展开}
+\label{sec:fourier-orthogonal-bases}
+
+在周期区间 $[t_0,t_0+T_0]$ 上取内积
+\[
+  \langle f,g\rangle
+  =\int_{t_0}^{t_0+T_0}f(t)\overline{g(t)}\dd t.
+\]
+复指数族 $e_k(t)=\e^{\iu k\omega_0t}$ 满足
+\begin{equation}
+  \langle e_k,e_\ell\rangle
+  =T_0\,\mathbf{1}_{k=\ell},
+  \label{eq:fourier-exponential-orthogonality}
+\end{equation}
+其中 $\mathbf{1}_{k=\ell}$ 在 $k=\ell$ 时为 $1$，否则为 $0$。证明只需对 $k=\ell$ 积分常数 $1$；对 $k\neq\ell$ 积分指数 $\e^{\iu(k-\ell)\omega_0t}$，利用 $(k-\ell)\omega_0T_0=2\pi(k-\ell)$ 即得零。
+
+将 $x(t)=\sum_kA_ke_k(t)$ 与 $e_r$ 取内积，立即得到
+\[
+  \langle x,e_r\rangle=T_0A_r,
+  \qquad
+  A_r=\frac{\langle x,e_r\rangle}{T_0},
+\]
+这正是\cref{eq:complex-fourier-series}中的系数公式。换句话说，傅里叶级数不是孤立的积分技巧，而是\red{在正交基上做投影}。
+
+\subsection{其他常见正交基}
+
+傅里叶基适合周期、全局振荡的信号，但并非所有信号都适合用它表示。原笔记还列出了几类正交展开：
+
+\begin{itemize}
+  \item Haar 基由局部矩形函数组成，适合表示局部突变和分段结构；
+  \item Legendre 多项式在 $[-1,1]$ 上正交，定义为
+  \begin{equation}
+    P_n(x)=\frac{1}{2^n n!}\frac{\dd^n}{\dd x^n}(x^2-1)^n,
+    \label{eq:legendre-polynomial}
+  \end{equation}
+  并满足
+  \begin{equation}
+    \int_{-1}^{1}P_m(x)P_n(x)\dd x
+    =\frac{2}{2n+1}\mathbf{1}_{m=n}.
+    \label{eq:legendre-orthogonality}
+  \end{equation}
+  因此 $f(x)=\sum_{n\geq0}a_nP_n(x)$ 时，$a_n=(2n+1)\langle f,P_n\rangle/2$；
+  \item 主成分分析（principal component analysis，PCA）也可看作在数据向量空间中寻找一组正交方向。先去除均值 $A_0=N^{-1}\sum_{i=1}^{N}x_i$，再用正交方向 $A_1,A_2,\ldots$ 展开样本；每个系数仍由内积投影得到。与傅里叶展开的差别在于：傅里叶基由周期结构预先给定，PCA 的方向则由数据本身决定。
+\end{itemize}
+
+这几种方法共享同一个骨架：选择正交方向、计算投影系数、用有限或无限级数重构信号。后续傅里叶变换将把周期信号的离散谐波索引推广为连续频率变量。

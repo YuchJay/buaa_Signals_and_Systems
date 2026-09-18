@@ -226,5 +226,55 @@ $r$ 控制序列随 $n$ 的增长或衰减，$\omega$ 控制每前进一步所�
   本书只使用“零测集不改变积分”和“几乎处处相等”这两个结论，不展开测度构造与一般勒贝格积分理论。单位冲激的严格基础是分布理论；\cref{eq:distribution-equality} 提供后文验证冲激恒等式所需的最小工具。
 \end{remark}
 
+\section{内积与正交展开基础}
+\label{sec:inner-product-foundations}
+
+本节集中整理后续傅里叶级数、傅里叶变换及数据展开都会反复使用的数学工具。它们是跨章节的共同语言，因此不把它们局限在某一章的频域讨论中。
+
+在复信号空间中，区间 $[a,b]$ 上的内积定义为
+\begin{equation}
+  \langle x,y\rangle
+  =\int_a^b x(t)\overline{y(t)}\dd t,
+  \label{eq:continuous-signal-inner-product}
+\end{equation}
+离散序列的对应定义为
+\begin{equation}
+  \langle x,y\rangle
+  =\sum_{k=m}^{n}x[k]\overline{y[k]}.
+  \label{eq:discrete-signal-inner-product}
+\end{equation}
+共轭放在第二个因子上，因而内积满足共轭对称性、对第一个因子的线性与可加性，以及正定性：
+\begin{align*}
+  \langle x,y\rangle&=\overline{\langle y,x\rangle},&
+  \langle \lambda x,y\rangle&=\lambda\langle x,y\rangle,\\
+  \langle x+z,y\rangle&=\langle x,y\rangle+\langle z,y\rangle,&
+  \langle x,x\rangle&=\int_a^b|x(t)|^2\dd t\geq0.
+\end{align*}
+若 $\langle x,y\rangle=0$，称 $x,y$ 正交。复信号计算中必须保留共轭，否则 $\langle x,x\rangle$ 可能不是非负实数。
+
+设函数族 $\{e_k(t)\}$ 两两正交，并且能够表示所考虑空间中的信号，则称其为正交基。展开
+\begin{equation}
+  x(t)=\sum_k a_k e_k(t)
+  \label{eq:orthogonal-expansion}
+\end{equation}
+两边与 $e_r$ 取内积，得到投影系数
+\begin{equation}
+  \boxed{a_r=\frac{\langle x,e_r\rangle}{\langle e_r,e_r\rangle}}.
+  \label{eq:orthogonal-projection-coefficient}
+\end{equation}
+正交归一基满足 $\langle e_r,e_r\rangle=1$，此时 $a_r=\langle x,e_r\rangle$。因此展开系数是信号沿各基方向的投影，而不是凭经验猜测的常数。
+
+给定线性无关但不正交的函数 $\{\alpha_k\}$，Gram--Schmidt 方法递推构造
+\begin{align}
+  \beta_1&=\alpha_1,\\
+  \beta_k&=\alpha_k-
+  \sum_{m=1}^{k-1}
+  \frac{\langle\alpha_k,\beta_m\rangle}
+       {\langle\beta_m,\beta_m\rangle}\beta_m,
+  \qquad k\geq2.
+  \label{eq:gram-schmidt}
+\end{align}
+再令 $e_k=\beta_k/\sqrt{\langle\beta_k,\beta_k\rangle}$，即可得到正交归一基。后续章节只需把具体的傅里叶函数代入这套通用投影框架。
+
 % 后续按资料进度补充“线性代数与正交展开视角”以及
 % “微分方程、差分方程与收敛基础”；未成文前不生成空节标题。

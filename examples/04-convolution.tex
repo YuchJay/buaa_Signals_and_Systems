@@ -113,3 +113,382 @@
 \begin{technique}
   含阶跃的卷积和先不要急于套等比公式。先把每个阶跃翻译成对求和变量 $k$ 的不等式，再求这些条件的交集；本题由 $k\geq0$ 与 $k\leq n$ 得到 $0\leq k\leq n$，同时自然暴露出 $n<0$ 时无重叠。最后再根据公比是否为 $1$ 分情况求和。
 \end{technique}
+
+\begin{workedexample}[两个右边指数信号的卷积]
+  \label{ex:causal-exponential-convolution}
+  设
+  \[
+    x(t)=\e^{-bt}\stepfun(t),
+    \qquad
+    h(t)=\e^{-at}\stepfun(t),
+    \qquad a,b>0.
+  \]
+  求 $y(t)=x(t)\conv h(t)$，并讨论 $a=b$ 的特殊情形。\Cref{fig:ex-causal-exponential-given} 以 $a=1,b=2$ 为例示意两个信号。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{04-convolution/examples/causal-exponential-given.pdf}
+    \caption{例题 \ref{ex:causal-exponential-convolution} 的两个右边指数信号（取 $a=1,b=2$）。}
+    \label{fig:ex-causal-exponential-given}
+  \end{figure}
+\end{workedexample}
+
+\begin{solution}
+  代入卷积积分：
+  \[
+    y(t)=\int_{-\infty}^{\infty}
+    \e^{-b\tau}\stepfun(\tau)
+    \e^{-a(t-\tau)}\stepfun(t-\tau)\dd\tau.
+  \]
+  两个阶跃分别要求 $\tau\geq0$ 与 $\tau\leq t$。当 $t<0$ 时没有重叠；当 $t\geq0$ 时，积分区间为 $0\leq\tau\leq t$。若 $a\neq b$，
+  \begin{align*}
+    y(t)
+    &=\e^{-at}\int_0^t\e^{-(b-a)\tau}\dd\tau\\
+    &=\frac{\e^{-at}-\e^{-bt}}{b-a}\stepfun(t).
+  \end{align*}
+  若 $a=b$，被积函数中的指数因子相消，故
+  \[
+    y(t)=t\e^{-at}\stepfun(t).
+  \]
+  $a=1,b=2$ 时的输出见\cref{fig:ex-causal-exponential-answer}。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.68\textwidth]{04-convolution/examples/causal-exponential-answer.pdf}
+    \caption{例题 \ref{ex:causal-exponential-convolution} 在 $a=1,b=2$ 时的输出。}
+    \label{fig:ex-causal-exponential-answer}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  连续卷积中出现阶跃时，先把每个阶跃翻译成对积分变量的限制，再取交集。本题的有效区间是 $0\leq\tau\leq t$；它既给出积分上下限，也直接说明输出是右边信号。参数恰好相等时应回到积分本身，不能把 $a=b$ 直接代入含 $b-a$ 的结果。
+\end{technique}
+
+\begin{workedexample}[矩形脉冲与有限斜坡的卷积]
+  \label{ex:rectangle-ramp-convolution}
+  设
+  \[
+    x(t)=\stepfun(t)-\stepfun(t-1),
+    \qquad
+    h(t)=(1-t)\bigl[\stepfun(t)-\stepfun(t-1)\bigr].
+  \]
+  用图解卷积思想求 $y(t)=x(t)\conv h(t)$。题设波形见\cref{fig:ex-rectangle-ramp-given}。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{04-convolution/examples/rectangle-ramp-given.pdf}
+    \caption{例题 \ref{ex:rectangle-ramp-convolution} 的单位矩形与有限斜坡。}
+    \label{fig:ex-rectangle-ramp-given}
+  \end{figure}
+\end{workedexample}
+
+\begin{solution}
+  两个信号的支撑区间均为 $[0,1]$，所以输出支撑区间为 $[0,2]$。翻转平移后
+  \[
+    h(t-\tau)=1-t+\tau
+  \]
+  在 $t-1\leq\tau\leq t$ 上非零，而 $x(\tau)$ 要求 $0\leq\tau\leq1$。
+
+  当 $0\leq t\leq1$ 时，交集为 $[0,t]$，故
+  \[
+    y(t)=\int_0^t(1-t+\tau)\dd\tau
+    =t-\frac{t^2}{2}.
+  \]
+  当 $1\leq t\leq2$ 时，交集为 $[t-1,1]$，故
+  \[
+    y(t)=\int_{t-1}^{1}(1-t+\tau)\dd\tau
+    =\frac{(2-t)^2}{2}.
+  \]
+  因此
+  \[
+    y(t)=
+    \begin{cases}
+      t-t^2/2, & 0\leq t\leq1,\\
+      (2-t)^2/2, & 1\leq t\leq2,\\
+      0, & \text{其他}.
+    \end{cases}
+  \]
+  输出见\cref{fig:ex-rectangle-ramp-answer}，并在 $t=1$ 处连续衔接为 $1/2$。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.68\textwidth]{04-convolution/examples/rectangle-ramp-answer.pdf}
+    \caption{例题 \ref{ex:rectangle-ramp-convolution} 的分段二次输出。}
+    \label{fig:ex-rectangle-ramp-answer}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  图解法的分段点来自支撑端点刚好接触或越过彼此的位置。本题只需检查 $t=0,1,2$。每个区间内先写出两个支撑条件的交集，再积分；最后用分段连接处的函数值检查是否漏项或写错上下限。
+\end{technique}
+
+\begin{workedexample}[两个等宽矩形脉冲的卷积]
+  \label{ex:equal-width-rectangle-convolution}
+  设
+  \[
+    x(t)=E_1\bigl[\stepfun(t+T_0)-\stepfun(t-T_0)\bigr],
+    \qquad
+    h(t)=E_2\bigl[\stepfun(t+T_0)-\stepfun(t-T_0)\bigr],
+  \]
+  其中 $T_0>0$。求二者卷积，并说明输出的几何形状。\Cref{fig:ex-equal-width-rectangle-given} 以 $E_1=E_2=1,T_0=1$ 为例。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{04-convolution/examples/equal-rectangle-given.pdf}
+    \caption{例题 \ref{ex:equal-width-rectangle-convolution} 的两个等宽矩形脉冲。}
+    \label{fig:ex-equal-width-rectangle-given}
+  \end{figure}
+\end{workedexample}
+
+\begin{solution}
+  在重叠区内，被积函数恒为 $E_1E_2$，所以卷积值等于“高度乘积 $\times$ 重叠长度”。两个区间 $[-T_0,T_0]$ 与 $[t-T_0,t+T_0]$ 的重叠长度为
+  \[
+    L(t)=
+    \begin{cases}
+      2T_0-|t|, & |t|\leq2T_0,\\
+      0, & |t|>2T_0.
+    \end{cases}
+  \]
+  因而
+  \[
+    y(t)=
+    \begin{cases}
+      E_1E_2(2T_0-|t|), & |t|\leq2T_0,\\
+      0, & |t|>2T_0.
+    \end{cases}
+  \]
+  输出是以原点为中心的三角脉冲，底边支撑为 $[-2T_0,2T_0]$，峰值为 $2T_0E_1E_2$。单位参数下的结果见\cref{fig:ex-equal-width-rectangle-answer}。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.68\textwidth]{04-convolution/examples/equal-rectangle-answer.pdf}
+    \caption{例题 \ref{ex:equal-width-rectangle-convolution} 的三角形输出（取单位参数）。}
+    \label{fig:ex-equal-width-rectangle-answer}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  两个常值矩形卷积时，不必逐段写被积函数，直接计算重叠长度即可。等宽矩形的重叠长度先线性增加、再线性减少，所以输出必为三角形；峰值等于“较短脉冲宽度 $\times$ 两个高度”。
+\end{technique}
+
+\begin{workedexample}[两个不等宽矩形脉冲的卷积]
+  \label{ex:unequal-width-rectangle-convolution}
+  设
+  \[
+    x(t)=E_1\bigl[\stepfun(t+a)-\stepfun(t-a)\bigr],
+    \qquad
+    h(t)=E_2\bigl[\stepfun(t+b)-\stepfun(t-b)\bigr],
+  \]
+  其中 $a\geq b>0$。求 $x(t)\conv h(t)$。\Cref{fig:ex-unequal-width-rectangle-given} 以 $a=3,b=1,E_1=E_2=1$ 为例。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{04-convolution/examples/unequal-rectangle-given.pdf}
+    \caption{例题 \ref{ex:unequal-width-rectangle-convolution} 的两个不等宽矩形脉冲。}
+    \label{fig:ex-unequal-width-rectangle-given}
+  \end{figure}
+\end{workedexample}
+
+\begin{solution}
+  两个支撑区间的重叠长度为
+  \[
+    L(t)=
+    \begin{cases}
+      2b, & |t|\leq a-b,\\
+      a+b-|t|, & a-b<|t|\leq a+b,\\
+      0, & |t|>a+b.
+    \end{cases}
+  \]
+  因此
+  \[
+    y(t)=E_1E_2L(t).
+  \]
+  当较窄矩形完全落入较宽矩形时，重叠长度保持为 $2b$，因而输出中间出现平台；两侧进入和离开时，重叠长度线性变化。结果是支撑区间 $[-a-b,a+b]$、平台区间 $[-a+b,a-b]$、峰值 $2bE_1E_2$ 的梯形。示例参数下见\cref{fig:ex-unequal-width-rectangle-answer}。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.68\textwidth]{04-convolution/examples/unequal-rectangle-answer.pdf}
+    \caption{例题 \ref{ex:unequal-width-rectangle-convolution} 的梯形输出（取 $a=3,b=1$）。}
+    \label{fig:ex-unequal-width-rectangle-answer}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  对不等宽矩形，先比较半宽 $a$ 与 $b$。较窄矩形完全进入较宽矩形的范围是 $|t|\leq a-b$，对应平台；开始或结束接触发生在 $|t|=a+b$。若 $a=b$，平台宽度退化为零，梯形自然退化为三角形。
+\end{technique}
+
+\begin{workedexample}[带正负幅度的分段常值信号卷积]
+  \label{ex:signed-piecewise-convolution}
+  设
+  \[
+    x(t)=
+    \begin{cases}
+      1, & -1\leq t<0,\\
+      -2, & 0\leq t\leq1,\\
+      0, & \text{其他},
+    \end{cases}
+    \qquad
+    h(t)=
+    \begin{cases}
+      1, & -1\leq t<0,\\
+      2, & 0\leq t\leq1,\\
+      0, & \text{其他}.
+    \end{cases}
+  \]
+  求 $y(t)=x(t)\conv h(t)$。已知信号见\cref{fig:ex-signed-piecewise-given}。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{04-convolution/examples/signed-piecewise-given.pdf}
+    \caption{例题 \ref{ex:signed-piecewise-convolution} 的两个分段常值信号。}
+    \label{fig:ex-signed-piecewise-given}
+  \end{figure}
+\end{workedexample}
+
+\begin{solution}
+  两个信号都支撑在 $[-1,1]$，所以输出只可能在 $[-2,2]$ 非零。随着 $h(t-\tau)$ 滑动，分段边界的相对次序在 $t=-2,-1,0,1,2$ 处改变。分别累计各重叠小区间上的“长度 $\times$ 幅度乘积”，可得
+  \[
+    y(t)=
+    \begin{cases}
+      t+2, & -2\leq t\leq-1,\\
+      -t, & -1\leq t\leq0,\\
+      -4t, & 0\leq t\leq1,\\
+      4t-8, & 1\leq t\leq2,\\
+      0, & \text{其他}.
+    \end{cases}
+  \]
+  四段在 $t=-1,0,1$ 处分别衔接为 $1,0,-4$，与图形连续性一致；输出见\cref{fig:ex-signed-piecewise-answer}。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.68\textwidth]{04-convolution/examples/signed-piecewise-answer.pdf}
+    \caption{例题 \ref{ex:signed-piecewise-convolution} 的分段线性输出。}
+    \label{fig:ex-signed-piecewise-answer}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  信号含正负幅度时，“重叠面积”必须理解为带符号面积。先列出所有端点相遇产生的分段时刻，再在每个区间内把重叠区域进一步按幅度切块；每块用长度乘以两个幅度，最后作代数求和。
+\end{technique}
+
+\begin{workedexample}[周期方波与三角脉冲的卷积]
+  \label{ex:periodic-square-triangle-convolution}
+  设 $x(t)$ 是周期为 $2$ 的方波，在一个周期内
+  \[
+    x(t)=
+    \begin{cases}
+      1, & -1\leq t<0,\\
+      -1, & 0\leq t<1,
+    \end{cases}
+    \qquad x(t+2)=x(t),
+  \]
+  并令
+  \[
+    h(t)=
+    \begin{cases}
+      t, & 0\leq t\leq1,\\
+      2-t, & 1<t\leq2,\\
+      0, & \text{其他}.
+    \end{cases}
+  \]
+  求 $y(t)=x(t)\conv h(t)$。题设波形见\cref{fig:ex-periodic-square-triangle-given}。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.86\textwidth]{04-convolution/examples/periodic-square-triangle-given.pdf}
+    \caption{例题 \ref{ex:periodic-square-triangle-convolution} 的周期方波与有限三角脉冲。}
+    \label{fig:ex-periodic-square-triangle-given}
+  \end{figure}
+\end{workedexample}
+
+\begin{solution}
+  $h$ 的支撑长度恰为 $x$ 的一个周期。由于 $x(t+1)=-x(t)$，卷积输出也满足
+  \[
+    y(t+1)=-y(t),
+    \qquad
+    y(t+2)=y(t).
+  \]
+  因此只需计算 $0\leq t\leq1$。此时将积分区间 $[t-2,t]$ 按 $x(\tau)$ 的跳变点 $-1,0$ 和 $h(t-\tau)$ 的折点 $t-1$ 切开，得到
+  \begin{align*}
+    y(t)
+    &=-\int_{t-2}^{-1}(2-t+\tau)\dd\tau
+      +\int_{-1}^{t-1}(2-t+\tau)\dd\tau\\
+    &\quad+\int_{t-1}^{0}(t-\tau)\dd\tau
+      -\int_{0}^{t}(t-\tau)\dd\tau\\
+    &=2t(t-1).
+  \end{align*}
+  再利用半周期反对称性，在一个周期 $0\leq t<2$ 内
+  \[
+    y(t)=
+    \begin{cases}
+      2t(t-1), & 0\leq t\leq1,\\
+      -2(t-1)(t-2), & 1<t<2,
+    \end{cases}
+  \]
+  并按周期 $2$ 延拓。输出见\cref{fig:ex-periodic-square-triangle-answer}。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.78\textwidth]{04-convolution/examples/periodic-square-triangle-answer.pdf}
+    \caption{例题 \ref{ex:periodic-square-triangle-convolution} 的周期输出；相邻半周期互为相反数。}
+    \label{fig:ex-periodic-square-triangle-answer}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  周期信号与有限长信号卷积后仍具有输入的周期。优先利用周期性和半周期对称性缩小计算范围，再按两个信号的全部断点切分积分区间；这通常比在整条实轴上逐段滑动更稳妥。
+\end{technique}
+
+\begin{workedexample}[由含冲激的时变换信号反求原信号]
+  \label{ex:recover-signal-with-impulse}
+  已知
+  \[
+    g(t)=x(3-2t)
+    =\bigl[\stepfun(t-2)-\stepfun(t-3)\bigr]
+    +2\bigl[\stepfun(t-3)-\stepfun(t-4)\bigr]
+    +2\impulse(t-1).
+  \]
+  求 $x(t)$，并正确处理冲激在时间伸缩下的幅度。已知 $g(t)$ 见\cref{fig:ex-recover-signal-given}。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.72\textwidth]{04-convolution/examples/recover-signal-impulse-given.pdf}
+    \caption{例题 \ref{ex:recover-signal-with-impulse} 中给定的 $g(t)=x(3-2t)$。}
+    \label{fig:ex-recover-signal-given}
+  \end{figure}
+\end{workedexample}
+
+\begin{solution}
+  令 $s=3-2t$，则 $t=(3-s)/2$，所以
+  \[
+    x(s)=g\!\left(\frac{3-s}{2}\right).
+  \]
+  将变量名改回 $t$：
+  \[
+    x(t)=g\!\left(\frac{3-t}{2}\right).
+  \]
+  普通分段部分只需映射端点：$g$ 在 $[3,4]$ 上高度为 $2$，对应 $x$ 的区间 $[-5,-3]$；$g$ 在 $[2,3]$ 上高度为 $1$，对应区间 $[-3,-1]$。
+
+  冲激项还会发生幅度变化：
+  \begin{align*}
+    2\impulse\!\left(\frac{3-t}{2}-1\right)
+    &=2\impulse\!\left(-\frac12(t-1)\right)\\
+    &=4\impulse(t-1).
+  \end{align*}
+  因此
+  \[
+    x(t)=2\bigl[\stepfun(t+5)-\stepfun(t+3)\bigr]
+    +\bigl[\stepfun(t+3)-\stepfun(t+1)\bigr]
+    +4\impulse(t-1).
+  \]
+  \begin{center}
+    \includegraphics[width=0.38\textwidth]{04-convolution/examples/recover-signal-impulse-answer.pdf}
+    \refstepcounter{figure}\label{fig:ex-recover-signal-answer}
+
+    \small 图~\thefigure：例题 \ref{ex:recover-signal-with-impulse} 反求得到的 $x(t)$。
+  \end{center}
+\end{solution}
+
+\begin{technique}
+  反求复合自变量信号时，先解出原自变量再整体代回。普通函数只改变横坐标；冲激还须用 $\impulse(at)=\impulse(t)/|a|$ 修正幅度，不能漏掉绝对值因子。
+\end{technique}
