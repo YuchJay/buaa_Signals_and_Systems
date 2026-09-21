@@ -1,0 +1,174 @@
+% !TeX root = ../main.tex
+
+\section{本章例题集}
+
+\begin{workedexample}[由幅度谱和相位谱恢复信号]
+  \label{ex:ctft-recover-from-magnitude-phase}
+  已知
+  \[
+    |X(\iu\omega)|=
+    \begin{cases}
+      1,&|\omega|<2,\\
+      0,&|\omega|>2,
+    \end{cases}
+    \qquad
+    \angle X(\iu\omega)=-\omega
+    \quad(|\omega|<2).
+  \]
+  求 $x(t)$。题设频谱见\cref{fig:ex-ctft-phase-given}。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.76\textwidth]{06-ctft/examples/phase-recovery-given.pdf}
+    \caption{例题 \ref{ex:ctft-recover-from-magnitude-phase} 的幅度谱和相位谱。}
+    \label{fig:ex-ctft-phase-given}
+  \end{figure}
+\end{workedexample}
+
+\begin{solution}
+  由幅度和相位，
+  \[
+    X(\iu\omega)=\mathbf 1_{|\omega|<2}\e^{-\iu\omega}.
+  \]
+  基本变换对给出
+  \[
+    \frac{\sin(2t)}{\pi t}
+    \fourierpair
+    \mathbf 1_{|\omega|<2}.
+  \]
+  频域中的 $\e^{-\iu\omega}$ 对应时域延迟 $1$，所以
+  \begin{equation}
+    x(t)=\frac{\sin\bigl(2(t-1)\bigr)}{\pi(t-1)}.
+    \label{eq:ex-ctft-phase-recovery-answer}
+  \end{equation}
+  $t=1$ 处按极限取值 $2/\pi$。结果见\cref{fig:ex-ctft-phase-answer}。
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.72\textwidth]{06-ctft/examples/phase-recovery-answer.pdf}
+    \caption{例题 \ref{ex:ctft-recover-from-magnitude-phase} 恢复出的时域信号。}
+    \label{fig:ex-ctft-phase-answer}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  先把幅度和相位合成复频谱，再识别基本变换对。线性相位 $-\omega t_0$ 对应延迟 $t_0$；只看幅度谱无法确定信号的位置。
+\end{technique}
+
+\begin{workedexample}[两个移位三角脉冲之差]
+  \label{ex:ctft-shifted-triangle-difference}
+  定义
+  \[
+    \Lambda(t)=
+    \begin{cases}
+      1-|t|,&|t|\leq1,\\
+      0,&|t|>1.
+    \end{cases}
+  \]
+  求信号 $x(t)=\Lambda(t-3)-\Lambda(t+3)$ 的傅里叶变换。
+\end{workedexample}
+
+\begin{solution}
+  单位三角脉冲可写成两个单位矩形的卷积，因此
+  \[
+    \Lambda(t)\fourierpair\Sa^2\left(\frac{\omega}{2}\right).
+  \]
+  分别应用时移性质：
+  \begin{align*}
+    X(\iu\omega)
+    &=\Sa^2\left(\frac{\omega}{2}\right)\e^{-\iu3\omega}
+      -\Sa^2\left(\frac{\omega}{2}\right)\e^{\iu3\omega}\\
+    &=-2\iu\Sa^2\left(\frac{\omega}{2}\right)\sin(3\omega).
+  \end{align*}
+  该结果为纯虚奇函数，与 $x(t)$ 是实奇信号相符。
+\end{solution}
+
+\begin{technique}
+  移位信号的线性组合宜先保留指数形式，最后再用欧拉公式合并。算完后检查时域与频域的奇偶性，可迅速发现移位符号写反的问题。
+\end{technique}
+
+\begin{workedexample}[由频谱乘积识别三角脉冲]
+  \label{ex:ctft-inverse-squared-sine}
+  求
+  \[
+    X(\iu\omega)=\frac{2\sin^2(3\omega)}{\omega^2}
+  \]
+  的逆傅里叶变换。
+\end{workedexample}
+
+\begin{solution}
+  令 $r(t)=\mathbf 1_{|t|<3}$，则
+  \[
+    r(t)\fourierpair\frac{2\sin(3\omega)}{\omega}.
+  \]
+  原频谱可分解为
+  \[
+    X(\iu\omega)
+    =\frac12\left[\frac{2\sin(3\omega)}{\omega}\right]^2.
+  \]
+  由卷积性质，$x(t)=\frac12(r\conv r)(t)$。两个宽度为 $6$ 的单位矩形卷积后得到三角脉冲：
+  \[
+    x(t)=
+    \begin{cases}
+      3-\dfrac{|t|}{2},&|t|\leq6,\\
+      0,&|t|>6.
+    \end{cases}
+  \]
+  峰值为 $3$，支撑为 $[-6,6]$。
+\end{solution}
+
+\begin{technique}
+  看到频谱中出现平方，先尝试把它拆成两个已知频谱的乘积。逆变换随后变成时域卷积；矩形与矩形卷积可直接用重叠长度求出。
+\end{technique}
+
+\begin{workedexample}[由输入和输出反求频率响应]
+  \label{ex:ctft-recover-frequency-response}
+  某连续时间 LTI 系统的输入为
+  \[
+    x(t)=\mathbf 1_{0<t<2},
+  \]
+  输出为
+  \[
+    y(t)=
+    \begin{cases}
+      t,&0\leq t\leq1,\\
+      2-t,&1<t\leq2,\\
+      0,&\text{其他}.
+    \end{cases}
+  \]
+  求系统的频率响应 $H(\iu\omega)$，并写出单位冲激响应的逆变换表达式。
+\end{workedexample}
+
+\begin{solution}
+  输入是宽度为 $2$、中心位于 $1$ 的矩形：
+  \[
+    X(\iu\omega)=2\Sa(\omega)\e^{-\iu\omega}.
+  \]
+  输出等于两个 $\mathbf 1_{0<t<1}$ 的卷积。由于
+  \[
+    \mathbf 1_{0<t<1}
+    \fourierpair
+    \Sa\left(\frac{\omega}{2}\right)\e^{-\iu\omega/2},
+  \]
+  故
+  \[
+    Y(\iu\omega)=\Sa^2\left(\frac{\omega}{2}\right)\e^{-\iu\omega}.
+  \]
+  在 $X(\iu\omega)\ne0$ 处，
+  \begin{equation}
+    H(\iu\omega)
+    =\frac{\Sa^2(\omega/2)}{2\Sa(\omega)}
+    =\frac{\tan(\omega/2)}{\omega}.
+    \label{eq:ex-ctft-recovered-frequency-response}
+  \end{equation}
+  上式在奇数倍 $\pi$ 处有极点。若按主值和广义函数意义解释这些极点，则形式上的逆变换为
+  \[
+    h(t)=\frac{1}{2\pi}\int_{-\infty}^{\infty}
+    \frac{\tan(\omega/2)}{\omega}\e^{\iu\omega t}\dd\omega,
+  \]
+  其中积分也取相应的主值。频谱在孤立点上的取值不影响通常的逆变换；若输入频谱在一段区间内恒为零，则那一频段的 $H$ 不能由这组输入输出确定。
+\end{solution}
+
+\begin{technique}
+  先分别求 $X$、$Y$，再在输入频谱非零的频率上计算 $H=Y/X$。约分后还要检查零点：孤立零点可能对应可去间断点或极点，整段为零则表示该频带没有受到激励。
+\end{technique}

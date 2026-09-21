@@ -1,7 +1,7 @@
 \chapter{连续时间傅里叶变换}
 \label{chap:ctft}
 
-傅里叶级数把周期信号分解为离散谐波；当周期趋于无穷大时，基频趋于零，离散谱线变成连续频谱，这就得到连续时间傅里叶变换（continuous-time Fourier transform, CTFT）。本章先建立变换定义和基本变换对，下一节再系统整理变换性质。
+傅里叶级数把周期信号分解为离散谐波。令周期趋于无穷大，基频随之趋于零，离散谱线过渡为连续频谱，由此得到连续时间傅里叶变换（continuous-time Fourier transform, CTFT）。以下先给出定义和基本变换对。
 
 \section{从傅里叶级数到傅里叶变换}
 \label{sec:ctft-definition}
@@ -51,7 +51,7 @@
     1\xleftrightarrow{\ \mathcal F\ }2\pi\impulse(\omega).
     \label{eq:ctft-impulse-constant-pairs}
   \end{equation}
-  第二式说明直流分量位于 $\omega=0$ 的冲激谱线上，而不是普通的有限高度曲线。
+  第二式说明直流分量集中在 $\omega=0$，频谱要用冲激表示。
 \end{example}
 
 \begin{example}[对称矩形脉冲]
@@ -81,7 +81,7 @@
 边界点的取值不影响普通积分意义下的变换。
 
 \begin{example}[单位阶跃的变换]
-  单位阶跃不是绝对可积信号。用截断积分并在分布意义下取极限，得到
+  单位阶跃不满足绝对可积条件。用截断积分并在分布意义下取极限，得到
   \begin{equation}
     \stepfun(t)\xleftrightarrow{\ \mathcal F\ }
     \frac{1}{\iu\omega}+\pi\impulse(\omega).
@@ -95,4 +95,188 @@
   $X(\iu\omega)=4\sin(3\omega)/\omega=12\Sa(3\omega)$；若宽度为 $2$、高度为 $1$，则 $X(\iu\omega)=2\Sa(\omega)$。先确定宽度和面积，再代入矩形变换对，比重新积分更不易出错。
 \end{example}
 
-本节至此只建立傅里叶变换的定义、逆变换及基本变换对；线性、时移、调制、微分、尺度变换、卷积等系统性质留待下一节统一推导。
+线性、时移、调制、微分和卷积性质将在下一节推导。
+
+\section{傅里叶变换的基本性质}
+\label{sec:ctft-properties-before-integration}
+
+本节沿用\cref{eq:ctft-definition,eq:ctft-inverse} 的变换约定。普通积分不收敛时，含冲激的变换对仍按广义函数理解。
+
+\subsection{线性性质}
+
+若 $x_1(t)\fourierpair X_1(\iu\omega)$、$x_2(t)\fourierpair X_2(\iu\omega)$，则
+\begin{equation}
+  a x_1(t)+b x_2(t)
+  \fourierpair
+  aX_1(\iu\omega)+bX_2(\iu\omega).
+  \label{eq:ctft-linearity}
+\end{equation}
+证明只需把线性组合代入傅里叶积分并拆开积分。计算复杂波形时，通常先将其写成已知变换对的缩放与叠加，再分别变换。
+
+\begin{example}[符号函数的傅里叶变换]
+  由 $\operatorname{sgn}(t)=2\stepfun(t)-1$，结合\cref{eq:ctft-step-pair,eq:ctft-impulse-constant-pairs}，得到
+  \[
+    \operatorname{sgn}(t)
+    \fourierpair
+    \frac{2}{\iu\omega}.
+  \]
+  两个冲激项正好抵消。处理阶跃与常数的线性组合时，应把零频冲激一并带入，不能只计算 $1/(\iu\omega)$ 部分。
+\end{example}
+
+\subsection{时移性质}
+
+若 $x(t)\fourierpair X(\iu\omega)$，则
+\begin{equation}
+  x(t-t_0)
+  \fourierpair
+  X(\iu\omega)\e^{-\iu\omega t_0}.
+  \label{eq:ctft-time-shift}
+\end{equation}
+令 $t'=t-t_0$，直接代入定义可得
+\[
+  \int_{-\infty}^{\infty}x(t-t_0)\e^{-\iu\omega t}\dd t
+  =\e^{-\iu\omega t_0}X(\iu\omega).
+\]
+乘子 $\e^{-\iu\omega t_0}$ 的模恒为 $1$，所以时移\red{不改变幅度谱}，只给相位谱增加线性项 $-\omega t_0$。若频谱在某些频率处为零，相位在这些点没有定义。
+
+\begin{example}[延迟的矩形脉冲]
+  宽度为 $2$、中心位于 $t=1$ 的单位矩形可写成 $\mathbf 1_{0<t<2}$。由\cref{eq:ctft-rectangle-pair,eq:ctft-time-shift}，
+  \[
+    \mathbf 1_{0<t<2}
+    \fourierpair
+    2\Sa(\omega)\e^{-\iu\omega}.
+  \]
+  幅度谱与中心在原点的矩形相同，相位中多出 $-\omega$。
+\end{example}
+
+\subsection{频移与调制性质}
+
+若 $x(t)\fourierpair X(\iu\omega)$，则
+\begin{equation}
+  x(t)\e^{\iu\omega_0t}
+  \fourierpair
+  X\bigl(\iu(\omega-\omega_0)\bigr).
+  \label{eq:ctft-frequency-shift}
+\end{equation}
+时域乘以复指数，会把整个频谱向右平移 $\omega_0$。利用余弦的复指数展开，还可得到
+\begin{equation}
+  x(t)\cos(\omega_0t)
+  \fourierpair
+  \frac12X\bigl(\iu(\omega-\omega_0)\bigr)
+  +\frac12X\bigl(\iu(\omega+\omega_0)\bigr).
+  \label{eq:ctft-cosine-modulation}
+\end{equation}
+余弦调制产生位于 $\pm\omega_0$ 的两份频谱副本，每份幅度减半。画图时应先平移横坐标，再乘系数 $1/2$。
+
+\begin{example}[正弦和余弦的冲激频谱]
+  从 $1\fourierpair2\pi\impulse(\omega)$ 出发，应用频移与线性性质可得
+  \begin{align*}
+    \cos(\omega_0t)
+      &\fourierpair
+      \pi\bigl[\impulse(\omega-\omega_0)+\impulse(\omega+\omega_0)\bigr],\\
+    \sin(\omega_0t)
+      &\fourierpair
+      \frac{\pi}{\iu}
+      \bigl[\impulse(\omega-\omega_0)-\impulse(\omega+\omega_0)\bigr].
+  \end{align*}
+  冲激位于正、负两个频率。实余弦的两条谱线同号，实正弦的两条谱线符号相反。
+\end{example}
+
+\subsection{时域微分与频域微分}
+
+设 $x(t)$ 分段光滑，并且分部积分产生的边界项为零，则
+\begin{equation}
+  \frac{\dd x(t)}{\dd t}
+  \fourierpair
+  \iu\omega X(\iu\omega).
+  \label{eq:ctft-time-differentiation}
+\end{equation}
+连续使用该性质，得到
+\begin{equation}
+  \frac{\dd^n x(t)}{\dd t^n}
+  \fourierpair
+  (\iu\omega)^nX(\iu\omega).
+  \label{eq:ctft-higher-time-differentiation}
+\end{equation}
+例如 $\impulse(t)\fourierpair1$，所以 $\impulse^{(n)}(t)\fourierpair(\iu\omega)^n$。时域微分在频域中会放大高频分量，这是理想微分器容易放大高频噪声的原因。
+
+对\cref{eq:ctft-definition} 关于 $\omega$ 求导，可得另一组关系：
+\begin{equation}
+  t x(t)
+  \fourierpair
+  \iu\frac{\dd X(\iu\omega)}{\dd\omega}.
+  \label{eq:ctft-frequency-differentiation}
+\end{equation}
+由 $\e^{-at}\stepfun(t)\fourierpair1/(a+\iu\omega)$（$a>0$），立刻得到
+\begin{equation}
+  t\e^{-at}\stepfun(t)
+  \fourierpair
+  \frac{1}{(a+\iu\omega)^2}.
+  \label{eq:ctft-ramp-exponential-pair}
+\end{equation}
+继续求导可推广为 $t^n\e^{-at}\stepfun(t)\fourierpair n!/(a+\iu\omega)^{n+1}$。
+
+\begin{pitfall}[混淆两种微分性质]
+  时域求导对应频域乘以 $\iu\omega$；时域乘以 $t$ 对应频域求导后再乘 $\iu$。先看运算发生在哪个域，再选公式。
+\end{pitfall}
+
+\subsection{卷积性质}
+
+若 $x(t)\fourierpair X(\iu\omega)$、$h(t)\fourierpair H(\iu\omega)$，则
+\begin{equation}
+  x(t)\conv h(t)
+  \fourierpair
+  X(\iu\omega)H(\iu\omega).
+  \label{eq:ctft-convolution-property}
+\end{equation}
+证明从卷积积分出发：
+\begin{align*}
+  Y(\iu\omega)
+  &=\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}
+    x(\tau)h(t-\tau)\e^{-\iu\omega t}\dd\tau\dd t\\
+  &=\left[\int_{-\infty}^{\infty}x(\tau)\e^{-\iu\omega\tau}\dd\tau\right]
+    \left[\int_{-\infty}^{\infty}h(t')\e^{-\iu\omega t'}\dd t'\right]\\
+  &=X(\iu\omega)H(\iu\omega).
+\end{align*}
+这一步默认可以交换积分次序；常见的绝对可积信号满足该条件。卷积在时域往往需要分段，变到频域后只剩乘法，因此\red{卷积可转为频谱相乘}。
+
+\begin{example}[矩形卷积与三角脉冲]
+  令 $r(t)=\mathbf 1_{|t|<1}$。由\cref{eq:ctft-rectangle-pair}，
+  \[
+    r(t)\fourierpair2\Sa(\omega).
+  \]
+  $r\conv r$ 是支撑在 $[-2,2]$ 上、峰值为 $2$ 的三角脉冲。卷积性质给出
+  \[
+    (r\conv r)(t)\fourierpair4\Sa^2(\omega).
+  \]
+  若第二个矩形高度改为 $1/2$，时域三角脉冲的峰值和频谱都相应减半。
+\end{example}
+
+\section{LTI 系统的频率响应}
+\label{sec:ctft-lti-frequency-response}
+
+连续时间 LTI 系统满足 $y=x\conv h$。由\cref{eq:ctft-convolution-property}，
+\begin{equation}
+  Y(\iu\omega)=X(\iu\omega)H(\iu\omega),
+  \label{eq:ctft-lti-input-output}
+\end{equation}
+其中 $H(\iu\omega)$ 是单位冲激响应 $h(t)$ 的傅里叶变换，称为系统的频率响应（frequency response）。在 $X(\iu\omega)\ne0$ 的频率上，可以由输入和输出反求
+\begin{equation}
+  H(\iu\omega)=\frac{Y(\iu\omega)}{X(\iu\omega)}.
+  \label{eq:ctft-frequency-response-ratio}
+\end{equation}
+若 $X$ 在某段频率上为零，这一次实验无法确定该频段的 $H$；直接变换 $h(t)$ 更稳妥。
+
+常见系统的频率响应可由已有变换对直接写出：
+\begin{align*}
+  h(t)=\impulse'(t)
+  &\quad\Longrightarrow\quad H(\iu\omega)=\iu\omega,
+  &&\text{理想微分器},\\
+  h(t)=\stepfun(t)
+  &\quad\Longrightarrow\quad H(\iu\omega)=\frac{1}{\iu\omega}+\pi\impulse(\omega),
+  &&\text{从负无穷起算的积分器},\\
+  h(t)=\impulse(t-t_0)
+  &\quad\Longrightarrow\quad H(\iu\omega)=\e^{-\iu\omega t_0},
+  &&\text{理想延迟器}.
+\end{align*}
+理想延迟器的幅度响应恒为 $1$，相位为 $-\omega t_0$。它只移动波形，不改变各频率分量的幅度。
