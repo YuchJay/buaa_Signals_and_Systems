@@ -573,12 +573,12 @@
   =(x\conv h)(t-a-b).
   \label{eq:convolution-shift-composition}
 \end{equation}
-两项时移量在输出端相加。原笔记中的特殊情形
+两项时移量在输出端相加。取 $a=-t_0$、$b=t_0$，两项时移相互抵消，得到
 \begin{equation}
   x(t+t_0)\conv h(t-t_0)=x(t)\conv h(t)
   \label{eq:opposite-shifts-cancel}
 \end{equation}
-正是 $a=-t_0$、$b=t_0$，两项时移相互抵消。口诀是\red{卷积两端的时移量相加}，不要把卷积误当成逐点乘法。
+口诀是\red{卷积两端的时移量相加}，不要把卷积误当成逐点乘法。
 
 \begin{example}[乘积、积分与卷积不可混淆]
   对同一个 $x(t+2)$ 与 $\impulse(t-3)$，三种运算给出不同结果：

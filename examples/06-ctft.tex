@@ -1,5 +1,7 @@
 % !TeX root = ../main.tex
 
+\begingroup
+\raggedbottom
 \section{本章例题集}
 
 \begin{workedexample}[由幅度谱和相位谱恢复信号]
@@ -12,12 +14,12 @@
       0,&|\omega|>2,
     \end{cases}
     \qquad
-    \angle X(\iu\omega)=-\omega
+    \theta(\omega)=-2\omega
     \quad(|\omega|<2).
   \]
-  求 $x(t)$。题设频谱见\cref{fig:ex-ctft-phase-given}。
+  求 $x(t)$。题设采用展开相位，频谱见\cref{fig:ex-ctft-phase-given}。
 
-  \begin{figure}[htbp]
+  \begin{figure}[H]
     \centering
     \includegraphics[width=0.76\textwidth]{06-ctft/examples/phase-recovery-given.pdf}
     \caption{例题 \ref{ex:ctft-recover-from-magnitude-phase} 的幅度谱和相位谱。}
@@ -28,7 +30,7 @@
 \begin{solution}
   由幅度和相位，
   \[
-    X(\iu\omega)=\mathbf 1_{|\omega|<2}\e^{-\iu\omega}.
+    X(\iu\omega)=\mathbf 1_{|\omega|<2}\e^{-2\iu\omega}.
   \]
   基本变换对给出
   \[
@@ -36,14 +38,14 @@
     \fourierpair
     \mathbf 1_{|\omega|<2}.
   \]
-  频域中的 $\e^{-\iu\omega}$ 对应时域延迟 $1$，所以
+  频域中的 $\e^{-2\iu\omega}$ 对应时域延迟 $2$，所以
   \begin{equation}
-    x(t)=\frac{\sin\bigl(2(t-1)\bigr)}{\pi(t-1)}.
+    x(t)=\frac{\sin\bigl(2(t-2)\bigr)}{\pi(t-2)}.
     \label{eq:ex-ctft-phase-recovery-answer}
   \end{equation}
-  $t=1$ 处按极限取值 $2/\pi$。结果见\cref{fig:ex-ctft-phase-answer}。
+  $t=2$ 处按极限取值 $2/\pi$。结果见\cref{fig:ex-ctft-phase-answer}。
 
-  \begin{figure}[htbp]
+  \begin{figure}[H]
     \centering
     \includegraphics[width=0.72\textwidth]{06-ctft/examples/phase-recovery-answer.pdf}
     \caption{例题 \ref{ex:ctft-recover-from-magnitude-phase} 恢复出的时域信号。}
@@ -53,6 +55,8 @@
 
 \begin{technique}
   先把幅度和相位合成复频谱，再识别基本变换对。线性相位 $-\omega t_0$ 对应延迟 $t_0$；只看幅度谱无法确定信号的位置。
+  若通带改为 $|\omega|<1$，相位改为 $-\omega$，同样的方法给出
+  $x(t)=\sin(t-1)/[\pi(t-1)]$。
 \end{technique}
 
 \begin{workedexample}[两个移位三角脉冲之差]
@@ -65,7 +69,13 @@
       0,&|t|>1.
     \end{cases}
   \]
-  求信号 $x(t)=\Lambda(t-3)-\Lambda(t+3)$ 的傅里叶变换。
+  求信号 $x(t)=\Lambda(t-3)-\Lambda(t+3)$ 的傅里叶变换。波形见\cref{fig:ex-ctft-triangle-difference-given}。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.72\textwidth]{06-ctft/examples/triangle-difference-given.pdf}
+    \caption{例题 \ref{ex:ctft-shifted-triangle-difference} 的时域波形。}
+    \label{fig:ex-ctft-triangle-difference-given}
+  \end{figure}
 \end{workedexample}
 
 \begin{solution}
@@ -80,7 +90,13 @@
       -\Sa^2\left(\frac{\omega}{2}\right)\e^{\iu3\omega}\\
     &=-2\iu\Sa^2\left(\frac{\omega}{2}\right)\sin(3\omega).
   \end{align*}
-  该结果为纯虚奇函数，与 $x(t)$ 是实奇信号相符。
+  该结果为纯虚奇函数，与 $x(t)$ 是实奇信号相符。虚部见\cref{fig:ex-ctft-triangle-difference-answer}。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.72\textwidth]{06-ctft/examples/triangle-difference-answer.pdf}
+    \caption{例题 \ref{ex:ctft-shifted-triangle-difference} 的虚部频谱。}
+    \label{fig:ex-ctft-triangle-difference-answer}
+  \end{figure}
 \end{solution}
 
 \begin{technique}
@@ -114,7 +130,13 @@
       0,&|t|>6.
     \end{cases}
   \]
-  峰值为 $3$，支撑为 $[-6,6]$。
+  峰值为 $3$，支撑为 $[-6,6]$，见\cref{fig:ex-ctft-squared-sine-answer}。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.72\textwidth]{06-ctft/examples/squared-sine-answer.pdf}
+    \caption{例题 \ref{ex:ctft-inverse-squared-sine} 恢复出的三角脉冲。}
+    \label{fig:ex-ctft-squared-sine-answer}
+  \end{figure}
 \end{solution}
 
 \begin{technique}
@@ -136,7 +158,13 @@
       0,&\text{其他}.
     \end{cases}
   \]
-  求系统的频率响应 $H(\iu\omega)$，并写出单位冲激响应的逆变换表达式。
+  求系统的频率响应 $H(\iu\omega)$，并写出单位冲激响应的逆变换表达式。输入和输出见\cref{fig:ex-ctft-lti-identification-given}。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.86\textwidth]{06-ctft/examples/lti-identification-given.pdf}
+    \caption{例题 \ref{ex:ctft-recover-frequency-response} 的输入矩形与输出三角脉冲。}
+    \label{fig:ex-ctft-lti-identification-given}
+  \end{figure}
 \end{workedexample}
 
 \begin{solution}
@@ -172,3 +200,325 @@
 \begin{technique}
   先分别求 $X$、$Y$，再在输入频谱非零的频率上计算 $H=Y/X$。约分后还要检查零点：孤立零点可能对应可去间断点或极点，整段为零则表示该频带没有受到激励。
 \end{technique}
+
+% 来源：materials/chapter3.pdf，第 23--26 页。
+\begin{workedexample}[用频域乘积计算指数信号的卷积]
+  \label{ex:ctft-exponential-convolution}
+  设 $a,b>0$，求
+  \[
+    y(t)=\e^{-at}\stepfun(t)\conv\e^{-bt}\stepfun(t).
+  \]
+  分别讨论 $a\ne b$ 与 $a=b$。
+\end{workedexample}
+
+\begin{solution}
+  由卷积性质，
+  \[
+    Y(\iu\omega)=\frac{1}{(a+\iu\omega)(b+\iu\omega)}.
+  \]
+  当 $a\ne b$ 时，部分分式展开为
+  \[
+    Y(\iu\omega)=\frac{1}{b-a}
+      \left(\frac{1}{a+\iu\omega}-\frac{1}{b+\iu\omega}\right),
+  \]
+  逐项逆变换得到
+  \[
+    y(t)=\frac{\e^{-at}-\e^{-bt}}{b-a}\stepfun(t).
+  \]
+  当 $a=b$ 时，$Y(\iu\omega)=1/(a+\iu\omega)^2$，由\cref{eq:ctft-ramp-exponential-pair}，
+  \[
+    y(t)=t\e^{-at}\stepfun(t).
+  \]
+  两个结果在 $b\to a$ 时相接。与时域计算所得结果一致，输出在 $t<0$ 时均为零；典型波形见\cref{fig:ex-ctft-exponential-convolution}。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.72\textwidth]{06-ctft/examples/exponential-convolution-answer.pdf}
+    \caption{例题 \ref{ex:ctft-exponential-convolution} 的输出：两个不同衰减率与两个相同衰减率的情形。}
+    \label{fig:ex-ctft-exponential-convolution}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  指数信号的卷积可先变成有理频谱的乘积。不同的一次因子用部分分式展开；相同因子合并成高次分母，再识别 $t^n\e^{-at}\stepfun(t)$。
+\end{technique}
+
+\begin{workedexample}[由指数输入和输出求单位冲激响应]
+  \label{ex:ctft-exponential-system-identification}
+  某连续时间 LTI 系统在输入
+  \[
+    x(t)=\e^{-2t}\stepfun(t)
+  \]
+  作用下，输出为
+  \[
+    y(t)=\frac12\bigl(\e^{-t}-\e^{-3t}\bigr)\stepfun(t).
+  \]
+  求 $h(t)$。
+\end{workedexample}
+
+\begin{solution}
+  分别变换输入和输出：
+  \[
+    X(\iu\omega)=\frac{1}{2+\iu\omega},\qquad
+    Y(\iu\omega)=\frac12\left(\frac{1}{1+\iu\omega}
+       -\frac{1}{3+\iu\omega}\right)
+      =\frac{1}{(1+\iu\omega)(3+\iu\omega)}.
+  \]
+  $X$ 在实频率轴上没有零点，故
+  \[
+    H(\iu\omega)=\frac{2+\iu\omega}{(1+\iu\omega)(3+\iu\omega)}
+    =\frac12\left(\frac{1}{1+\iu\omega}
+                   +\frac{1}{3+\iu\omega}\right).
+  \]
+  所求响应为
+  \[
+    h(t)=\frac12\bigl(\e^{-t}+\e^{-3t}\bigr)\stepfun(t),
+  \]
+  如\cref{fig:ex-ctft-exponential-identification}。$h(t)$ 为因果且绝对可积的函数，该系统因而因果且 BIBO 稳定。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.70\textwidth]{06-ctft/examples/exponential-identification-answer.pdf}
+    \caption{例题 \ref{ex:ctft-exponential-system-identification} 的单位冲激响应。}
+    \label{fig:ex-ctft-exponential-identification}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  先将输出频谱通分，再计算 $H=Y/X$，往往比直接对多个分式作除法更简洁。求出 $h$ 后，可用支撑区间和绝对可积性检查系统性质。
+\end{technique}
+
+\begin{workedexample}[三个一次因子的部分分式展开]
+  \label{ex:ctft-three-pole-inverse}
+  求
+  \[
+    X(\iu\omega)=\frac{1}{(1+\iu\omega)(2+\iu\omega)(3+\iu\omega)}
+  \]
+  的逆傅里叶变换。
+\end{workedexample}
+
+\begin{solution}
+  令 $s=\iu\omega$，只将 $s$ 用作代数简记，设
+  \[
+    \frac{1}{(s+1)(s+2)(s+3)}
+       =\frac{A}{s+1}+\frac{B}{s+2}+\frac{C}{s+3}.
+  \]
+  两边乘以分母后，分别代入 $s=-1,-2,-3$，得到
+  $A=1/2$、$B=-1$、$C=1/2$。因此
+  \[
+    x(t)=\left(\frac12\e^{-t}-\e^{-2t}
+                      +\frac12\e^{-3t}\right)\stepfun(t)
+      =\frac12\e^{-t}(1-\e^{-t})^2\stepfun(t).
+  \]
+  后一种写法说明 $x(t)\geq0$，且 $x(0)=0$。波形见\cref{fig:ex-ctft-three-pole-inverse}。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.70\textwidth]{06-ctft/examples/three-pole-answer.pdf}
+    \caption{例题 \ref{ex:ctft-three-pole-inverse} 的时域信号。}
+    \label{fig:ex-ctft-three-pole-inverse}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  一次因子互异时，通分后代入各因子的零点即可求出系数。带正负号的指数之和可再适当因式分解，用于检查初值和符号。
+\end{technique}
+
+\begin{workedexample}[用傅里叶变换求微分方程的零状态响应]
+  \label{ex:ctft-differential-equation-response}
+  某因果 LTI 系统满足
+  \[
+    \frac{\dd^2y(t)}{\dd t^2}+4\frac{\dd y(t)}{\dd t}+3y(t)
+    =\frac{\dd x(t)}{\dd t}+2x(t).
+  \]
+  系统初始静止。输入为 $x(t)=\e^{-t}\stepfun(t)$，求输出 $y(t)$。
+\end{workedexample}
+
+\begin{solution}
+  用时域微分性质对方程两边作变换。阶跃带来的冲激项由广义导数统一处理，得到
+  \[
+    [(\iu\omega)^2+4\iu\omega+3]Y(\iu\omega)
+      =(\iu\omega+2)X(\iu\omega).
+  \]
+  代入 $X(\iu\omega)=1/(1+\iu\omega)$，有
+  \[
+    Y(\iu\omega)=
+    \frac{\iu\omega+2}{(1+\iu\omega)^2(3+\iu\omega)}.
+  \]
+  分母含重根，展开时需要两种次数：
+  \[
+    Y(\iu\omega)=\frac{1/4}{1+\iu\omega}
+      +\frac{1/2}{(1+\iu\omega)^2}
+      -\frac{1/4}{3+\iu\omega}.
+  \]
+  逐项逆变换，
+  \[
+    y(t)=\left(\frac14\e^{-t}+\frac12t\e^{-t}
+                         -\frac14\e^{-3t}\right)\stepfun(t).
+  \]
+  如\cref{fig:ex-ctft-differential-equation-response}，输出从零开始。虽然系统初始静止，但输入在零时刻跳变，$\dd x/\dd t$ 含有冲激，因此不应另行强加 $y'(0^+)=0$。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.70\textwidth]{06-ctft/examples/differential-equation-answer.pdf}
+    \caption{例题 \ref{ex:ctft-differential-equation-response} 的零状态输出。}
+    \label{fig:ex-ctft-differential-equation-response}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  对初始静止系统，先将求导转换为频域乘以 $\iu\omega$，求出 $H$ 后再乘输入频谱。重根处的部分分式必须包含从一次到最高次的所有分母项；初值条件应区分跳变前与跳变后。
+\end{technique}
+
+\begin{workedexample}[由两个移位三角频谱恢复信号]
+  \label{ex:ctft-two-triangle-spectra}
+  已知 $X(\iu\omega)$ 为两个高度为 $1$ 的三角形，中心分别位于 $\omega=\pm3$，支撑分别为 $[-4,-2]$、$[2,4]$：
+  \[
+    X(\iu\omega)=\max(1-|\omega-3|,0)+\max(1-|\omega+3|,0).
+  \]
+  题设频谱见\cref{fig:ex-ctft-two-triangle-given}。求 $x(t)$。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.72\textwidth]{06-ctft/examples/two-triangle-given.pdf}
+    \caption{例题 \ref{ex:ctft-two-triangle-spectra} 的频谱。}
+    \label{fig:ex-ctft-two-triangle-given}
+  \end{figure}
+\end{workedexample}
+
+\begin{solution}
+  先求中心在原点的单位三角频谱
+  $G(\iu\omega)=\max(1-|\omega|,0)$ 的逆变换。
+  令 $R(\omega)=\mathbf 1_{|\omega|<1/2}$，则
+  \[
+    G(\iu\omega)=(R\conv R)(\omega),\qquad
+    r(t)=\frac{\sin(t/2)}{\pi t}\fourierpair R(\omega).
+  \]
+  由频域卷积性质，
+  \[
+    g(t)=2\pi r^2(t)=\frac{2\sin^2(t/2)}{\pi t^2}.
+  \]
+  将频谱分别平移到 $\pm3$ 并相加，对应时域乘以两项复指数之和：
+  \[
+    x(t)=g(t)\bigl(\e^{\iu3t}+\e^{-\iu3t}\bigr)
+        =\frac{4\sin^2(t/2)\cos(3t)}{\pi t^2}.
+  \]
+  $t=0$ 处按极限取值 $x(0)=1/\pi$，也等于频谱总面积除以 $2\pi$。时域波形见\cref{fig:ex-ctft-two-triangle-answer}。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.72\textwidth]{06-ctft/examples/two-triangle-answer.pdf}
+    \caption{例题 \ref{ex:ctft-two-triangle-spectra} 恢复出的信号。}
+    \label{fig:ex-ctft-two-triangle-answer}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  先把频谱移回原点并识别形状，再处理频移。三角频谱写成两个矩形的卷积后，逆变换就是两个 sinc 信号相乘；对称的正、负频移最终合成余弦。
+\end{technique}
+
+\begin{workedexample}[用能量归一化确定波形]
+  \label{ex:ctft-parseval-normalize}
+  设 $A>0$，且 $X(\iu\omega)$ 满足
+  \[
+    \IFT\bigl[(2+\iu\omega)X(\iu\omega)\bigr]
+    =A\e^{-t}\stepfun(t),
+  \]
+  \[
+    \frac{1}{2\pi}\int_{-\infty}^{\infty}|X(\iu\omega)|^2\dd\omega=1.
+  \]
+  求 $x(t)$。
+\end{workedexample}
+
+\begin{solution}
+  第一式说明 $(2+\iu\omega)X(\iu\omega)$ 是 $A\e^{-t}\stepfun(t)$ 的变换，
+  \[
+    (2+\iu\omega)X(\iu\omega)=\frac{A}{1+\iu\omega}.
+  \]
+  分解
+  \[
+    X(\iu\omega)
+    =\frac{A}{(1+\iu\omega)(2+\iu\omega)}
+    =A\left(\frac{1}{1+\iu\omega}-\frac{1}{2+\iu\omega}\right),
+  \]
+  逐项逆变换，
+  \[
+    x(t)=A(\e^{-t}-\e^{-2t})\stepfun(t).
+  \]
+  第二式就是 $\int_{-\infty}^{\infty}|x(t)|^2\dd t=1$。计算
+  \begin{align*}
+    \int_0^{\infty}(\e^{-t}-\e^{-2t})^2\dd t
+    &=\int_0^{\infty}(\e^{-2t}-2\e^{-3t}+\e^{-4t})\dd t\\
+    &=\frac12-\frac23+\frac14=\frac{1}{12}.
+  \end{align*}
+  于是 $A^2/12=1$。$A>0$，故 $A=2\sqrt{3}$，
+  \begin{equation}
+    x(t)=2\sqrt{3}\,(\e^{-t}-\e^{-2t})\stepfun(t).
+    \label{eq:ex-ctft-parseval-answer}
+  \end{equation}
+  频域可以再核一次。$|X(\iu\omega)|^2=A^2/[(1+\omega^2)(4+\omega^2)]$，而
+  \[
+    \frac{1}{(1+\omega^2)(4+\omega^2)}
+    =\frac13\left(\frac{1}{1+\omega^2}-\frac{1}{4+\omega^2}\right).
+  \]
+  从 $-\infty$ 到 $\infty$ 的积分等于 $\pi/6$，乘上 $A^2/(2\pi)$ 后仍是 $A^2/12$。波形见\cref{fig:ex-ctft-parseval-answer}。
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.72\textwidth]{06-ctft/examples/parseval-normalized-answer.pdf}
+    \caption{例题 \ref{ex:ctft-parseval-normalize} 的信号。}
+    \label{fig:ex-ctft-parseval-answer}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  先利用乘以 $\iu\omega$ 或 $(a+\iu\omega)$ 的关系定出频谱形状，能量条件只负责一个正比例常数。时域积分和帕塞瓦尔积分应给出同一个常数；两个结果不同时，先检查部分分式的符号和 $1/(2\pi)$。
+\end{technique}
+
+\begin{workedexample}[用一个周期的变换求三角波系数]
+  \label{ex:ctft-triangle-fs}
+  设 $x(t)$ 以 $T>0$ 为周期，且为偶函数。在 $|t|<T/2$ 内
+  \[
+    x(t)=E\left(1-\frac{2|t|}{T}\right),
+  \]
+  峰值为 $E$，在 $t=\pm T/2$ 降到 $0$。求复系数 $A_k$，并写成余弦级数。波形见\cref{fig:ex-ctft-triangle-fs-given}。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.72\textwidth]{06-ctft/examples/triangle-fs-given.pdf}
+    \caption{例题 \ref{ex:ctft-triangle-fs} 的一个周期波形，横轴按 $T$ 归一化。}
+    \label{fig:ex-ctft-triangle-fs-given}
+  \end{figure}
+\end{workedexample}
+
+\begin{solution}
+  取 $|t|<T/2$ 上的这一段，周期外置零，记为 $x_1$。它是峰值 $E$、底宽 $T$ 的三角脉冲。对照\cref{eq:ctft-triangle-pair}，其中的底宽参数取 $T/2$，
+  \[
+    X_1(\iu\omega)=\frac{ET}{2}\Sa^2\!\left(\frac{\omega T}{4}\right).
+  \]
+  周期为 $T$ 时 $\omega_0=2\pi/T$。由\cref{eq:ctft-coefficient-from-transform}，
+  \[
+    A_k=\frac{1}{T}X_1(\iu k\omega_0)
+    =\frac{E}{2}\Sa^2\!\left(\frac{k\pi}{2}\right).
+  \]
+  $\Sa(0)=1$，所以 $A_0=E/2$。$k\neq 0$ 时
+  \[
+    A_k=\frac{2E\sin^2(k\pi/2)}{\pi^2 k^2}.
+  \]
+  偶数 $k\neq 0$ 使 $\sin(k\pi/2)=0$，对应系数为零。信号为实偶函数，级数只含余弦：
+  \begin{equation}
+    x(t)=\frac{E}{2}
+    +\sum_{m=0}^{\infty}
+      \frac{4E}{\pi^2(2m+1)^2}
+      \cos\bigl((2m+1)\omega_0 t\bigr).
+    \label{eq:ex-ctft-triangle-fs-series}
+  \end{equation}
+  系数见\cref{fig:ex-ctft-triangle-fs-answer}。$k=\pm 1$ 时 $A_k/E=2/\pi^2$。
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.72\textwidth]{06-ctft/examples/triangle-fs-answer.pdf}
+    \caption{例题 \ref{ex:ctft-triangle-fs} 的复系数，纵轴按 $E$ 归一化。}
+    \label{fig:ex-ctft-triangle-fs-answer}
+  \end{figure}
+\end{solution}
+
+\begin{technique}
+  先划出一个周期并套已知的脉冲变换，再在 $k\omega_0$ 处取样、除以周期。偶函数只有余弦项。$\sin(k\pi/2)$ 在偶数 $k$ 为零，这些谐波可以在取样之前划掉。
+\end{technique}
+
+\clearpage
+\endgroup

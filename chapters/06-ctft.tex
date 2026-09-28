@@ -6,96 +6,289 @@
 \section{从傅里叶级数到傅里叶变换}
 \label{sec:ctft-definition}
 
-周期信号的复指数级数为
+先取一个有限时宽信号 $x(t)$，将它以周期 $T_0$ 重复，得到周期信号 $\widetilde x_{T_0}(t)$。当 $T_0$ 大于信号的支撑宽度时，各副本不重叠，其复指数级数为
 \begin{equation}
-  x(t)=\sum_{k=-\infty}^{\infty}a_k\e^{\iu k\omega_0t},\qquad
+  \widetilde x_{T_0}(t)=\sum_{k=-\infty}^{\infty}a_k\e^{\iu k\omega_0t},\qquad
   a_k=\frac{1}{T_0}\int_{t_0}^{t_0+T_0}x(t)\e^{-\iu k\omega_0t}\dd t.
   \label{eq:ctft-periodic-series-start}
 \end{equation}
-令 $T_0\to\infty$，则 $\omega_0=2\pi/T_0\to0$，频率采样点 $\omega=k\omega_0$ 变得连续。定义
+这里的积分区间包含 $x$ 的完整支撑。定义
 \begin{equation}
   X(\iu\omega)=\int_{-\infty}^{\infty}x(t)\e^{-\iu\omega t}\dd t,
   \label{eq:ctft-definition}
 \end{equation}
-逆变换为
+则 $a_k=X(\iu k\omega_0)/T_0$。利用 $1/T_0=\omega_0/(2\pi)$，级数改写为
+\[
+  \widetilde x_{T_0}(t)
+  =\frac{1}{2\pi}\sum_{k=-\infty}^{\infty}
+    X(\iu k\omega_0)\e^{\iu k\omega_0t}\omega_0.
+\]
+令 $T_0\to\infty$，重复副本远离，$\omega_0\to0$。和式中的\red{频率间隔趋于零}，在极限成立的条件下，求和成为积分：
 \begin{equation}
   x(t)=\frac{1}{2\pi}\int_{-\infty}^{\infty}X(\iu\omega)\e^{\iu\omega t}\dd\omega.
   \label{eq:ctft-inverse}
 \end{equation}
-记号 $x(t)\xleftrightarrow{\ \mathcal F\ }X(\iu\omega)$ 表示一对正、逆傅里叶变换。$\iu\omega$ 是频域变量的记号，画频谱时横轴仍是实频率 $\omega$。
+记号 $x(t)\xleftrightarrow{\ \mathcal F\ }X(\iu\omega)$ 表示一对正、逆傅里叶变换，计算时也写成 $\mathcal F[x(t)]=X(\iu\omega)$、$\mathcal F^{-1}[X(\iu\omega)]=x(t)$。$x(t)$ 描述时域（time domain），$X(\iu\omega)$ 描述频域（frequency domain）。写成 $X(\iu\omega)$ 时，\red{自变量仍是实频率} $\omega$；$\iu$ 只是沿用的记号。角频率 $\omega$ 的单位为 $\mathrm{rad/s}$，与频率 $f$ 的关系为 $\omega=2\pi f$。
+
+上述推导可推广到无限时宽信号。$\int |x(t)|\dd t<\infty$ 是傅里叶积分收敛的充分条件；若还满足每个有限区间内只有有限个极值点与有限个有限跳跃间断点，则逆变换在连续点恢复原值，在跳跃处恢复左右极限的平均值。绝对可积并非必要条件：sinc 信号可用振荡积分或均方意义处理，常数、正弦与阶跃则需广义函数意义。
 
 \begin{pitfall}[混淆级数系数与变换]
-  傅里叶级数系数 $a_k$ 含有 $1/T_0$，只在离散谐波 $k\omega_0$ 上定义；傅里叶变换 $X(\iu\omega)$ 是连续频率函数。过渡时必须同时记住 $a_k=X(\iu k\omega_0)/T_0$ 和求和到积分的替换。
+  傅里叶级数系数 $a_k$ 含有 $1/T_0$，只在离散谐波 $k\omega_0$ 上定义。上面的 $X$ 是被周期重复的单个信号 $x$ 的变换，不能将 $a_k=X(\iu k\omega_0)/T_0$ 中的 $X$ 当成周期信号本身的普通函数频谱。连续频谱在宽度 $\dd\omega$ 内对逆变换的贡献还包含因子 $\dd\omega/(2\pi)$。
 \end{pitfall}
 
-\section{基本变换对与典型计算}
+\section{幅度谱与相位谱}
+\label{sec:ctft-magnitude-phase}
+
+\begin{definition}[幅度谱与相位谱]
+  \label{def:ctft-magnitude-phase}
+  对普通复值频谱，在 $X(\iu\omega)\ne0$ 处写成
+  \begin{equation}
+    X(\iu\omega)=|X(\iu\omega)|\e^{\iu\theta(\omega)}.
+    \label{eq:ctft-polar-spectrum}
+  \end{equation}
+  随 $\omega$ 变化的 $|X(\iu\omega)|$ 称为幅度谱（magnitude spectrum），$\theta(\omega)=\arg X(\iu\omega)$ 称为相位谱（phase spectrum）。\red{幅度与相位共同确定频谱}。
+\end{definition}
+
+若 $X=X_{\mathrm R}+\iu X_{\mathrm I}$，则
+\[
+  |X|=\sqrt{X_{\mathrm R}^2+X_{\mathrm I}^2},\qquad
+  \theta=\operatorname{atan2}(X_{\mathrm I},X_{\mathrm R}).
+\]
+求相位时要根据实部、虚部确定象限，不能对任意复数都直接使用 $\arctan(X_{\mathrm I}/X_{\mathrm R})$。
+相位相差 $2\pi$ 的整数倍时表示同一个复数；主值相位通常取在 $(-\pi,\pi]$，也可按连续变化选取展开相位。
+
+\red{幅度谱恒为非负}。实值频谱 $X$ 的负瓣在幅度谱中须翻到横轴上方，其符号由相位 $\pi$ 表示；在 $X=0$ 处，\red{相位没有定义}。因此画一条有正、负瓣的实函数曲线时，纵轴应标 $X(\iu\omega)$，不能标成 $|X(\iu\omega)|$。
+
+含冲激的频谱按谱线表示。若某条谱线为 $C\impulse(\omega-\omega_0)$，箭头旁的 $C$ 表示冲激权重；讨论这条谱线的幅度和相位时，分别指 $|C|$ 与 $\arg C$，不把冲激当作有限高度的普通函数。
+
+\section{典型信号的傅里叶变换}
 \label{sec:ctft-basic-pairs}
 
-以下变换对直接由定义、逆变换或分布意义下的极限得到。$\Sa(u)=\sin(u)/u$ 沿用第二章的非归一化定义。
+以下七组变换对是后续计算的基本结论。$\Sa(v)=\sin(v)/v$，并按极限取 $\Sa(0)=1$。普通函数的变换直接积分，含冲激的变换在广义函数意义下理解。
 
-\begin{example}[右侧指数衰减]
-  对 $a>0$，令 $x(t)=\e^{-at}\stepfun(t)$，则
-  \[
-    X(\iu\omega)=\int_0^{\infty}\e^{-(a+\iu\omega)t}\dd t
+\subsection{右侧衰减指数信号}
+\label{sec:ctft-exponential-pair}
+
+对实数 $a>0$，
+\begin{equation}
+  \boxed{\e^{-at}\stepfun(t)\fourierpair\frac{1}{a+\iu\omega}}.
+  \label{eq:ctft-exponential-pair}
+\end{equation}
+由定义，
+\[
+  X(\iu\omega)=\int_0^\infty\e^{-(a+\iu\omega)t}\dd t
     =\frac{1}{a+\iu\omega}
     =\frac{a-\iu\omega}{a^2+\omega^2}.
-  \]
-  因而 $|X(\iu\omega)|=1/\sqrt{a^2+\omega^2}$，这是低通型频谱的基本例子。
-\end{example}
+\]
+实部、虚部和幅相表达式分别为
+\begin{align*}
+  X_{\mathrm R}(\omega)&=\frac{a}{a^2+\omega^2},
+  &X_{\mathrm I}(\omega)&=-\frac{\omega}{a^2+\omega^2},\\
+  |X(\iu\omega)|&=\frac{1}{\sqrt{a^2+\omega^2}},
+  &\theta(\omega)&=-\arctan\frac{\omega}{a}.
+\end{align*}
+幅度谱在零频处取最大值 $1/a$，随 $|\omega|$ 增大而减小；相位在零频处为零，当 $\omega\to\pm\infty$ 时趋于 $\mp\pi/2$，见\cref{fig:ctft-exponential-spectrum}。分母的辐角在取倒数后变号，因此\red{正频率侧的相位为负}。
 
-\begin{example}[单位冲激与直流常数]
-  冲激抽样性质给出
-  \begin{equation}
-    \impulse(t)\xleftrightarrow{\ \mathcal F\ }1,
-    \qquad
-    1\xleftrightarrow{\ \mathcal F\ }2\pi\impulse(\omega).
-    \label{eq:ctft-impulse-constant-pairs}
-  \end{equation}
-  第二式说明直流分量集中在 $\omega=0$，频谱要用冲激表示。
-\end{example}
+若把 $h(t)=\e^{-at}\stepfun(t)$ 作为 LTI 系统的冲激响应，则其频率响应呈低通形状。相对于零频增益，
+\[
+  \frac{|H(\iu\omega)|}{|H(0)|}
+     =\frac{a}{\sqrt{a^2+\omega^2}}.
+\]
+通常的 $-3\,\mathrm{dB}$ 截止频率按\red{半功率标准}确定：
+\[
+  \frac{|H(\iu\omega_{\mathrm{3dB}})|}{|H(0)|}=\frac{1}{\sqrt2}
+  \quad\Longrightarrow\quad \omega_{\mathrm{3dB}}=a,
+  \qquad f_{\mathrm{3dB}}=\frac{a}{2\pi}.
+\]
+这里 $20\log_{10}(1/\sqrt2)\approx-3.01\,\mathrm{dB}$，对应幅度平方减半。若取\red{幅度减半}作为另一个宽度指标，则得到 $|\omega|=\sqrt3a$，对应约 $-6.02\,\mathrm{dB}$；两个标准不能混用。
 
-\begin{example}[对称矩形脉冲]
-  设 $x(t)=E$（$|t|<\tau/2$），其余为零。直接积分得到
-  \begin{align*}
-    X(\iu\omega)&=E\int_{-\tau/2}^{\tau/2}\e^{-\iu\omega t}\dd t
-    =\frac{2E\sin(\omega\tau/2)}{\omega}
-    =E\tau\Sa\left(\frac{\omega\tau}{2}\right).
-  \end{align*}
-  因而
-  \begin{equation}
-    E\,\mathbf{1}_{|t|<\tau/2}
-    \xleftrightarrow{\ \mathcal F\ }
-    E\tau\Sa\left(\frac{\omega\tau}{2}\right).
-    \label{eq:ctft-rectangle-pair}
-  \end{equation}
-  脉冲越窄，频谱主瓣越宽；脉冲面积 $E\tau$ 等于 $X(0)$。
-\end{example}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.96\textwidth]{06-ctft/basic/exponential-spectrum.pdf}
+  \caption{右侧衰减指数信号及频谱。横轴按 $at$、$\omega/a$ 归一化；幅度图同时标出幅度比 $1/\sqrt2$ 与 $1/2$。}
+  \label{fig:ctft-exponential-spectrum}
+\end{figure}
 
-对应的逆向变换对为
+\subsection{单位冲激}
+
 \begin{equation}
-  \frac{\sin(\omega_c t)}{\pi t}
-  \xleftrightarrow{\ \mathcal F\ }
-  \begin{cases}1,&|\omega|<\omega_c,\\0,&|\omega|>\omega_c,\end{cases}
+  \boxed{\impulse(t)\fourierpair1}.
+  \label{eq:ctft-impulse-constant-pairs}
+\end{equation}
+冲激抽样性质直接给出
+\[
+  X(\iu\omega)=\int_{-\infty}^{\infty}\impulse(t)\e^{-\iu\omega t}\dd t=1.
+\]
+因此它的\red{幅度谱处处为一}，相位处处为零。冲激在时域集中于一个时刻，但其频谱\red{覆盖全部频率}，见\cref{fig:ctft-impulse-constant} 上行。
+
+\subsection{直流常数}
+
+\begin{equation}
+  \boxed{1\fourierpair2\pi\impulse(\omega)}.
+  \label{eq:ctft-constant-pair}
+\end{equation}
+用逆变换即可核对系数：
+\[
+  \frac{1}{2\pi}\int_{-\infty}^{\infty}2\pi\impulse(\omega)
+            \e^{\iu\omega t}\dd\omega=1.
+\]
+正向推导可先截断为 $\mathbf 1_{|t|<T}$，其变换为 $2\sin(\omega T)/\omega=2\pi\cdot\sin(\omega T)/(\pi\omega)$。分布意义下后一因子趋于 $\impulse(\omega)$，故极限为 $2\pi\impulse(\omega)$。直流信号的频谱\red{只在零频有冲激}，权重为 $2\pi$；画图时应\red{标明谱线权重}，不能把箭头长度理解成冲激的有限高度。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.86\textwidth]{06-ctft/basic/impulse-constant.pdf}
+  \caption{单位冲激与直流常数的变换。箭头旁分别标明冲激权重 $1$ 和 $2\pi$。}
+  \label{fig:ctft-impulse-constant}
+\end{figure}
+
+\subsection{对称矩形脉冲}
+\label{sec:ctft-rectangle-pair}
+
+设脉冲高度为 $E$、宽度为 $\tau>0$，则
+\begin{equation}
+  \boxed{E\,\mathbf 1_{|t|<\tau/2}
+      \fourierpair E\tau\Sa\left(\frac{\omega\tau}{2}\right)}.
+  \label{eq:ctft-rectangle-pair}
+\end{equation}
+直接积分得到
+\[
+  X(\iu\omega)=E\int_{-\tau/2}^{\tau/2}\e^{-\iu\omega t}\dd t
+       =\frac{2E\sin(\omega\tau/2)}{\omega}.
+\]
+零频处按极限取 $X(0)=E\tau$，即\red{零频值等于时域面积}；其他零点为
+$\omega=2k\pi/\tau$（$k$ 为非零整数）。两个首零点之间的主瓣宽度是 $4\pi/\tau$，所以\red{脉冲越窄，主瓣越宽}。
+
+当 $E>0$ 时，实频谱的符号随旁瓣交替；幅度谱为
+$E\tau|\Sa(\omega\tau/2)|$，相位在正瓣为 $0$、负瓣可取 $\pi$，零点处未定义。\cref{fig:ctft-rectangle-spectrum} 将实频谱、幅度和相位分开绘制。
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.96\textwidth]{06-ctft/basic/rectangle-spectrum.pdf}
+  \caption{对称矩形脉冲及其频谱，取 $E>0$。负频谱值在幅度图中取绝对值，在相位图中对应 $\pi$。}
+  \label{fig:ctft-rectangle-spectrum}
+\end{figure}
+
+代入时先辨认完整宽度。高度 $2$、宽度 $6$ 给出
+$12\Sa(3\omega)=4\sin(3\omega)/\omega$；高度 $1$、宽度 $10$ 给出
+$10\Sa(5\omega)$；高度 $1/4$、宽度 $6$ 给出 $\sin(3\omega)/(2\omega)$。反过来，$7\Sa(2\omega)$ 对应宽度 $4$、高度 $7/4$，
+$5\sin(3\omega)/\omega$ 对应宽度 $6$、高度 $5/2$。
+
+\subsection{sinc 信号与矩形频谱}
+\label{sec:ctft-sinc-pair}
+
+对 $\omega_c>0$，
+\begin{equation}
+  \boxed{\frac{\sin(\omega_c t)}{\pi t}
+  \fourierpair
+  \begin{cases}1,&|\omega|<\omega_c,\\0,&|\omega|>\omega_c.\end{cases}}
   \label{eq:ctft-sinc-rectangle-pair}
 \end{equation}
-边界点的取值不影响普通积分意义下的变换。
+对矩形频谱直接作逆变换，
+\[
+  x(t)=\frac{1}{2\pi}\int_{-\omega_c}^{\omega_c}\e^{\iu\omega t}\dd\omega
+       =\frac{\sin(\omega_c t)}{\pi t}.
+\]
+正向计算也可利用
+$\int_{-\infty}^{\infty}\sin(bt)/(\pi t)\dd t=\operatorname{sgn}(b)$：
+奇函数部分积分为零，余下部分经积化和差后得到
+\[
+  X(\iu\omega)=\frac12\left[
+        \operatorname{sgn}(\omega_c+\omega)
+       +\operatorname{sgn}(\omega_c-\omega)\right].
+\]
+由此可读出\red{频谱支撑边界}为 $\pm\omega_c$；在边界处，对称极限给出 $1/2$。矩形频谱的有限个端点取值不影响逆变换。
 
-\begin{example}[单位阶跃的变换]
-  单位阶跃不满足绝对可积条件。用截断积分并在分布意义下取极限，得到
-  \begin{equation}
-    \stepfun(t)\xleftrightarrow{\ \mathcal F\ }
-    \frac{1}{\iu\omega}+\pi\impulse(\omega).
-    \label{eq:ctft-step-pair}
-  \end{equation}
-  其中 $1/(\iu\omega)$ 按主值理解，$\pi\impulse(\omega)$ 对应阶跃的直流成分。
-\end{example}
+时域的 $t=0$ 是可去奇点，\red{中心值应按极限计算}为 $\omega_c/\pi$，其他零点为 $t=k\pi/\omega_c$。时域有无限延伸的旁瓣，频域却严格限于有限区间，见\cref{fig:ctft-sinc-spectrum}。
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.88\textwidth]{06-ctft/basic/sinc-spectrum.pdf}
+  \caption{sinc 信号与矩形频谱。时域纵轴以 $\omega_c/\pi$ 归一化，图中标出中心值与首零点。}
+  \label{fig:ctft-sinc-spectrum}
+\end{figure}
 
-\begin{example}[有限区间矩形的尺度计算]
-  若矩形脉冲宽度为 $6$、高度为 $2$，由\cref{eq:ctft-rectangle-pair} 得
-  $X(\iu\omega)=4\sin(3\omega)/\omega=12\Sa(3\omega)$；若宽度为 $2$、高度为 $1$，则 $X(\iu\omega)=2\Sa(\omega)$。先确定宽度和面积，再代入矩形变换对，比重新积分更不易出错。
-\end{example}
+尤其要区分
+\[
+  \Sa(bt)=\frac{\sin(bt)}{bt}
+    \fourierpair\frac{\pi}{b}\mathbf 1_{|\omega|<b}\quad(b>0).
+\]
+例如 $\sin(3t)/(3t)$ 的矩形频谱高度为 $\pi/3$、边界为 $\pm3$。分母中的常数若与频率系数不同，不能直接约去：$\sin(5t)/(3t)=(5/3)\Sa(5t)$，矩形高度仍按 $\pi/3$ 计算，边界则为 $\pm5$。反过来，高度 $3$、边界 $\pm2$ 的矩形频谱对应 $3\sin(2t)/(\pi t)$。
 
-线性、时移、调制、微分和卷积性质将在下一节推导。
+\subsection{复指数、余弦与正弦}
+\label{sec:ctft-sinusoid-pairs}
+
+单一复指数的频谱集中在一个频率：
+\begin{equation}
+  \boxed{\e^{\iu\omega_0t}\fourierpair2\pi\impulse(\omega-\omega_0)}.
+  \label{eq:ctft-complex-exponential-pair}
+\end{equation}
+将右端代入逆变换即得左端。对 $\omega_0>0$，用欧拉公式分解余弦与正弦，得到
+\begin{align}
+  \cos(\omega_0t)
+    &\fourierpair
+      \pi\bigl[\impulse(\omega-\omega_0)+\impulse(\omega+\omega_0)\bigr],
+      \label{eq:ctft-cosine-pair}\\
+  \sin(\omega_0t)
+    &\fourierpair
+      \frac{\pi}{\iu}\bigl[\impulse(\omega-\omega_0)-\impulse(\omega+\omega_0)\bigr].
+      \label{eq:ctft-sine-pair}
+\end{align}
+两者的\red{谱线幅度相同}：在 $\pm\omega_0$ 处权重模均为 $\pi$。余弦的谱线权重均为正实数；正弦在 $+\omega_0$ 处权重为 $-\iu\pi$，在 $-\omega_0$ 处为 $+\iu\pi$，所以\red{差别体现在相位}。对应相位分别为
+\[
+  \theta_{\cos}(-\omega_0)=\theta_{\cos}(\omega_0)=0,\qquad
+  \theta_{\sin}(-\omega_0)=\frac{\pi}{2},\quad
+  \theta_{\sin}(\omega_0)=-\frac{\pi}{2}.
+\]
+如\cref{fig:ctft-harmonic-spectra}，正弦频谱宜画虚部的冲激，避免将虚数权重误画成实幅度的正负。
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.98\textwidth]{06-ctft/basic/harmonic-spectra.pdf}
+  \caption{余弦与正弦的时域波形、谱线权重及相位。中列分别画实部与虚部；相位只在有谱线的频率上标出。}
+  \label{fig:ctft-harmonic-spectra}
+\end{figure}
+
+\subsection{单位阶跃}
+\label{sec:ctft-step-pair}
+
+\begin{equation}
+  \boxed{\stepfun(t)\fourierpair\frac{1}{\iu\omega}+\pi\impulse(\omega)}.
+  \label{eq:ctft-step-pair}
+\end{equation}
+其中 $1/(\iu\omega)$ 表示主值分布。它与零频冲激分别构成频谱的虚部和实部，见\cref{fig:ctft-step-spectrum}。
+
+可先给阶跃加上衰减因子。对 $\varepsilon>0$，
+\[
+  \e^{-\varepsilon t}\stepfun(t)
+  \fourierpair\frac{1}{\varepsilon+\iu\omega}
+  =\frac{\varepsilon}{\varepsilon^2+\omega^2}
+      -\iu\frac{\omega}{\varepsilon^2+\omega^2}.
+\]
+当 $\varepsilon\to0^+$ 时，实部的积分恒为 $\pi$ 且集中到零频，趋于 $\pi\impulse(\omega)$；虚部趋于 $\operatorname{pv}(1/(\iu\omega))$。
+因此\red{普通逐点极限会漏项}，必须在广义函数意义下取极限。
+
+若采用有限时长截断，令 $u_N(t)=1$（$0<t<N$），其余为零，则
+\[
+  U_N(\iu\omega)=\frac{1-\e^{-\iu\omega N}}{\iu\omega}
+    =\frac{1}{\iu\omega}
+      +\frac{\sin(N\omega)}{\omega}
+      +\iu\frac{\cos(N\omega)}{\omega}.
+\]
+等号右侧各奇异项按主值理解。$N\to\infty$ 时，第二项在分布意义下趋于 $\pi\impulse(\omega)$，第三项趋于零，得到相同结论。
+
+还可逆向核对：
+\[
+  \frac{1}{2\pi}\operatorname{pv}
+    \int_{-\infty}^{\infty}\frac{\e^{\iu\omega t}}{\iu\omega}\dd\omega
+       +\frac12
+    =\frac12\operatorname{sgn}(t)+\frac12
+    =
+  \begin{cases}1,&t>0,\\0,&t<0.\end{cases}
+\]
+即 $u(t)$（$t\ne0$）。\red{零频冲激提供常数项} $1/2$，其余主值项提供 $\operatorname{sgn}(t)/2$；在 $t=0$ 处逆变换取左右极限平均值。
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.98\textwidth]{06-ctft/basic/step-spectrum.pdf}
+  \caption{单位阶跃及其频谱的实部、虚部。虚部曲线在零点断开，奇异积分按主值解释。}
+  \label{fig:ctft-step-spectrum}
+\end{figure}
 
 \section{傅里叶变换的基本性质}
 \label{sec:ctft-properties-before-integration}
@@ -113,14 +306,41 @@
 \end{equation}
 证明只需把线性组合代入傅里叶积分并拆开积分。计算复杂波形时，通常先将其写成已知变换对的缩放与叠加，再分别变换。
 
+\begin{example}[矩形的叠加、相减与补集]
+  \label{eg:ctft-rectangle-combinations}
+  记 $r_a(t)=\mathbf 1_{|t|<a}$（$a>0$），则 $r_a\fourierpair2a\Sa(a\omega)$。
+  \cref{fig:ctft-rectangle-combinations} 中的四种波形分别给出
+  \begin{align*}
+    r_3+r_1&\fourierpair6\Sa(3\omega)+2\Sa(\omega),\\
+    r_4-r_2&\fourierpair8\Sa(4\omega)-4\Sa(2\omega),\\
+    1-r_3&\fourierpair2\pi\impulse(\omega)-6\Sa(3\omega),\\
+    1-r_3+r_2&\fourierpair2\pi\impulse(\omega)-6\Sa(3\omega)+4\Sa(2\omega).
+  \end{align*}
+  对无限延伸的背景，\red{常数背景对应零频冲激}；不能只变换有限区间内的缺口。
+  同时，\red{幅度谱不能直接相加}：线性性质相加的是复频谱 $X$，不是 $|X|$。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.91\textwidth]{06-ctft/basic/rectangle-combinations.pdf}
+    \caption{由矩形叠加与相减得到的四种波形，与公式的排列顺序一致。}
+    \label{fig:ctft-rectangle-combinations}
+  \end{figure}
+\end{example}
+
 \begin{example}[符号函数的傅里叶变换]
-  由 $\operatorname{sgn}(t)=2\stepfun(t)-1$，结合\cref{eq:ctft-step-pair,eq:ctft-impulse-constant-pairs}，得到
+  由 $\operatorname{sgn}(t)=2\stepfun(t)-1$，结合\cref{eq:ctft-step-pair,eq:ctft-constant-pair}，得到
   \[
     \operatorname{sgn}(t)
     \fourierpair
     \frac{2}{\iu\omega}.
   \]
   两个冲激项正好抵消。处理阶跃与常数的线性组合时，应把零频冲激一并带入，不能只计算 $1/(\iu\omega)$ 部分。
+$2/(\iu\omega)=-2\iu/\omega$ 是奇的纯虚函数：幅度为 $2/|\omega|$，正频率相位为 $-\pi/2$，负频率相位为 $\pi/2$，零频处相位没有定义，见\cref{fig:ctft-sign-spectrum}。
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.96\textwidth]{06-ctft/basic/sign-spectrum.pdf}
+  \caption{符号函数的时域波形、虚部频谱和相位。零频是奇点，相位在该点没有定义。}
+  \label{fig:ctft-sign-spectrum}
+\end{figure}
 \end{example}
 
 \subsection{时移性质}
@@ -138,6 +358,7 @@
   =\e^{-\iu\omega t_0}X(\iu\omega).
 \]
 乘子 $\e^{-\iu\omega t_0}$ 的模恒为 $1$，所以时移\red{不改变幅度谱}，只给相位谱增加线性项 $-\omega t_0$。若频谱在某些频率处为零，相位在这些点没有定义。
+对于一段无其他相位贡献的线性相位，\red{负斜率对应延迟}，延迟量等于斜率的相反数；正斜率则对应超前。
 
 \begin{example}[延迟的矩形脉冲]
   宽度为 $2$、中心位于 $t=1$ 的单位矩形可写成 $\mathbf 1_{0<t<2}$。由\cref{eq:ctft-rectangle-pair,eq:ctft-time-shift}，
@@ -147,6 +368,31 @@
     2\Sa(\omega)\e^{-\iu\omega}.
   \]
   幅度谱与中心在原点的矩形相同，相位中多出 $-\omega$。
+\end{example}
+
+同一对双矩形也可按时移拆分：
+\[
+  r_1(t-3)+r_1(t+3)
+  \fourierpair
+  2\Sa(\omega)\bigl(\e^{-\iu3\omega}+\e^{\iu3\omega}\bigr)
+  =4\Sa(\omega)\cos(3\omega).
+\]
+时域上它等于 $r_4-r_2$，所以结果与前一小节的
+$8\Sa(4\omega)-4\Sa(2\omega)$ 相同。这提供了两种拆分方法之间的核对。
+
+\begin{example}[移位阶跃的零频项]
+  \label{eg:ctft-shifted-steps}
+  利用 $\e^{-\iu\omega t_0}\impulse(\omega)=\impulse(\omega)$，
+  \[
+    \stepfun(t-1)\fourierpair
+      \frac{\e^{-\iu\omega}}{\iu\omega}+\pi\impulse(\omega).
+  \]
+  又由 $\stepfun(-t-1)=1-\stepfun(t+1)$（除端点外），
+  \[
+    \stepfun(-t-1)\fourierpair
+      \pi\impulse(\omega)-\frac{\e^{\iu\omega}}{\iu\omega}.
+  \]
+  阶跃移位后仍保留同样的零频冲激权重。各式中的商按主值分布理解。
 \end{example}
 
 \subsection{频移与调制性质}
@@ -168,29 +414,61 @@
 \end{equation}
 余弦调制产生位于 $\pm\omega_0$ 的两份频谱副本，每份幅度减半。画图时应先平移横坐标，再乘系数 $1/2$。
 
-\begin{example}[正弦和余弦的冲激频谱]
-  从 $1\fourierpair2\pi\impulse(\omega)$ 出发，应用频移与线性性质可得
-  \begin{align*}
-    \cos(\omega_0t)
-      &\fourierpair
-      \pi\bigl[\impulse(\omega-\omega_0)+\impulse(\omega+\omega_0)\bigr],\\
-    \sin(\omega_0t)
-      &\fourierpair
-      \frac{\pi}{\iu}
-      \bigl[\impulse(\omega-\omega_0)-\impulse(\omega+\omega_0)\bigr].
-  \end{align*}
-  冲激位于正、负两个频率。实余弦的两条谱线同号，实正弦的两条谱线符号相反。
+从 $1\fourierpair2\pi\impulse(\omega)$ 出发应用频移，也可得到
+\cref{eq:ctft-complex-exponential-pair}。结合线性性质和欧拉公式，便得到
+\cref{eq:ctft-cosine-pair,eq:ctft-sine-pair} 中的正弦、余弦频谱。
+
+\begin{example}[时移与调制同时出现时的幅相谱]
+  \label{eg:ctft-shift-modulation-phase}
+  令
+  \[
+    x(t)=\frac{\sin(t-1)}{\pi(t-1)}
+         \bigl(\e^{\iu3t}+\e^{-\iu3t}\bigr).
+  \]
+  先作时移，$g(t)=\sin(t-1)/[\pi(t-1)]$ 的变换为
+  $G(\iu\omega)=\mathbf 1_{|\omega|<1}\e^{-\iu\omega}$；
+  频移作用于整个 $G$，包括其中的相位因子。于是
+  \[
+    X(\iu\omega)=
+      \mathbf 1_{|\omega-3|<1}\e^{-\iu(\omega-3)}
+      +\mathbf 1_{|\omega+3|<1}\e^{-\iu(\omega+3)}.
+  \]
+  两个通带内幅度均为 $1$，相位分别为
+  \[
+    \theta(\omega)=
+    \begin{cases}
+      -(\omega+3),&-4<\omega<-2,\\
+      -(\omega-3),&2<\omega<4.
+    \end{cases}
+  \]
+  带外相位未定义。两段直线分别在 $\omega=-3$ 和 $3$ 处过零，见\cref{fig:ctft-shift-modulation-phase}。
+  \red{频移包括相位因子}，不能仍写成全频段统一的 $-\omega$；
+  \red{运算顺序影响附加相位}，$\cos(3t)g(t)$ 与将整个 $\cos(3t)\sin(t)/(\pi t)$ 延迟一单位得到的信号不同。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.98\textwidth]{06-ctft/basic/shift-modulation-phase.pdf}
+    \caption{时移 sinc 再作调制后的波形、幅度谱与分段相位谱。}
+    \label{fig:ctft-shift-modulation-phase}
+  \end{figure}
 \end{example}
 
 \subsection{时域微分与频域微分}
 
-设 $x(t)$ 分段光滑，并且分部积分产生的边界项为零，则
+设 $x(t)$ 连续且分段光滑，相应积分存在，并且分部积分产生的无穷远边界项为零，则
 \begin{equation}
   \frac{\dd x(t)}{\dd t}
   \fourierpair
   \iu\omega X(\iu\omega).
   \label{eq:ctft-time-differentiation}
 \end{equation}
+推导为
+\[
+  \int_{-\infty}^{\infty}x'(t)\e^{-\iu\omega t}\dd t
+  =\left[x(t)\e^{-\iu\omega t}\right]_{-\infty}^{\infty}
+      +\iu\omega\int_{-\infty}^{\infty}x(t)\e^{-\iu\omega t}\dd t
+  =\iu\omega X(\iu\omega).
+\]
+若 $x$ 有跳跃，导数须包含相应冲激；用广义导数时结论仍成立。
 连续使用该性质，得到
 \begin{equation}
   \frac{\dd^n x(t)}{\dd t^n}
@@ -198,16 +476,22 @@
   (\iu\omega)^nX(\iu\omega).
   \label{eq:ctft-higher-time-differentiation}
 \end{equation}
-例如 $\impulse(t)\fourierpair1$，所以 $\impulse^{(n)}(t)\fourierpair(\iu\omega)^n$。时域微分在频域中会放大高频分量，这是理想微分器容易放大高频噪声的原因。
+例如 $\impulse(t)\fourierpair1$，所以 $\impulse^{(n)}(t)\fourierpair(\iu\omega)^n$。时域微分会\red{放大高频分量}，理想微分器因此容易把高频噪声一并放大。
 
-对\cref{eq:ctft-definition} 关于 $\omega$ 求导，可得另一组关系：
+在允许积分与求导交换的条件下，例如 $x$ 与 $t x$ 均绝对可积，对
+\cref{eq:ctft-definition} 关于 $\omega$ 求导：
+\[
+  \frac{\dd X(\iu\omega)}{\dd\omega}
+     =\int_{-\infty}^{\infty}(-\iu t)x(t)\e^{-\iu\omega t}\dd t.
+\]
+于是
 \begin{equation}
   t x(t)
   \fourierpair
   \iu\frac{\dd X(\iu\omega)}{\dd\omega}.
   \label{eq:ctft-frequency-differentiation}
 \end{equation}
-由 $\e^{-at}\stepfun(t)\fourierpair1/(a+\iu\omega)$（$a>0$），立刻得到
+\red{乘时间对应频域求导}。由 $\e^{-at}\stepfun(t)\fourierpair1/(a+\iu\omega)$（$a>0$），立刻得到
 \begin{equation}
   t\e^{-at}\stepfun(t)
   \fourierpair
@@ -240,16 +524,72 @@
 \end{align*}
 这一步默认可以交换积分次序；常见的绝对可积信号满足该条件。卷积在时域往往需要分段，变到频域后只剩乘法，因此\red{卷积可转为频谱相乘}。
 
-\begin{example}[矩形卷积与三角脉冲]
-  令 $r(t)=\mathbf 1_{|t|<1}$。由\cref{eq:ctft-rectangle-pair}，
+\noindent\textbf{三角脉冲的变换}\quad
+对 $T>0$，令 $q_T(t)=\mathbf 1_{|t|<T/2}$。
+两个宽度为 $T$ 的单位矩形卷积得到峰值 $T$、底宽 $2T$ 的三角形，因此
+\begin{equation}
+  A\max\left(1-\frac{|t|}{T},0\right)
+  =\frac{A}{T}(q_T\conv q_T)(t)
+  \fourierpair AT\Sa^2\left(\frac{\omega T}{2}\right).
+  \label{eq:ctft-triangle-pair}
+\end{equation}
+这里\red{面积决定零频值} $AT$。例如峰值 $1$、支撑 $[-2,2]$ 对应
+$2\Sa^2(\omega)$，峰值 $2$、支撑 $[-4,4]$ 对应 $8\Sa^2(2\omega)$。
+
+\noindent\textbf{梯形脉冲的变换}\quad
+设 $a\ge b>0$。左右端点分别为 $\pm a$、$\pm b$ 的两个对称矩形，高度为 $E_1$、$E_2$，卷积后得到对称梯形：支撑为 $|t|\le a+b$，平台为 $|t|\le a-b$，平台高度为 $2b E_1 E_2$。平台两侧线性下降，到 $|t|=a+b$ 时降为零。频谱是两个矩形频谱的乘积
+\[
+  4ab E_1 E_2\Sa(a\omega)\Sa(b\omega).
+\]
+\red{较窄脉冲决定平台高度}。两矩形等宽时，平台缩成一个点，梯形退化为三角形。取 $a=2$、$b=1$、$E_1=1$、$E_2=1/2$，就得到
+$r_2\conv(r_1/2)$：支撑 $[-3,3]$，平台 $[-1,1]$、高度 $1$，变换为 $4\Sa(2\omega)\Sa(\omega)$。几何关系见\cref{fig:ctft-trapezoid-geometry}，两个具体频谱见\cref{fig:ctft-triangle-trapezoid}。
+拆分时须\red{同时匹配宽度与峰值}，不能仅由外形相似确定系数。
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.96\textwidth]{06-ctft/basic/trapezoid-geometry.pdf}
+  \caption{不等宽对称矩形卷积成梯形，取 $a=2$、$b=1$、$E_1=1$、$E_2=1/2$。平台高度 $2bE_1E_2=1$。}
+  \label{fig:ctft-trapezoid-geometry}
+\end{figure}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.94\textwidth]{06-ctft/basic/triangle-trapezoid.pdf}
+  \caption{三角脉冲与梯形脉冲的实频谱。梯形的频谱有负瓣，纵轴标为 $X$。}
+  \label{fig:ctft-triangle-trapezoid}
+\end{figure}
+
+\begin{example}[三角脉冲的移位和补形]
+  \label{eg:ctft-triangle-combinations}
+  设 $\Lambda(t)=\max(1-|t|,0)$，则
   \[
-    r(t)\fourierpair2\Sa(\omega).
+    \Lambda(t-3)+\Lambda(t+3)
+    \fourierpair2\Sa^2(\omega/2)\cos(3\omega).
   \]
-  $r\conv r$ 是支撑在 $[-2,2]$ 上、峰值为 $2$ 的三角脉冲。卷积性质给出
+  取差时得到\cref{ex:ctft-shifted-triangle-difference} 中的纯虚频谱。
+  对 $v(t)=|t|/2$（$|t|<2$），其余为零，可写成
+  $v=r_2-\Lambda(t/2)$，于是
   \[
-    (r\conv r)(t)\fourierpair4\Sa^2(\omega).
+    V(\iu\omega)=4\Sa(2\omega)-2\Sa^2(\omega).
   \]
-  若第二个矩形高度改为 $1/2$，时域三角脉冲的峰值和频谱都相应减半。
+  第二种分解把 V 形波形补成矩形，再减去三角脉冲。这两个波形见\cref{fig:ctft-pulse-shapes} 的前两栏。
+\end{example}
+
+\begin{example}[有限上升沿后保持常值]
+  \label{eg:ctft-finite-rise}
+  设 $x(t)$ 在 $t<-1$ 时为零，在 $-1<t<0$ 时为 $t+1$，在 $t>0$ 时为 $1$。
+  它等于 $\mathbf 1_{-1<t<0}\conv\stepfun(t)$。
+  矩形频谱为 $\Sa(\omega/2)\e^{\iu\omega/2}$，故
+  \[
+    X(\iu\omega)=
+       \frac{\Sa(\omega/2)\e^{\iu\omega/2}}{\iu\omega}
+       +\pi\impulse(\omega).
+  \]
+  零频处矩形频谱的值为 $1$，因此乘上阶跃频谱后保留权重 $\pi$ 的冲激。时域波形见\cref{fig:ctft-pulse-shapes} 右栏。
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.96\textwidth]{06-ctft/basic/pulse-shapes.pdf}
+    \caption{移位三角脉冲之和、V 形脉冲，以及有限上升后保持为 $1$ 的信号。}
+    \label{fig:ctft-pulse-shapes}
+  \end{figure}
 \end{example}
 
 \section{LTI 系统的频率响应}
@@ -267,6 +607,20 @@
 \end{equation}
 若 $X$ 在某段频率上为零，这一次实验无法确定该频段的 $H$；直接变换 $h(t)$ 更稳妥。
 
+同一个系统可分别用时域和频域流程表示：
+\[
+  \begin{aligned}
+    x(t)&\longrightarrow\boxed{h(t)}
+       \longrightarrow y(t)=(x\conv h)(t),\\
+    X(\iu\omega)&\longrightarrow\boxed{H(\iu\omega)}
+       \longrightarrow Y(\iu\omega)=X(\iu\omega)H(\iu\omega).
+  \end{aligned}
+\]
+当相关频谱为普通函数且不为零时，\red{幅度响应相乘}、\red{相位响应相加}：
+\[
+  |Y|=|X|\,|H|,\qquad \arg Y=\arg X+\arg H\pmod{2\pi}.
+\]
+
 常见系统的频率响应可由已有变换对直接写出：
 \begin{align*}
   h(t)=\impulse'(t)
@@ -280,3 +634,814 @@
   &&\text{理想延迟器}.
 \end{align*}
 理想延迟器的幅度响应恒为 $1$，相位为 $-\omega t_0$。它只移动波形，不改变各频率分量的幅度。
+
+\section{积分性质与频域卷积}
+\label{sec:ctft-integration-and-frequency-convolution}
+
+\subsection{积分性质}
+
+设
+$x(t)\fourierpair X(\iu\omega)$，并令
+\[
+  y(t)=\int_{-\infty}^{t}x(\tau)\dd\tau.
+\]
+利用 $y=x\conv\stepfun$ 以及
+\cref{eq:ctft-step-pair}，得到
+\begin{equation}
+  \int_{-\infty}^{t}x(\tau)\dd\tau
+  \fourierpair
+  \frac{X(\iu\omega)}{\iu\omega}
+  +\pi X(0)\impulse(\omega).
+  \label{eq:ctft-integration-property}
+\end{equation}
+这里假定 $x$ 可积且 $X$ 在零频附近足够光滑，使主值乘积有定义；例如 $x$ 和 $t x$ 都绝对可积就足够。$1/(\iu\omega)$ 按主值理解，
+$X(0)=\int_{-\infty}^{\infty}x(t)\dd t$ 是信号总面积。由冲激抽样性质，
+$X(\iu\omega)\impulse(\omega)=X(0)\impulse(\omega)$。积分结果可能具有非零直流分量，因此\red{积分须保留零频冲激}。
+
+\begin{example}[指数信号的累积积分]
+  \label{eg:ctft-integrated-exponential}
+  对 $a>0$，令 $x(t)=\e^{-at}\stepfun(t)$，则 $X(0)=1/a$，并且
+  \[
+    y(t)=\frac{1-\e^{-at}}{a}\stepfun(t),\qquad
+    Y(\iu\omega)=\frac{1}{\iu\omega(a+\iu\omega)}
+      +\frac{\pi}{a}\impulse(\omega).
+  \]
+  用 $y=(\stepfun-\e^{-at}\stepfun)/a$ 分别变换，也能得到相同结果。
+  微分器、积分器和延迟器的频率响应见\cref{sec:ctft-lti-frequency-response}。
+\end{example}
+
+\begin{pitfall}[积分时漏掉零频冲激]
+  只把频谱除以 $\iu\omega$，可能漏掉积分结果的直流部分。遇到从 $-\infty$ 起算的积分，\red{先检查信号总面积}，再写出 $\pi X(0)\impulse(\omega)$。
+\end{pitfall}
+
+\subsection{时域乘积与频域卷积}
+
+若
+$x_1(t)\fourierpair X_1(\iu\omega)$、
+$x_2(t)\fourierpair X_2(\iu\omega)$，则
+\begin{equation}
+  x_1(t)x_2(t)
+  \fourierpair
+  \frac{1}{2\pi}
+  \int_{-\infty}^{\infty}
+    X_1(\iu\nu)X_2\bigl(\iu(\omega-\nu)\bigr)\dd\nu.
+  \label{eq:ctft-frequency-convolution}
+\end{equation}
+右端是频率变量上的卷积。推导从逆变换代入乘积开始：
+\begin{align*}
+  x_1(t)x_2(t)
+  &=
+  \frac{1}{(2\pi)^2}
+  \iint X_1(\iu\nu)X_2(\iu\mu)
+  \e^{\iu(\nu+\mu)t}\dd\nu\dd\mu\\
+  &=
+  \frac{1}{2\pi}
+  \int_{-\infty}^{\infty}
+  \left[
+    \frac{1}{2\pi}
+    \int_{-\infty}^{\infty}
+      X_1(\iu\nu)X_2\bigl(\iu(\omega-\nu)\bigr)\dd\nu
+  \right]
+  \e^{\iu\omega t}\dd\omega.
+\end{align*}
+上述换元与交换积分次序要求相应积分成立。计算时记住：\red{时域相乘对应频域卷积}，并且\red{不要漏掉卷积系数} $1/(2\pi)$。为避免混淆，频域卷积的积分变量用 $\nu$，时域卷积的积分变量用 $\tau$。
+
+\begin{example}[两个 sinc 因子的平方]
+  由
+  \[
+    \frac{\sin(2t)}{\pi t}
+    \fourierpair
+    \mathbf 1_{|\omega|<2}
+  \]
+  可得
+  \[
+    \left[\frac{\sin(2t)}{t}\right]^2
+    \fourierpair
+    \frac{\pi}{2}
+    \bigl(\mathbf 1_{|\omega|<2}\conv\mathbf 1_{|\omega|<2}\bigr)(\omega).
+  \]
+  两个宽度为 $4$ 的矩形频谱卷积成三角形，所以
+  \begin{equation}
+    \left[\frac{\sin(2t)}{t}\right]^2
+    \fourierpair
+    \begin{cases}
+      \dfrac{\pi}{2}(4-|\omega|),&|\omega|\leq4,\\
+      0,&|\omega|>4.
+    \end{cases}
+  \label{eq:ctft-sinc-square-pair}
+  \end{equation}
+  取 $\omega=0$ 还可立即得到
+  \[
+    \int_{-\infty}^{\infty}\left[\frac{\sin(2t)}{t}\right]^2\dd t=2\pi.
+  \]
+\end{example}
+
+\subsection{时移、频移与部分分式的配合}
+
+组合使用变换性质时，先写出基本信号，再处理缩放、平移或调制。对于有理频谱，\red{先分解再逐项逆变换}；出现重根时，\red{保留高次分母项}，例如 $(a+\iu\omega)^{-2}$ 对应 $t\e^{-at}\stepfun(t)$。
+
+\begin{example}[阶跃起点与指数起点不同]
+  \label{eg:ctft-delayed-exponential-window}
+  计算 $\e^{-2t}\stepfun(t-1)$ 的变换时，先写成
+  \[
+    \e^{-2t}\stepfun(t-1)
+    =\e^{-2}\e^{-2(t-1)}\stepfun(t-1).
+  \]
+  再应用时移性质，得
+  \[
+    \e^{-2t}\stepfun(t-1)
+    \fourierpair
+    \frac{\e^{-2}\e^{-\iu\omega}}{2+\iu\omega}.
+  \]
+  因子 $\e^{-2}$ 来自指数在新起点 $t=1$ 的幅度。
+\end{example}
+
+\begin{example}[调制 sinc 信号得到带通频谱]
+  \label{eg:ctft-modulated-sinc-bandpass}
+  对 $x(t)=\sin(3t)\cos(4t)/(\pi t)$，频移性质给出
+  \[
+    X(\iu\omega)=\frac12\mathbf 1_{|\omega-4|<3}
+      +\frac12\mathbf 1_{|\omega+4|<3}
+      =\frac12\mathbf 1_{1<|\omega|<7}.
+  \]
+  用积化和差
+  $x(t)=[\sin(7t)-\sin(t)]/(2\pi t)$，也可把结果看成两个低通矩形频谱之差。
+  同理，
+  \[
+    \frac{\sin(2\pi t)}{\pi t}-\frac{\sin(\pi t)}{\pi t}
+    \fourierpair \mathbf 1_{\pi<|\omega|<2\pi}.
+  \]
+  端点取值不影响这些普通函数的逆变换。
+\end{example}
+
+\section{调制、解调与频分复用}
+\label{sec:ctft-modulation-demodulation-fdm}
+
+\subsection{带限信号与余弦调制}
+
+若 $X(\iu\omega)=0$（$|\omega|>\omega_m$），则称 $x(t)$ 为带限信号（band-limited signal）。
+对于非带限信号，可以先用截止频率为 $\omega_m$、通带增益为 $1$ 的理想低通滤波器限制频带：
+\[
+  H_0(\iu\omega)=\mathbf 1_{|\omega|<\omega_m},\qquad
+  h_0(t)=\frac{\sin(\omega_m t)}{\pi t},\qquad
+  x_{\mathrm b}=x\conv h_0.
+\]
+此时\red{带外分量被滤除}，$x_{\mathrm b}$ 是用于后续传输的带限近似。
+
+对基带带限信号 $x(t)$，取载波（carrier）$\cos(\omega_ct)$，其中 $\omega_c>\omega_m$。调制（modulation）得到
+\[
+  y(t)=x(t)\cos(\omega_ct)
+\]
+的频谱为
+\begin{equation}
+  Y(\iu\omega)
+  =\frac12X\bigl(\iu(\omega-\omega_c)\bigr)
+  +\frac12X\bigl(\iu(\omega+\omega_c)\bigr).
+  \label{eq:ctft-cosine-modulation-again}
+\end{equation}
+\red{两份频谱副本各缩小为一半}，中心分别位于 $\omega_c$ 和 $-\omega_c$。当 $\omega_c>\omega_m$ 时，正负两个副本不重叠，基带信号的频谱信息被搬移到载波附近，见\cref{fig:ctft-modulation-demodulation}。载频若用赫兹表示，则 $f_c=\omega_c/(2\pi)$。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.86\textwidth]{06-ctft/modulation-demodulation.pdf}
+  \caption{取单位高度的三角形基带频谱，$\omega_m=2$、$\omega_c=6$。再次乘以同频载波后，以增益 $2$、截止频率 $\omega_p=3$ 的低通恢复基带。}
+  \label{fig:ctft-modulation-demodulation}
+\end{figure}
+
+\subsection{同步解调}
+
+同步解调（synchronous demodulation）在接收端再次乘以\red{同频同相的载波}：
+\[
+  w(t)=y(t)\cos(\omega_ct)
+  =x(t)\cos^2(\omega_ct)
+  =\frac12x(t)+\frac12x(t)\cos(2\omega_ct).
+\]
+所以
+\begin{equation}
+  W(\iu\omega)
+  =\frac12X(\iu\omega)
+  +\frac14X\bigl(\iu(\omega-2\omega_c)\bigr)
+  +\frac14X\bigl(\iu(\omega+2\omega_c)\bigr).
+  \label{eq:ctft-synchronous-demodulation}
+\end{equation}
+若理想低通滤波器的频率响应为
+\begin{equation}
+  H_{\mathrm{LP}}(\iu\omega)
+  =
+  \begin{cases}
+    2,&|\omega|<\omega_p,\\
+    0,&|\omega|>\omega_p,
+  \end{cases}
+  \qquad
+  \omega_m<\omega_p<2\omega_c-\omega_m,
+  \label{eq:ctft-demodulation-lowpass}
+\end{equation}
+对应的单位冲激响应及恢复公式为
+\begin{equation}
+  h_{\mathrm{LP}}(t)=\frac{2\sin(\omega_p t)}{\pi t},\qquad
+  x(t)=\bigl[y(t)\cos(\omega_ct)\bigr]\conv h_{\mathrm{LP}}(t).
+  \label{eq:ctft-demodulation-time-domain}
+\end{equation}
+低通滤波器保留 $\frac12X(\iu\omega)$ 并将其放大 $2$，输出恢复为 $x(t)$。
+若接收端载波为 $\cos(\omega_ct+\varphi)$，低通输出变为 $x(t)\cos\varphi$；特别地，$\varphi=\pi/2$ 时输出为零。
+
+\begin{pitfall}[解调后的低通增益]
+  解调后基带部分的系数是 $1/2$，需要\red{补偿基带幅度}，故低通增益取 $2$。只画出低通通带而漏写增益，最后得到的信号会差一倍。
+\end{pitfall}
+
+\subsection{频分复用}
+
+频分复用（frequency-division multiplexing, FDM）将多路信号安排在不同频带内，共用一个传输通道。
+设有 $N$ 个实带限信号 $x_k(t)$，其频谱分别集中在基带。选择正载频
+$0<\omega_{c,1}<\cdots<\omega_{c,N}$，发送信号写成
+\begin{equation}
+  y(t)=\sum_{k=1}^{N}x_k(t)\cos(\omega_{c,k}t).
+  \label{eq:ctft-frequency-division-multiplexing}
+\end{equation}
+由\cref{eq:ctft-cosine-modulation-again}，第 $k$ 路信号在 $\pm\omega_{c,k}$ 附近各产生一份频谱副本。若第 $k$ 路带宽为 $\omega_{m,k}$，相邻载波应满足
+\begin{equation}
+  \omega_{c,k+1}-\omega_{c,k}
+  >
+  \omega_{m,k}+\omega_{m,k+1},
+  \label{eq:ctft-fdm-separation}
+\end{equation}
+还应取 $\omega_{c,k}>\omega_{m,k}$，使各路正、负频带分开。\red{相邻频带应留有间隔}，避免边界附近的分量相互干扰。
+
+各路带宽均为 $\omega_m$ 时，接收端可直接将总信号乘以第 $j$ 路载波：
+\begin{align*}
+  w_j(t)
+  &=y(t)\cos(\omega_{c,j}t)\\
+  &=\frac12x_j(t)+\frac12x_j(t)\cos(2\omega_{c,j}t)\\
+  &\quad+\frac12\sum_{k\ne j}x_k(t)
+  \left[\cos\bigl((\omega_{c,k}-\omega_{c,j})t\bigr)
+       +\cos\bigl((\omega_{c,k}+\omega_{c,j})t\bigr)\right].
+\end{align*}
+目标信号回到零频附近；其余分量位于二倍载频、差频和和频附近。定义离零频最近的非目标中心频率
+\[
+  d_j=\min\left(\{2\omega_{c,j}\}\cup
+      \{|\omega_{c,k}-\omega_{c,j}|,\ \omega_{c,k}+\omega_{c,j}:k\ne j\}\right).
+\]
+只要
+\begin{equation}
+  \omega_m<\omega_{p,j}<d_j-\omega_m,
+  \label{eq:ctft-fdm-demodulation-cutoff}
+\end{equation}
+就能用增益为 $2$ 的低通滤波器恢复
+\[
+  x_j(t)=\bigl[y(t)\cos(\omega_{c,j}t)\bigr]
+    \conv\frac{2\sin(\omega_{p,j}t)}{\pi t}.
+\]
+选截止频率时应\red{检查最近的非目标频带}。
+
+\begin{example}[两路信号的频带安排]
+  \label{eg:ctft-two-channel-fdm}
+  若两路信号都限制在 $|\omega|\leq\omega_m$，选择
+  $\omega_{c,1}=4\omega_m$、$\omega_{c,2}=8\omega_m$。两路正频率副本分别位于
+  \[
+    [3\omega_m,5\omega_m],\qquad [7\omega_m,9\omega_m].
+  \]
+  负频率侧对称。解调任一路时，最近的非目标中心频率都是 $4\omega_m$，故可取 $\omega_p=2\omega_m$，满足 $\omega_m<\omega_p<3\omega_m$。频带安排见\cref{fig:ctft-two-channel-fdm}。
+\end{example}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.86\textwidth]{06-ctft/fdm-spectra.pdf}
+  \caption{两路等带宽信号的频分复用与第一路的同步解调，横轴按 $\omega_m$ 归一化。}
+  \label{fig:ctft-two-channel-fdm}
+\end{figure}
+
+
+\section{尺度变换与对偶}
+\label{sec:ctft-scaling-duality}
+
+\subsection{时间与频率尺度变换}
+\label{sec:ctft-scaling}
+
+设 $a\neq 0$，且 $x(t)\fourierpair X(\iu\omega)$。则
+\begin{equation}
+  x(at)\fourierpair\frac{1}{|a|}X\!\left(\iu\frac{\omega}{a}\right).
+  \label{eq:ctft-scaling}
+\end{equation}
+令 $u=at$。$a>0$ 时 $\dd t=\dd u/a$，积分区间方向不变，
+\[
+  \int_{-\infty}^{\infty}x(at)\e^{-\iu\omega t}\dd t
+  =\frac{1}{a}X\!\left(\iu\frac{\omega}{a}\right).
+\]
+$a<0$ 时上下限对调，多出的负号与 $1/a$ 合成 $1/|a|$。因此\red{负尺度仍取绝对值}。$a=-1$ 就是时域翻转，$x(-t)\fourierpair X(-\iu\omega)$。
+
+把\cref{eq:ctft-scaling} 里的尺度改记为 $1/a$，得到频率轴上的写法
+\begin{equation}
+  \frac{1}{|a|}x\!\left(\frac{t}{a}\right)
+  \fourierpair X(\iu a\omega).
+  \label{eq:ctft-frequency-scaling}
+\end{equation}
+$|a|<1$ 时，$x(at)$ 沿时间被拉宽，频谱自变量变为 $\omega/a$，主瓣变窄，零频高度变为原来的 $1/|a|$。\red{时域展宽则频域变窄}，并且\red{展宽后频谱更高}。$|a|>1$ 时正好相反，\red{时域压缩则频域变宽}，频谱高度下降。
+
+\cref{fig:ctft-scaling-rectangles} 对比宽度为 $2$ 的单位矩形和 $a=2$ 的压缩。原变换是 $2\Sa(\omega)$，第一对零点在 $\pm\pi$，零频高度为 $2$。压缩后的变换是 $\Sa(\omega/2)$，第一对零点移到 $\pm 2\pi$，零频高度降为 $1$。
+
+冲激的尺度公式见\cref{eq:continuous-impulse-scaling}。它与\cref{eq:ctft-scaling} 一致：$\impulse(t)\fourierpair 1$，所以 $\impulse(at)\fourierpair 1/|a|$。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.92\textwidth]{06-ctft/basic/scaling-rectangles.pdf}
+  \caption{单位矩形及其时间压缩。压缩后频谱变宽，零频高度下降。}
+  \label{fig:ctft-scaling-rectangles}
+\end{figure}
+
+\begin{pitfall}[尺度系数漏掉绝对值]
+  $a<0$ 时若把系数写成 $1/a$，整个频谱都会反号。时间翻转只把频率轴反过来。代入之前先看 $a$ 的符号，系数统一用 $|a|$。
+\end{pitfall}
+
+\subsection{对偶性}
+\label{sec:ctft-duality}
+
+若 $x(t)\fourierpair X(\iu\omega)$，则
+\begin{equation}
+  \boxed{X(t)\fourierpair 2\pi x(-\omega)}.
+  \label{eq:ctft-duality}
+\end{equation}
+左端的 $X(t)$ 是把频谱表达式中的 $\omega$ 换成 $t$。右端先把原信号的自变量换成 $-\omega$，再乘 $2\pi$。\red{先互换变量，再补系数}，其中\red{频率轴要反向}，并且\red{不要漏掉二倍圆周率}。
+
+由逆变换，
+\[
+  2\pi x(t)=\int_{-\infty}^{\infty}X(\iu\omega)\e^{\iu\omega t}\dd\omega.
+\]
+把积分变量 $\omega$ 改称为 $t$，再把自由变量 $t$ 改称为 $-\omega$，
+\[
+  2\pi x(-\omega)=\int_{-\infty}^{\infty}X(t)\e^{-\iu\omega t}\dd t.
+\]
+右端就是 $X(t)$ 的傅里叶变换。这一步要求 $X$ 作为普通函数可积，或者等式在广义函数意义下理解。常数与冲激的对偶属于后一种。
+
+$\impulse(t)\fourierpair 1$ 的对偶是 $1\fourierpair 2\pi\impulse(-\omega)=2\pi\impulse(\omega)$，与\cref{eq:ctft-constant-pair} 相同。
+
+高度为 $E$、半宽为 $\tau>0$ 的对称矩形满足 $E\,\mathbf 1_{|t|<\tau}\fourierpair 2E\sin(\tau\omega)/\omega$。把频谱表达式中的 $\omega$ 换成 $t$，再乘 $2\pi$，得到
+\begin{equation}
+  \boxed{\frac{2E\sin(\tau t)}{t}
+  \fourierpair
+  2\pi E\,\mathbf 1_{|\omega|<\tau}}.
+  \label{eq:ctft-dual-rectangle}
+\end{equation}
+时域面积 $2\tau E$ 只出现在正变换的零频值里；对偶之后，矩形高度写成 $2\pi E$。
+
+\cref{fig:ctft-duality-rectangle} 取 $E=1$、$\tau=1$，四格依次为原矩形、原频谱、频谱表达式换到时间轴、对偶结果。它与\cref{eq:ctft-sinc-rectangle-pair} 一致：$\sin t/(\pi t)$ 对应高度为 $1$ 的矩形，乘上 $2\pi$ 之后高度为 $2\pi$。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.92\textwidth]{06-ctft/basic/duality-rectangle.pdf}
+  \caption{矩形与 $\sin t/t$ 的对偶，取 $E=1$、$\tau=1$。右下频谱的高度是 $2\pi$。}
+  \label{fig:ctft-duality-rectangle}
+\end{figure}
+
+\subsection{由对偶得到的变换对}
+\label{sec:ctft-duality-pairs}
+
+先补双边指数，后面的有理函数要用到它。对 $a>0$，
+\[
+  \e^{-a|t|}=\e^{-at}\stepfun(t)+\e^{at}\stepfun(-t).
+\]
+第一项的变换是 $1/(a+\iu\omega)$。第二项是第一项的时间翻转，故
+\[
+  \e^{at}\stepfun(-t)\fourierpair\frac{1}{a-\iu\omega}.
+\]
+两项相加，
+\begin{equation}
+  \boxed{\e^{-a|t|}\fourierpair\frac{2a}{a^2+\omega^2}},\qquad a>0.
+  \label{eq:ctft-two-sided-exponential}
+\end{equation}
+\red{两侧指数合成双边指数}。信号和频谱都是实偶函数，非零频率上的相位为零。$a=1$ 的图形见\cref{fig:ctft-dual-rational} 的上行。
+
+把 $\e^{-t}\stepfun(t)\fourierpair 1/(1+\iu\omega)$ 代入对偶：
+\begin{equation}
+  \boxed{\frac{1}{1+\iu t}\fourierpair 2\pi\e^{\omega}\stepfun(-\omega)}.
+  \label{eq:ctft-one-over-one-plus-jt}
+\end{equation}
+左端是复信号，实部为 $1/(1+t^2)$，虚部为 $-t/(1+t^2)$。右端在 $\omega>0$ 时为零，\red{正频率没有分量}；在 $\omega<0$ 时等于 $2\pi\e^{\omega}$，沿负频率指数衰减，见\cref{fig:ctft-dual-rational} 的下行。更一般地，$a>0$ 时 $1/(a+\iu t)\fourierpair 2\pi\e^{a\omega}\stepfun(-\omega)$。
+
+再对 $a=1$ 的双边指数使用对偶。由 $2/(1+t^2)\fourierpair 2\pi\e^{-|\omega|}$ 得到
+\begin{equation}
+  \boxed{\frac{1}{1+t^2}\fourierpair\pi\e^{-|\omega|}}.
+  \label{eq:ctft-lorentz-pair}
+\end{equation}
+两边都是实偶函数，见\cref{fig:ctft-lorentz-spectrum}。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.92\textwidth]{06-ctft/basic/dual-rational.pdf}
+  \caption{上行是双边指数及其实频谱。下行是 $1/(1+\iu t)$ 的实部、虚部和单边频谱。}
+  \label{fig:ctft-dual-rational}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.86\textwidth]{06-ctft/basic/lorentz-spectrum.pdf}
+  \caption{$1/(1+t^2)$ 与 $\pi\e^{-|\omega|}$。二者均为实偶函数。}
+  \label{fig:ctft-lorentz-spectrum}
+\end{figure}
+
+最后计算 $1/(\pi t)$。由 $\stepfun(t)-1/2\fourierpair 1/(\iu\omega)$，
+\[
+  \frac{\iu}{\pi}\left(\stepfun(t)-\frac12\right)\fourierpair\frac{1}{\pi\omega}.
+\]
+对偶把右端搬到时域：
+\begin{equation}
+  \boxed{\frac{1}{\pi t}
+  \fourierpair
+  2\iu\left(\stepfun(-\omega)-\frac12\right)
+  =-\iu\operatorname{sgn}(\omega)}.
+  \label{eq:ctft-hilbert-pair}
+\end{equation}
+$\omega>0$ 时频谱为 $-\iu$，相位为 $-\pi/2$；$\omega<0$ 时频谱为 $\iu$，相位为 $\pi/2$。零频处频谱可取 $0$，相位在该点没有定义；其余频率的幅度都是 $1$，见\cref{fig:ctft-hilbert-spectrum}。
+
+若冲激响应为 $1/(\pi t)$，频率响应就是 $-\iu\operatorname{sgn}(\omega)$。正频率分量乘以 $-\iu$，\red{正频率移相负九十度}；负频率移相 $+\pi/2$。这个系统是 $90^\circ$ 移相器，也称为希尔伯特变换器（Hilbert transformer）。$t=0$ 处的奇异性按主值理解，输入需要使卷积有定义。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.96\textwidth]{06-ctft/basic/hilbert-spectrum.pdf}
+  \caption{$1/(\pi t)$ 的虚部频谱和相位。零频处相位没有定义。}
+  \label{fig:ctft-hilbert-spectrum}
+\end{figure}
+
+\section{帕塞瓦尔定理}
+\label{sec:ctft-parseval}
+
+设 $x$ 的能量有限，且 $x(t)\fourierpair X(\iu\omega)$。则
+\begin{equation}
+  \int_{-\infty}^{\infty}|x(t)|^2\dd t
+  =\frac{1}{2\pi}\int_{-\infty}^{\infty}|X(\iu\omega)|^2\dd\omega.
+  \label{eq:ctft-parseval}
+\end{equation}
+\red{两边能量彼此相等}。$|X(\iu\omega)|^2/(2\pi)$ 是单位频率上的能量密度。计算时\red{频域积分要带系数} $1/(2\pi)$，它和逆变换里的系数是同一个。\red{能量有限才能直接用}。常数、阶跃和正弦的能量为无穷，两边都不能写成普通积分。
+
+由 $|x(t)|^2=x(t)x^*(t)$ 以及
+\[
+  x^*(t)=\frac{1}{2\pi}\int_{-\infty}^{\infty}
+    X^*(\iu\omega)\e^{-\iu\omega t}\dd\omega,
+\]
+代入后交换积分次序，
+\begin{align*}
+  \int_{-\infty}^{\infty}|x(t)|^2\dd t
+  &=\frac{1}{2\pi}\int_{-\infty}^{\infty}X^*(\iu\omega)
+    \left(\int_{-\infty}^{\infty}x(t)\e^{-\iu\omega t}\dd t\right)\dd\omega\\
+  &=\frac{1}{2\pi}\int_{-\infty}^{\infty}|X(\iu\omega)|^2\dd\omega.
+\end{align*}
+交换次序要求能量积分和傅里叶积分收敛。绝对可积且能量有限时这个条件成立。sinc 能量有限但不绝对可积，等式按均方极限理解。
+
+\begin{example}[$\sin t/t$ 的能量]
+  \label{eg:ctft-sinc-energy}
+  由
+  \[
+    \frac{\sin t}{\pi t}\fourierpair\mathbf 1_{|\omega|<1}
+  \]
+  得到 $\sin t/t\fourierpair\pi\,\mathbf 1_{|\omega|<1}$。代入\cref{eq:ctft-parseval}，
+  \[
+    \int_{-\infty}^{\infty}\left(\frac{\sin t}{t}\right)^2\dd t
+    =\frac{1}{2\pi}\int_{-1}^{1}\pi^2\dd\omega=\pi.
+  \]
+  也可以只使用频域卷积。$(\sin t/t)^2$ 的变换由\cref{eq:ctft-frequency-convolution} 计算。两个高度为 $\pi$、宽度为 $2$ 的矩形作卷积，重叠长度是 $2-|\omega|$，再乘 $1/(2\pi)$，得到
+  \[
+    \frac{\pi}{2}(2-|\omega|),\qquad |\omega|\le 2,
+  \]
+  其余频率为零。它的零频值等于信号积分，结果同样是 $\pi$。两条路线见\cref{fig:ctft-sinc-energy}。
+\end{example}
+
+频谱形状已经确定、只剩一个正的比例常数时，能量等式用来定这个常数，见\cref{ex:ctft-parseval-normalize}。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.96\textwidth]{06-ctft/basic/sinc-energy.pdf}
+  \caption{$\sin t/t$ 的矩形频谱，以及 $(\sin t/t)^2$ 的三角频谱。三角频谱在零频处的高度为 $\pi$。}
+  \label{fig:ctft-sinc-energy}
+\end{figure}
+
+\begin{pitfall}[能量等式漏掉系数]
+  时域能量直接对 $|x|^2$ 积分。频域一侧必须除以 $2\pi$。漏掉这个系数时，结果会放大 $2\pi$ 倍。
+\end{pitfall}
+
+
+\section{共轭对称性}
+\label{sec:ctft-conjugate-symmetry}
+
+\subsection{奇偶性与实虚部}
+\label{sec:ctft-even-odd-spectrum}
+
+把实信号分成偶部和奇部，
+\[
+  x_e(t)=\frac{x(t)+x(-t)}{2},\qquad
+  x_o(t)=\frac{x(t)-x(-t)}{2}.
+\]
+若 $x$ 为实偶函数，$x(t)\sin(\omega t)$ 是奇函数，其积分为零，于是
+\[
+  X(\iu\omega)=\int_{-\infty}^{\infty}x(t)\cos(\omega t)\dd t
+\]
+是 $\omega$ 的实偶函数。若 $x$ 为实奇函数，$x(t)\cos(\omega t)$ 是奇函数，于是
+\[
+  X(\iu\omega)=-\iu\int_{-\infty}^{\infty}x(t)\sin(\omega t)\dd t
+\]
+是纯虚的奇函数。\red{实偶信号给出实偶频谱}，\red{实奇信号给出虚奇频谱}。双边指数和符号函数分别属于这两类。
+
+这两个对应可以反着用。频谱是实偶函数时，逆变换只留下余弦积分，得到实偶信号；频谱是纯虚奇函数时，得到实奇信号。\red{反过来也对}，前提是逆变换存在。
+
+\subsection{实信号的幅度谱与相位谱}
+\label{sec:ctft-real-signal-symmetry}
+
+实信号的偶部产生频谱的实部，奇部产生频谱的虚部。实部关于 $\omega$ 为偶，虚部关于 $\omega$ 为奇，合起来是
+\begin{equation}
+  X(-\iu\omega)=X^*(\iu\omega).
+  \label{eq:ctft-conjugate-symmetry}
+\end{equation}
+在 $X(\iu\omega)\neq 0$ 处写成 $X=|X|\e^{\iu\theta(\omega)}$，则
+\begin{equation}
+  |X(\iu(-\omega))|=|X(\iu\omega)|,\qquad
+  \theta(-\omega)=-\theta(\omega).
+  \label{eq:ctft-magnitude-phase-symmetry}
+\end{equation}
+\red{幅度谱关于原点偶对称}，\red{相位谱关于原点奇对称}。相位相差 $2\pi$ 的整数倍时表示同一个复数。主值被折回 $(-\pi,\pi]$ 时，跳变点附近的奇对称可能差一个 $2\pi$；展开相位保持严格的奇对称。象限仍按\cref{sec:ctft-magnitude-phase} 判断。
+
+\begin{example}[由实部恢复因果信号]
+  \label{eg:ctft-causal-from-real}
+  设 $x$ 因果，且 $\Re X(\iu\omega)=1/(1+\omega^2)$。偶部的变换就是这个实部。由\cref{eq:ctft-two-sided-exponential}，
+  \[
+    \frac{x(t)+x(-t)}{2}=\frac12\e^{-|t|}.
+  \]
+  因果信号在 $t<0$ 时为零，偶部在正半轴等于 $x(t)/2$，所以
+  \[
+    x(t)=\e^{-t}\stepfun(t).
+  \]
+  \red{因果信号由偶部恢复}。偶部和因果波形见\cref{fig:ctft-causal-from-real}。直接验证：$\e^{-t}\stepfun(t)$ 的实部确为 $1/(1+\omega^2)$。
+\end{example}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.86\textwidth]{06-ctft/basic/causal-from-real.pdf}
+  \caption{实部 $1/(1+\omega^2)$ 对应的偶部，以及由因果性恢复出的右侧指数。}
+  \label{fig:ctft-causal-from-real}
+\end{figure}
+
+\section{理想低通滤波器}
+\label{sec:ctft-ideal-lowpass}
+
+\subsection{冲激响应与延迟}
+\label{sec:ctft-ideal-lowpass-response}
+
+截止频率 $\omega_c>0$ 的理想低通（ideal lowpass filter）具有频率响应
+\begin{equation}
+  H(\iu\omega)=
+  \begin{cases}
+    1,&|\omega|<\omega_c,\\
+    0,&|\omega|>\omega_c.
+  \end{cases}
+  \label{eq:ctft-ideal-lowpass}
+\end{equation}
+\red{通带内幅度为常数}，\red{通带外完全截止}。边界上有限个点的取值不影响输出。由\cref{eq:ctft-sinc-rectangle-pair}，
+\[
+  h(t)=\frac{\sin(\omega_c t)}{\pi t},
+\]
+$t=0$ 处按极限取 $\omega_c/\pi$。
+
+延迟 $t_0$ 之后，
+\begin{equation}
+  h(t-t_0)=\frac{\sin\bigl(\omega_c(t-t_0)\bigr)}{\pi(t-t_0)}
+  \fourierpair
+  H(\iu\omega)\e^{-\iu\omega t_0}.
+  \label{eq:ctft-ideal-lowpass-delay}
+\end{equation}
+通带内相位为 $-\omega t_0$，通带外幅度为零，相位没有定义。\red{负斜率表示延迟}，延迟量等于斜率的相反数。对任意输入，记 $y_1=x\conv h$、$y_2=x\conv h(\,\cdot\,-t_0)$，时不变性给出 $y_2(t)=y_1(t-t_0)$。线性相位不改变各频率分量的幅度，输出只是整体后移。\cref{fig:ctft-ideal-lowpass} 取 $\omega_c=1$、$t_0=1.5/\omega_c$。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.92\textwidth]{06-ctft/basic/ideal-lowpass.pdf}
+  \caption{理想低通的冲激响应、幅度响应，以及延迟后的冲激响应和通带相位。通带外相位没有定义。}
+  \label{fig:ctft-ideal-lowpass}
+\end{figure}
+
+\subsection{非因果与年轮效应}
+\label{sec:ctft-ideal-lowpass-defects}
+
+$h(t)$ 在 $t<0$ 时不为零。按\cref{thm:lti-causality-impulse-response}，理想低通\red{负时刻响应不为零}，不能做成因果系统，也就\red{做不成实时系统}。输出若在输入发生之前出现，用到的就是未来的输入。
+
+阶跃输入 $\stepfun(t)$ 的响应是
+\begin{equation}
+  y(t)=\int_{-\infty}^{t}\frac{\sin(\omega_c\tau)}{\pi\tau}\dd\tau
+  =\frac12+\frac{1}{\pi}\operatorname{Si}(\omega_c t),
+  \label{eq:ctft-ideal-step-response}
+\end{equation}
+其中 $\operatorname{Si}(z)=\int_0^z(\sin u)/u\dd u$。$y(0)=1/2$。第一个峰值在 $t=\pi/\omega_c$，
+\[
+  y\!\left(\frac{\pi}{\omega_c}\right)
+  =\frac12+\frac{\operatorname{Si}(\pi)}{\pi}\approx 1.089.
+\]
+终值是 $1$，过冲约为跳变幅度的 $9\%$。$\omega_c$ 增大只把振荡压向跳变点，峰值不变，\red{过冲比例不随带宽消失}。第五章矩形波的 Gibbs 振荡是同一类截断：那里截断的是谐波项数，这里截断的是连续频谱。
+
+$|t|<\pi/\omega_c$ 的主瓣面积约为 $1.18$，一侧第一旁瓣的面积约为 $0.14$。主瓣面积大于 $1$，后面的负旁瓣把总面积拉回 $1$。阶跃响应在峰值之后靠近 $1$，振荡却\red{一直延伸到无穷远}，包络按 $1/t$ 衰减。这种长拖尾称为年轮效应。\cref{fig:ctft-ideal-lowpass-step} 左边是主瓣和第一旁瓣，右边的红点标在第一个峰值上。
+
+旁瓣面积大致按 $1/n$ 累加，$\int|h(t)|\dd t$ 发散。由\cref{thm:lti-bibo-impulse-response}，理想低通也不满足 BIBO 稳定。非因果和年轮振荡都来自矩形频率响应，绝对可积同样被旁瓣的慢衰减破坏。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.92\textwidth]{06-ctft/basic/ideal-lowpass-step.pdf}
+  \caption{理想低通冲激响应的主瓣、第一旁瓣，以及单位阶跃响应。主瓣面积约为 $1.18$，单侧第一旁瓣面积约为 $0.14$；峰值约为 $1.09$，不随 $\omega_c$ 改变。}
+  \label{fig:ctft-ideal-lowpass-step}
+\end{figure}
+
+\section{四组补充变换对}
+\label{sec:ctft-extra-pairs}
+
+矩形、三角、阶跃和单边指数之外，双边指数、高斯脉冲、半波余弦和有限长奇对称斜线也各有封闭形式。双边指数见\cref{eq:ctft-two-sided-exponential}：波形连续，原点处的导数跳变，频谱按 $1/\omega^2$ 下降。其余三组的差别在端点是否光滑。高斯脉冲无穷次可微，频谱按指数衰减；半波余弦本身连续，导数在端点跳变；有限长斜线在端点幅度跳变，频谱只按 $1/\omega$ 起伏。
+
+\subsection{高斯脉冲}
+\label{sec:ctft-gaussian}
+
+对 $\tau>0$，
+\begin{equation}
+  \boxed{E\e^{-(t/\tau)^2}
+  \fourierpair
+  E\tau\sqrt{\pi}\,\e^{-(\omega\tau/2)^2}}.
+  \label{eq:ctft-gaussian-pair}
+\end{equation}
+把指数配成完全平方，
+\[
+  -\frac{t^2}{\tau^2}-\iu\omega t
+  =-\left(\frac{t}{\tau}+\iu\frac{\omega\tau}{2}\right)^2
+   -\left(\frac{\omega\tau}{2}\right)^2.
+\]
+剩余积分是高斯积分 $\int_{-\infty}^{\infty}\e^{-u^2}\dd u=\sqrt{\pi}$。配平方时出现的虚位移不改变这个积分值，系数因此是 $E\tau\sqrt{\pi}$。\red{时域频域都是高斯形}。$\tau$ 增大时脉冲变宽、频谱变窄，\red{脉宽和频宽互相制约}，与尺度变换的方向一致。\cref{fig:ctft-gaussian-spectrum} 已按 $E$ 和 $E\tau\sqrt{\pi}$ 归一化。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.86\textwidth]{06-ctft/basic/gaussian-spectrum.pdf}
+  \caption{高斯脉冲和它的高斯频谱，纵轴分别按峰值归一化。}
+  \label{fig:ctft-gaussian-spectrum}
+\end{figure}
+
+\subsection{半波余弦脉冲}
+\label{sec:ctft-half-cosine}
+
+设 $\tau>0$，
+\begin{equation}
+  x(t)=
+  \begin{cases}
+    E\cos(\pi t/\tau),&|t|<\tau/2,\\
+    0,&|t|>\tau/2.
+  \end{cases}
+  \label{eq:ctft-half-cosine-signal}
+\end{equation}
+端点处余弦正好为零，所以 $x$ 连续；导数在 $\pm\tau/2$ 跳变。$x$ 为偶函数，频谱是实函数。把余弦写成两个复指数，窗口积分给出
+\[
+  X(\iu\omega)=\frac{E\tau}{2}\left[
+    \Sa\!\left(\frac{\omega\tau}{2}-\frac{\pi}{2}\right)
+    +\Sa\!\left(\frac{\omega\tau}{2}+\frac{\pi}{2}\right)
+  \right].
+\]
+令 $\theta=\omega\tau/2$，利用 $\Sa(\theta\pm\pi/2)$ 的正弦展开，合并后得到
+\begin{equation}
+  \boxed{X(\iu\omega)
+  =\frac{2\pi E\tau\cos(\omega\tau/2)}{\pi^2-(\omega\tau)^2}}.
+  \label{eq:ctft-half-cosine-pair}
+\end{equation}
+$\omega=\pm\pi/\tau$ 时分子和分母同时为零。直接计算该频率上的积分，
+\[
+  X\!\left(\iu\frac{\pi}{\tau}\right)
+  =E\int_{-\tau/2}^{\tau/2}\cos^2(\pi t/\tau)\dd t
+  =\frac{E\tau}{2}.
+\]
+负频率处相同。\red{分母零点按极限补值}，补上之后频谱连续。\red{负瓣改由相位表示}，取 $\pi$；零点处相位没有定义，见\cref{fig:ctft-half-cosine-spectrum}。$\tau=2$、$E=1$ 时，两个红点就是补上的值 $1$。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.96\textwidth]{06-ctft/basic/half-cosine-spectrum.pdf}
+  \caption{半波余弦脉冲、带符号的实频谱和相位。红点是分母零点处补上的函数值。}
+  \label{fig:ctft-half-cosine-spectrum}
+\end{figure}
+
+\subsection{有限长奇对称斜线}
+\label{sec:ctft-odd-ramp}
+
+在 $|t|<T$ 内取 $x(t)=(E/T)t$，其余时间为零。$t=\pm T$ 处信号从 $\pm E$ 跳到 $0$。它是实奇函数，频谱是纯虚奇函数：
+\begin{equation}
+  \boxed{X(\iu\omega)
+  =-\iu\frac{2E}{T}\left(
+      \frac{\sin(\omega T)}{\omega^2}
+      -\frac{T\cos(\omega T)}{\omega}
+    \right)}.
+  \label{eq:ctft-odd-ramp}
+\end{equation}
+$\omega=0$ 按极限取 $X(0)=0$，\red{零频按极限取零}。
+
+$t\cos(\omega t)$ 是奇函数，积分为零，只留下
+\[
+  X(\iu\omega)=-\iu\frac{2E}{T}\int_0^T t\sin(\omega t)\dd t.
+\]
+分部积分后就是\cref{eq:ctft-odd-ramp}。$\omega>0$ 且接近零时，括号为正，虚部为负，\red{正斜率对应负虚部}。端点跳变使频谱按 $1/\omega$ 振荡，\red{端点跳变使衰减变慢}。相位只取 $\pm\pi/2$，虚部的零点上相位没有定义，见\cref{fig:ctft-odd-ramp-spectrum}。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.96\textwidth]{06-ctft/basic/odd-ramp-spectrum.pdf}
+  \caption{有限长奇对称斜线、虚部频谱和相位。端点处的跳变保留在时域图中。}
+  \label{fig:ctft-odd-ramp-spectrum}
+\end{figure}
+
+\section{周期信号的系数与频谱}
+\label{sec:ctft-periodic-signals}
+
+读取系数、变换整段周期信号、变换周期冲激串，用的不是同一个式子。系数来自一个周期的普通变换，在谐波上取样后再除以周期。整段周期信号的变换是冲激串，第 $k$ 条的权重为 $2\pi A_k$。周期冲激串是后一式的特例，各条权重相同。
+
+\subsection{由一个周期读取傅里叶系数}
+\label{sec:ctft-fs-from-transform}
+
+设 $x$ 以 $T_0$ 为周期，$\omega_0=2\pi/T_0$，复系数 $A_k$ 见\cref{eq:complex-fourier-series}。\cref{eq:ctft-periodic-series-start} 中的 $a_k$ 就是这里的 $A_k$。
+
+取出一个周期内的波形，周期外置零，记为 $x_1(t)$，其变换记为 $X_1$。则
+\begin{equation}
+  \boxed{A_k=\frac{1}{T_0}X_1(\iu k\omega_0)}.
+  \label{eq:ctft-coefficient-from-transform}
+\end{equation}
+\red{只取一个周期做变换}，再\red{到谐波频率上取样}，然后除以 $T_0$。\red{整段周期信号不能代入} $X_1$。周期信号的普通傅里叶积分不收敛，它的变换是下一小节的冲激串。
+
+对称矩形波的一个周期是高度 $1$、宽度 $2T_1$ 的矩形，变换为 $2T_1\Sa(T_1\omega)$。代入上式，
+\[
+  A_0=\frac{2T_1}{T_0},\qquad
+  A_k=\frac{\sin(k\omega_0 T_1)}{k\pi}\quad(k\neq 0).
+\]
+这与第五章对称矩形波的余弦系数一致：那里的周期 $T$ 就是这里的 $T_0$，$B_0=A_0$，且 $k>0$ 时 $B_k=2A_k$。三角周期波先对一个三角脉冲做变换，再按同一公式取样，见\cref{ex:ctft-triangle-fs}。
+
+\subsection{周期信号的傅里叶变换}
+\label{sec:ctft-periodic-transform}
+
+若周期信号的复指数级数为 $x(t)=\sum_k A_k\e^{\iu k\omega_0 t}$，逐项使用 $\e^{\iu k\omega_0 t}\fourierpair 2\pi\impulse(\omega-k\omega_0)$，得到
+\begin{equation}
+  \boxed{x(t)\fourierpair
+  2\pi\sum_{k=-\infty}^{\infty}A_k\impulse(\omega-k\omega_0)}.
+  \label{eq:ctft-periodic-transform}
+\end{equation}
+\red{频谱是一串冲激}。第 $k$ 条的权重是 $2\pi A_k$，\red{权重里带着级数系数}。$A_k$ 里已经有 $1/T_0$，这里再乘 $2\pi$，不能把 $X_1(\iu k\omega_0)$ 的函数值直接当成谱线权重。
+
+\begin{example}[周期矩形脉冲的冲激频谱]
+  \label{eg:ctft-periodic-rectangle-spectrum}
+  取 $T_1=1$、$T_0=4$，则 $\omega_0=\pi/2$，$A_0=1/2$，并且 $k\neq 0$ 时 $A_k=\sin(k\pi/2)/(k\pi)$。于是
+  \[
+    X(\iu\omega)
+    =\pi\impulse(\omega)
+    +\sum_{k\neq 0}\frac{2\sin(k\pi/2)}{k}
+      \impulse\!\left(\omega-\frac{k\pi}{2}\right).
+  \]
+  $k=\pm 1$ 的权重为 $2$，$k=\pm 3$ 的权重为 $-2/3$，偶数 $k\neq 0$ 的权重为零。\red{零权重也要标出位置}，见\cref{fig:ctft-periodic-rectangle-spectrum}。
+\end{example}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.92\textwidth]{06-ctft/basic/periodic-rectangle-spectrum.pdf}
+  \caption{周期 $4$、脉宽 $2$ 的矩形脉冲串，以及各谐波上的冲激权重 $2\pi A_k$。灰点表示权重为零。}
+  \label{fig:ctft-periodic-rectangle-spectrum}
+\end{figure}
+
+\begin{pitfall}[把冲激串再除以周期]
+  $A_k=X_1(\iu k\omega_0)/T_0$ 里的 $X_1$ 来自一个周期。周期信号的变换 $2\pi\sum A_k\impulse(\omega-k\omega_0)$ 已经是冲激。再除以 $T_0$，系数和频谱会差两层周期。先确认手里的频谱来自一个周期，还是来自整段周期信号。
+\end{pitfall}
+
+\subsection{周期冲激串}
+\label{sec:ctft-impulse-train}
+
+\begin{equation}
+  \boxed{\sum_{k=-\infty}^{\infty}\impulse(t-kT_0)
+  \fourierpair
+  \omega_0\sum_{k=-\infty}^{\infty}\impulse(\omega-k\omega_0)}.
+  \label{eq:ctft-impulse-train}
+\end{equation}
+一个周期内只在原点有冲激，$X_1(\iu\omega)=1$，所以每个 $A_k$ 都是 $1/T_0$。对应的复指数级数是
+\[
+  \sum_{k=-\infty}^{\infty}\impulse(t-kT_0)
+  =\frac{1}{T_0}\sum_{k=-\infty}^{\infty}\e^{\iu k\omega_0 t}.
+\]
+代入\cref{eq:ctft-periodic-transform}，权重为 $2\pi/T_0=\omega_0$。\red{时域冲激串仍变冲激串}，\red{谱线间隔等于基频}，而且\red{各条谱线权重相同}。$T_0$ 增大时，频域间隔变小，每条权重也变小。\cref{fig:ctft-impulse-train-spectrum} 里频域纵轴按 $2\pi/T_0$ 画出，各箭头一样高。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.88\textwidth]{06-ctft/basic/impulse-train-spectrum.pdf}
+  \caption{周期冲激串和它的频谱。频域每条冲激的权重都是 $2\pi/T_0$。}
+  \label{fig:ctft-impulse-train-spectrum}
+\end{figure}
+
+\cref{tab:ctft-later-map} 只列使用前要核对的条件，公式的推导仍以相应各节为准。
+
+\begin{table}[htbp]
+  \centering
+  \caption{尺度、对偶、能量、对称、理想低通和周期频谱的对照}
+  \label{tab:ctft-later-map}
+  \small
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    关系 & 结论位置 & 使用前先检查 \\
+    \midrule
+    时间尺度 & \cref{eq:ctft-scaling} & $a$ 取绝对值 \\
+    对偶 & \cref{eq:ctft-duality} & 频率反向，并乘 $2\pi$ \\
+    对偶后的矩形 & \cref{eq:ctft-dual-rectangle} & 高度是 $2\pi E$ \\
+    帕塞瓦尔 & \cref{eq:ctft-parseval} & 信号能量有限 \\
+    实信号对称 & \cref{eq:ctft-conjugate-symmetry} & 幅度谱为偶，相位谱为奇 \\
+    补充变换对 & \cref{sec:ctft-extra-pairs} & 端点跳变决定尾部衰减 \\
+    理想低通 & \cref{eq:ctft-ideal-lowpass} & 非因果，过冲不消失 \\
+    傅里叶系数 & \cref{eq:ctft-coefficient-from-transform} & 只代入一个周期 \\
+    周期信号的变换 & \cref{eq:ctft-periodic-transform} & 权重是 $2\pi A_k$ \\
+    周期冲激串 & \cref{eq:ctft-impulse-train} & 间隔为 $\omega_0$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}

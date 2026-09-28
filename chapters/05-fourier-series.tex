@@ -29,7 +29,7 @@
   C_n&=\frac{2}{T_0}\int_{t_0}^{t_0+T_0}x(t)\sin(n\omega_0t)\dd t.
   \label{eq:trigonometric-fourier-coefficients}
 \end{align}
-其中 $B_0$ 是一个周期内的平均值，$B_n,C_n$ 分别记录余弦和正弦谐波的权重。取积分区间时最重要的是\red{完整覆盖一个周期}，不一定要从 $0$ 开始。
+其中 $B_0$ 是\red{一个周期内的平均值}，$B_n,C_n$ 分别记录余弦和正弦谐波的权重。取积分区间时最重要的是\red{完整覆盖一个周期}，不一定要从 $0$ 开始。
 
 \subsection{收敛条件与跳变点}
 
@@ -46,7 +46,7 @@
   =\frac{x(t_0^-)+x(t_0^+)}{2}.
   \label{eq:fourier-jump-convergence}
 \end{equation}
-所以级数在跳变处出现 Gibbs 现象并不表示计算错误；部分和会在跳变附近振荡，振荡宽度随项数增加而缩小，但过冲幅度不会完全消失。判断收敛时应区分\red{连续点取函数值，跳变点取左右平均}。
+所以级数在跳变处出现 Gibbs 现象并不表示计算错误；部分和会在跳变附近振荡，振荡宽度随项数增加而缩小，但\red{过冲幅度不会完全消失}。判断收敛时应区分\red{连续点取函数值，跳变点取左右平均}。
 
 \begin{example}[对称矩形波的傅里叶级数]
   设 $x(t)$ 以 $T$ 为周期，在每个周期中心附近满足
@@ -94,7 +94,7 @@
   x(t)\e^{-\iu k\omega_0t}\dd t.
   \label{eq:complex-fourier-series}
 \end{equation}
-复指数形式把正、负频率统一在一个整数下标中，通常更适合推导和变换。其系数本身是复数，模表示该谐波的强度，辐角则包含相位信息。
+复指数形式把\red{正、负频率统一在一个整数下标中}，通常更适合推导和变换。其系数本身是复数，模表示该谐波的强度，辐角则包含相位信息。
 
 对实信号，$A_{-k}=\overline{A_k}$。三角系数与复系数的关系为
 \begin{align}
@@ -111,7 +111,7 @@
   \qquad k>0.
   \label{eq:fourier-coefficient-conversion-inverse}
 \end{equation}
-若信号是偶函数，则 $C_k=0$；若信号是奇函数，则 $B_0=B_k=0$。这些对称性可以在积分前直接消去一半系数。
+若信号是偶函数，则 $C_k=0$；若信号是奇函数，则 $B_0=B_k=0$。这些对称性\red{在积分前直接消去一半系数}。
 
 \section{正交基、傅里叶基与其他展开}
 \label{sec:fourier-orthogonal-bases}
@@ -155,7 +155,7 @@
     \label{eq:legendre-orthogonality}
   \end{equation}
   因此 $f(x)=\sum_{n\geq0}a_nP_n(x)$ 时，$a_n=(2n+1)\langle f,P_n\rangle/2$；
-  \item 主成分分析（principal component analysis，PCA）也可看作在数据向量空间中寻找一组正交方向。先去除均值 $A_0=N^{-1}\sum_{i=1}^{N}x_i$，再用正交方向 $A_1,A_2,\ldots$ 展开样本；每个系数仍由内积投影得到。与傅里叶展开的差别在于：傅里叶基由周期结构预先给定，PCA 的方向则由数据本身决定。
+  \item 主成分分析（principal component analysis，PCA）也可看作在数据向量空间中寻找一组正交方向。先去除均值 $A_0=N^{-1}\sum_{i=1}^{N}x_i$，再用正交方向 $A_1,A_2,\ldots$ 展开样本；每个系数仍由内积投影得到。与傅里叶展开的差别在于：傅里叶基由周期结构预先给定，\red{PCA 的方向则由数据本身决定}。
 \end{itemize}
 
-这些方法都先选择正交方向，再计算投影系数并重构信号。下一章把离散的谐波索引推广为连续频率变量。
+这些方法都先选择正交方向，再计算投影系数并重构信号。下一章把离散的谐波索引\red{推广为连续频率变量}。
