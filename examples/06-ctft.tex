@@ -43,7 +43,13 @@
     x(t)=\frac{\sin\bigl(2(t-2)\bigr)}{\pi(t-2)}.
     \label{eq:ex-ctft-phase-recovery-answer}
   \end{equation}
-  $t=2$ 处按极限取值 $2/\pi$。结果见\cref{fig:ex-ctft-phase-answer}。
+  直接反演也可核对延迟的符号。$t\ne2$ 时，
+  \[
+    x(t)=\frac1{2\pi}\int_{-2}^{2}\e^{\iu\omega(t-2)}\dd\omega
+      =\frac{\e^{2\iu(t-2)}-\e^{-2\iu(t-2)}}{2\pi\iu(t-2)}
+      =\frac{\sin(2(t-2))}{\pi(t-2)}.
+  \]
+  $t=2$ 时直接积分得 $4/(2\pi)=2/\pi$，与极限一致。结果见\cref{fig:ex-ctft-phase-answer}。
 
   \begin{figure}[H]
     \centering
@@ -117,12 +123,23 @@
   \[
     r(t)\fourierpair\frac{2\sin(3\omega)}{\omega}.
   \]
-  原频谱可分解为
+  将频谱拆成两个矩形的变换：
   \[
     X(\iu\omega)
-    =\frac12\left[\frac{2\sin(3\omega)}{\omega}\right]^2.
+    =\frac{2\sin(3\omega)}{\omega}\,
+       \frac{\sin(3\omega)}{\omega}.
   \]
-  由卷积性质，$x(t)=\frac12(r\conv r)(t)$。两个宽度为 $6$ 的单位矩形卷积后得到三角脉冲：
+  第二个因子对应 $r(t)/2$。保持 $r(\tau)$ 不动，$(r/2)(t-\tau)$ 的支撑是 $[t-3,t+3]$，重叠部分的乘积为 $1\times(1/2)$：
+  \[
+    \begin{array}{c|c|c}
+      t\text{ 的范围}&\text{重叠区间}&x(t)\\ \hline
+      -6\le t\le0&[-3,t+3]&
+        \displaystyle\int_{-3}^{t+3}\frac12\dd\tau=3+\frac t2\\
+      0<t\le6&[t-3,3]&
+        \displaystyle\int_{t-3}^{3}\frac12\dd\tau=3-\frac t2
+    \end{array}
+  \]
+  $|t|>6$ 时两区间错开。合并后得到三角脉冲：
   \[
     x(t)=
     \begin{cases}
@@ -194,7 +211,12 @@
     h(t)=\frac{1}{2\pi}\int_{-\infty}^{\infty}
     \frac{\tan(\omega/2)}{\omega}\e^{\iu\omega t}\dd\omega,
   \]
-  其中积分也取相应的主值。频谱在孤立点上的取值不影响通常的逆变换；若输入频谱在一段区间内恒为零，则那一频段的 $H$ 不能由这组输入输出确定。
+  其中积分也取相应的主值。$\tan(\omega/2)/\omega$ 为实偶函数；将复指数拆成 $\cos(\omega t)+\iu\sin(\omega t)$ 后，正弦部分为奇函数，在对称主值下积分为零，故也可写成
+  \[
+    h(t)=\frac1{2\pi}\operatorname{pv}\int_{-\infty}^{\infty}
+      \frac{\tan(\omega/2)}{\omega}\cos(\omega t)\dd\omega.
+  \]
+  这个 $H$ 只是由给定输入输出得到的形式频率响应；它含有奇数倍 $\pi$ 处的极点，不能据此把 $h(t)$ 当作普通函数，也不能据此断言系统因果或 BIBO 稳定。频谱在孤立点上的取值不影响通常的逆变换；若输入频谱在一段区间内恒为零，则那一频段的 $H$ 不能由这组输入输出确定。
 \end{solution}
 
 \begin{technique}
@@ -216,7 +238,17 @@
   \[
     Y(\iu\omega)=\frac{1}{(a+\iu\omega)(b+\iu\omega)}.
   \]
-  当 $a\ne b$ 时，部分分式展开为
+  当 $a\ne b$ 时，令 $s=\iu\omega$ 作代数简记，设
+  \[
+    \frac1{(a+s)(b+s)}=\frac{A}{a+s}+\frac{B}{b+s}.
+  \]
+  两边乘以分母，得到 $1=A(b+s)+B(a+s)$。代入各因子的零点：
+  \[
+    s=-a:\quad1=A(b-a),\quad A=\frac1{b-a};
+    \qquad
+    s=-b:\quad1=B(a-b),\quad B=-\frac1{b-a}.
+  \]
+  代回，
   \[
     Y(\iu\omega)=\frac{1}{b-a}
       \left(\frac{1}{a+\iu\omega}-\frac{1}{b+\iu\omega}\right),
@@ -265,11 +297,13 @@
   \]
   $X$ 在实频率轴上没有零点，故
   \[
-    H(\iu\omega)=\frac{2+\iu\omega}{(1+\iu\omega)(3+\iu\omega)}
-    =\frac12\left(\frac{1}{1+\iu\omega}
-                   +\frac{1}{3+\iu\omega}\right).
+    H(\iu\omega)=\frac{2+\iu\omega}{(1+\iu\omega)(3+\iu\omega)}.
   \]
-  所求响应为
+  令 $s=\iu\omega$，设 $H=A/(s+1)+B/(s+3)$。通分后，
+  \[
+    s+2=A(s+3)+B(s+1).
+  \]
+  代入 $s=-1$ 得 $1=2A$；代入 $s=-3$ 得 $-1=-2B$，所以 $A=B=1/2$。所求响应为
   \[
     h(t)=\frac12\bigl(\e^{-t}+\e^{-3t}\bigr)\stepfun(t),
   \]
@@ -301,8 +335,20 @@
     \frac{1}{(s+1)(s+2)(s+3)}
        =\frac{A}{s+1}+\frac{B}{s+2}+\frac{C}{s+3}.
   \]
-  两边乘以分母后，分别代入 $s=-1,-2,-3$，得到
-  $A=1/2$、$B=-1$、$C=1/2$。因此
+  两边乘以分母后，
+  \[
+    1=A(s+2)(s+3)+B(s+1)(s+3)+C(s+1)(s+2).
+  \]
+  分别代入各因子的零点：
+  \[
+    \begin{array}{c|c|c}
+      s&\text{剩余方程}&\text{系数}\\ \hline
+      -1&1=A\times1\times2&A=1/2\\
+      -2&1=B\times(-1)\times1&B=-1\\
+      -3&1=C\times(-2)\times(-1)&C=1/2
+    \end{array}
+  \]
+  逐项逆变换，
   \[
     x(t)=\left(\frac12\e^{-t}-\e^{-2t}
                       +\frac12\e^{-3t}\right)\stepfun(t)
@@ -342,7 +388,25 @@
     Y(\iu\omega)=
     \frac{\iu\omega+2}{(1+\iu\omega)^2(3+\iu\omega)}.
   \]
-  分母含重根，展开时需要两种次数：
+  分母含重根。令 $s=\iu\omega$，展开时保留 $s+1$ 的一次项和二次项：
+  \[
+    \frac{s+2}{(s+1)^2(s+3)}
+     =\frac{A}{s+1}+\frac{B}{(s+1)^2}+\frac{C}{s+3}.
+  \]
+  通分后，
+  \[
+    s+2=A(s+1)(s+3)+B(s+3)+C(s+1)^2.
+  \]
+  依次代入：
+  \[
+    \begin{array}{c|c|c}
+      s&\text{剩余方程}&\text{系数}\\ \hline
+      -1&1=2B&B=1/2\\
+      -3&-1=4C&C=-1/4\\
+      0&2=3A+3B+C&3A=2-3/2+1/4,\quad A=1/4
+    \end{array}
+  \]
+  因此
   \[
     Y(\iu\omega)=\frac{1/4}{1+\iu\omega}
       +\frac{1/2}{(1+\iu\omega)^2}
@@ -384,14 +448,30 @@
 \begin{solution}
   先求中心在原点的单位三角频谱
   $G(\iu\omega)=\max(1-|\omega|,0)$ 的逆变换。
-  令 $R(\omega)=\mathbf 1_{|\omega|<1/2}$，则
+  将三角形拆成两个宽度为 $1$ 的矩形频谱的卷积。取
+  $R_1(\omega)=2\pi\mathbf 1_{|\omega|<1/2}$、
+  $R_2(\omega)=\mathbf 1_{|\omega|<1/2}$，对应的时域信号为
   \[
-    G(\iu\omega)=(R\conv R)(\omega),\qquad
-    r(t)=\frac{\sin(t/2)}{\pi t}\fourierpair R(\omega).
+    \frac{2\sin(t/2)}{t}\fourierpair R_1(\omega),
+    \qquad
+    \frac{\sin(t/2)}{\pi t}\fourierpair R_2(\omega).
   \]
-  由频域卷积性质，
+  频域滑动时，$R_1(\nu)$ 固定在 $[-1/2,1/2]$，$R_2(\omega-\nu)$ 移到 $[\omega-1/2,\omega+1/2]$。重叠区间内乘积为 $2\pi$，再乘频域卷积系数 $1/(2\pi)$：
   \[
-    g(t)=2\pi r^2(t)=\frac{2\sin^2(t/2)}{\pi t^2}.
+    \frac1{2\pi}(R_1\conv R_2)(\omega)=
+    \begin{cases}
+      \displaystyle\frac1{2\pi}\int_{-1/2}^{\omega+1/2}2\pi\dd\nu
+         =1+\omega,&-1\le\omega\le0,\\[5pt]
+      \displaystyle\frac1{2\pi}\int_{\omega-1/2}^{1/2}2\pi\dd\nu
+         =1-\omega,&0<\omega\le1,\\
+      0,&|\omega|>1.
+    \end{cases}
+  \]
+  这就是 $G$，所以
+  \[
+    g(t)=\frac{2\sin(t/2)}{t}\,
+          \frac{\sin(t/2)}{\pi t}
+        =\frac{2\sin^2(t/2)}{\pi t^2}.
   \]
   将频谱分别平移到 $\pm3$ 并相加，对应时域乘以两项复指数之和：
   \[

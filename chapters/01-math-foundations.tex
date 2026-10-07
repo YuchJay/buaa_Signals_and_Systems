@@ -257,14 +257,29 @@ $r$ 控制序列随 $n$ 的增长或衰减，$\omega$ 控制每前进一步所�
   x(t)=\sum_k a_k e_k(t)
   \label{eq:orthogonal-expansion}
 \end{equation}
-两边与 $e_r$ 取内积，得到投影系数
+两边与 $e_r$ 取内积。逐项展开后，正交性消去所有 $k\ne r$ 的项：
+\[
+  \langle x,e_r\rangle
+  =\sum_k a_k\langle e_k,e_r\rangle
+  =a_r\langle e_r,e_r\rangle.
+\]
+得到投影系数
 \begin{equation}
   \boxed{a_r=\frac{\langle x,e_r\rangle}{\langle e_r,e_r\rangle}}.
   \label{eq:orthogonal-projection-coefficient}
 \end{equation}
 正交归一基满足 $\langle e_r,e_r\rangle=1$，此时 $a_r=\langle x,e_r\rangle$。展开系数就是信号沿各基方向的投影。
 
-给定线性无关但不正交的函数 $\{\alpha_k\}$，Gram--Schmidt 方法递推构造
+给定线性无关但不正交的函数 $\{\alpha_k\}$，Gram--Schmidt 方法先逐个减去已有方向上的投影：
+\begin{align*}
+  \beta_1&=\alpha_1,\\
+  \beta_2&=\alpha_2-
+    \frac{\langle\alpha_2,\beta_1\rangle}{\langle\beta_1,\beta_1\rangle}\beta_1,\\
+  \beta_3&=\alpha_3-
+    \frac{\langle\alpha_3,\beta_1\rangle}{\langle\beta_1,\beta_1\rangle}\beta_1-
+    \frac{\langle\alpha_3,\beta_2\rangle}{\langle\beta_2,\beta_2\rangle}\beta_2.
+\end{align*}
+计算 $\beta_3$ 时，第二个投影方向须用已算出的 $\beta_2$。一般递推式为
 \begin{align}
   \beta_1&=\alpha_1,\\
   \beta_k&=\alpha_k-

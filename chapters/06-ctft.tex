@@ -64,7 +64,7 @@
 \section{典型信号的傅里叶变换}
 \label{sec:ctft-basic-pairs}
 
-以下七组变换对是后续计算的基本结论。$\Sa(v)=\sin(v)/v$，并按极限取 $\Sa(0)=1$。普通函数的变换直接积分，含冲激的变换在广义函数意义下理解。
+以下八组变换对是后续计算的基本结论。$\Sa(v)=\sin(v)/v$，并按极限取 $\Sa(0)=1$。普通函数的变换直接积分，含冲激的变换在广义函数意义下理解。
 
 \subsection{右侧衰减指数信号}
 \label{sec:ctft-exponential-pair}
@@ -150,11 +150,16 @@
       \fourierpair E\tau\Sa\left(\frac{\omega\tau}{2}\right)}.
   \label{eq:ctft-rectangle-pair}
 \end{equation}
-直接积分得到
-\[
-  X(\iu\omega)=E\int_{-\tau/2}^{\tau/2}\e^{-\iu\omega t}\dd t
-       =\frac{2E\sin(\omega\tau/2)}{\omega}.
-\]
+当 $\omega\ne0$ 时，直接积分得到
+\begin{align*}
+  X(\iu\omega)
+  &=E\int_{-\tau/2}^{\tau/2}\e^{-\iu\omega t}\dd t
+   =\frac{E}{-\iu\omega}
+     \left[\e^{-\iu\omega t}\right]_{-\tau/2}^{\tau/2}\\
+  &=\frac{E}{\iu\omega}
+     \left(\e^{\iu\omega\tau/2}-\e^{-\iu\omega\tau/2}\right)
+   =\frac{2E\sin(\omega\tau/2)}{\omega}.
+\end{align*}
 零频处按极限取 $X(0)=E\tau$，即\red{零频值等于时域面积}；其他零点为
 $\omega=2k\pi/\tau$（$k$ 为非零整数）。两个首零点之间的主瓣宽度是 $4\pi/\tau$，所以\red{脉冲越窄，主瓣越宽}。
 
@@ -170,7 +175,9 @@ $E\tau|\Sa(\omega\tau/2)|$，相位在正瓣为 $0$、负瓣可取 $\pi$，零�
 代入时先辨认完整宽度。高度 $2$、宽度 $6$ 给出
 $12\Sa(3\omega)=4\sin(3\omega)/\omega$；高度 $1$、宽度 $10$ 给出
 $10\Sa(5\omega)$；高度 $1/4$、宽度 $6$ 给出 $\sin(3\omega)/(2\omega)$。反过来，$7\Sa(2\omega)$ 对应宽度 $4$、高度 $7/4$，
-$5\sin(3\omega)/\omega$ 对应宽度 $6$、高度 $5/2$。
+$5\sin(3\omega)/\omega$ 对应宽度 $6$、高度 $5/2$。前一题先由
+$\omega\tau/2=2\omega$ 得 $\tau=4$，再由 $E\tau=7$ 得 $E=7/4$；后一题先由
+$\omega\tau/2=3\omega$ 得 $\tau=6$，再由 $2E=5$ 得 $E=5/2$。
 
 \subsection{sinc 信号与矩形频谱}
 \label{sec:ctft-sinc-pair}
@@ -182,18 +189,33 @@ $5\sin(3\omega)/\omega$ 对应宽度 $6$、高度 $5/2$。
   \begin{cases}1,&|\omega|<\omega_c,\\0,&|\omega|>\omega_c.\end{cases}}
   \label{eq:ctft-sinc-rectangle-pair}
 \end{equation}
-对矩形频谱直接作逆变换，
+正向计算时，把复指数拆成余弦和正弦。$\sin(\omega_c t)/t$ 为偶函数，乘上 $\sin(\omega t)$ 后是奇函数，对称积分为零：
+\begin{align*}
+  X(\iu\omega)
+  &=\int_{-\infty}^{\infty}\frac{\sin(\omega_c t)}{\pi t}
+       [\cos(\omega t)-\iu\sin(\omega t)]\dd t\\
+  &=\int_{-\infty}^{\infty}
+       \frac{\sin(\omega_c t)\cos(\omega t)}{\pi t}\dd t\\
+  &=\frac12\int_{-\infty}^{\infty}
+       \frac{\sin((\omega_c+\omega)t)+\sin((\omega_c-\omega)t)}
+            {\pi t}\dd t.
+\end{align*}
+第二章的抽样函数面积公式经换元给出
+$\int_{-\infty}^{\infty}\sin(bt)/(\pi t)\dd t=\operatorname{sgn}(b)$。分别判断两个正弦的频率系数：
 \[
-  x(t)=\frac{1}{2\pi}\int_{-\omega_c}^{\omega_c}\e^{\iu\omega t}\dd\omega
-       =\frac{\sin(\omega_c t)}{\pi t}.
+  \begin{array}{c|c|c|c}
+    \omega\text{ 的范围}&\operatorname{sgn}(\omega_c+\omega)
+      &\operatorname{sgn}(\omega_c-\omega)&X(\iu\omega)\\ \hline
+    \omega<-\omega_c&-1&1&(-1+1)/2=0\\
+    -\omega_c<\omega<\omega_c&1&1&(1+1)/2=1\\
+    \omega>\omega_c&1&-1&(1-1)/2=0
+  \end{array}
 \]
-正向计算也可利用
-$\int_{-\infty}^{\infty}\sin(bt)/(\pi t)\dd t=\operatorname{sgn}(b)$：
-奇函数部分积分为零，余下部分经积化和差后得到
+也可用逆变换核对。$t\ne0$ 时，
 \[
-  X(\iu\omega)=\frac12\left[
-        \operatorname{sgn}(\omega_c+\omega)
-       +\operatorname{sgn}(\omega_c-\omega)\right].
+  x(t)=\frac1{2\pi}\int_{-\omega_c}^{\omega_c}\e^{\iu\omega t}\dd\omega
+      =\frac{\e^{\iu\omega_c t}-\e^{-\iu\omega_c t}}{2\pi\iu t}
+      =\frac{\sin(\omega_c t)}{\pi t}.
 \]
 由此可读出\red{频谱支撑边界}为 $\pm\omega_c$；在边界处，对称极限给出 $1/2$。矩形频谱的有限个端点取值不影响逆变换。
 
@@ -290,6 +312,24 @@ $\int_{-\infty}^{\infty}\sin(bt)/(\pi t)\dd t=\operatorname{sgn}(b)$：
   \label{fig:ctft-step-spectrum}
 \end{figure}
 
+\subsection{符号函数}
+\label{sec:ctft-sign-pair}
+
+由 $\operatorname{sgn}(t)=2\stepfun(t)-1$，结合
+\cref{eq:ctft-step-pair,eq:ctft-constant-pair}，得到
+\begin{equation}
+  \boxed{\operatorname{sgn}(t)\fourierpair\frac{2}{\iu\omega}}.
+  \label{eq:ctft-sign-pair}
+\end{equation}
+两个零频冲激项正好抵消。处理阶跃与常数的线性组合时，应把零频冲激一并带入，不能只计算 $1/(\iu\omega)$ 部分。
+$2/(\iu\omega)=-2\iu/\omega$ 是奇的纯虚函数：幅度为 $2/|\omega|$，正频率相位为 $-\pi/2$，负频率相位为 $\pi/2$，零频处相位没有定义，见\cref{fig:ctft-sign-spectrum}。
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.96\textwidth]{06-ctft/basic/sign-spectrum.pdf}
+  \caption{符号函数的时域波形、虚部频谱和相位。零频是奇点，相位在该点没有定义。}
+  \label{fig:ctft-sign-spectrum}
+\end{figure}
+
 \section{傅里叶变换的基本性质}
 \label{sec:ctft-properties-before-integration}
 
@@ -324,23 +364,6 @@ $\int_{-\infty}^{\infty}\sin(bt)/(\pi t)\dd t=\operatorname{sgn}(b)$：
     \caption{由矩形叠加与相减得到的四种波形，与公式的排列顺序一致。}
     \label{fig:ctft-rectangle-combinations}
   \end{figure}
-\end{example}
-
-\begin{example}[符号函数的傅里叶变换]
-  由 $\operatorname{sgn}(t)=2\stepfun(t)-1$，结合\cref{eq:ctft-step-pair,eq:ctft-constant-pair}，得到
-  \[
-    \operatorname{sgn}(t)
-    \fourierpair
-    \frac{2}{\iu\omega}.
-  \]
-  两个冲激项正好抵消。处理阶跃与常数的线性组合时，应把零频冲激一并带入，不能只计算 $1/(\iu\omega)$ 部分。
-$2/(\iu\omega)=-2\iu/\omega$ 是奇的纯虚函数：幅度为 $2/|\omega|$，正频率相位为 $-\pi/2$，负频率相位为 $\pi/2$，零频处相位没有定义，见\cref{fig:ctft-sign-spectrum}。
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.96\textwidth]{06-ctft/basic/sign-spectrum.pdf}
-  \caption{符号函数的时域波形、虚部频谱和相位。零频是奇点，相位在该点没有定义。}
-  \label{fig:ctft-sign-spectrum}
-\end{figure}
 \end{example}
 
 \subsection{时移性质}
@@ -876,7 +899,36 @@ $0<\omega_{c,1}<\cdots<\omega_{c,N}$，发送信号写成
   \left[\cos\bigl((\omega_{c,k}-\omega_{c,j})t\bigr)
        +\cos\bigl((\omega_{c,k}+\omega_{c,j})t\bigr)\right].
 \end{align*}
-目标信号回到零频附近；其余分量位于二倍载频、差频和和频附近。定义离零频最近的非目标中心频率
+目标信号回到零频附近；其余分量位于二倍载频、差频和和频附近。
+
+先看两路信号的具体安排。取 $\omega_{c,1}=4\omega_m$、$\omega_{c,2}=8\omega_m$，发送端的正频带分别为
+$[3\omega_m,5\omega_m]$ 和 $[7\omega_m,9\omega_m]$。解调第一路时，
+\[
+  w_1=\frac12x_1+\frac12x_1\cos(8\omega_m t)
+      +\frac12x_2\cos(4\omega_m t)
+      +\frac12x_2\cos(12\omega_m t).
+\]
+目标频带为 $[-\omega_m,\omega_m]$。其余正频带依次为
+$[7\omega_m,9\omega_m]$、$[3\omega_m,5\omega_m]$、
+$[11\omega_m,13\omega_m]$，负频带对称；最近的干扰从 $3\omega_m$ 开始。
+解调第二路时，
+\[
+  w_2=\frac12x_2+\frac12x_2\cos(16\omega_m t)
+      +\frac12x_1\cos(4\omega_m t)
+      +\frac12x_1\cos(12\omega_m t).
+\]
+最近的干扰仍从 $3\omega_m$ 开始。两路都可取 $\omega_m<\omega_p<3\omega_m$，如 $\omega_p=2\omega_m$；通带增益取 $2$，补偿目标项前的 $1/2$。
+频带安排见\cref{fig:ctft-two-channel-fdm}。
+
+一般的两路等带宽情况还要同时检查差频和自身二倍载频：
+\[
+  \omega_m<\omega_{p,j}<
+    \min\{\omega_{c,2}-\omega_{c,1}-\omega_m,\,
+           2\omega_{c,j}-\omega_m\},\qquad j=1,2.
+\]
+载频差大于 $2\omega_m$ 时，两路副本分开；若二倍载频带更靠近零频，低通截止频率还须低于它的左边界。
+
+对多路信号，将同一检查归纳为离零频最近的非目标中心频率
 \[
   d_j=\min\left(\{2\omega_{c,j}\}\cup
       \{|\omega_{c,k}-\omega_{c,j}|,\ \omega_{c,k}+\omega_{c,j}:k\ne j\}\right).
@@ -892,16 +944,6 @@ $0<\omega_{c,1}<\cdots<\omega_{c,N}$，发送信号写成
     \conv\frac{2\sin(\omega_{p,j}t)}{\pi t}.
 \]
 选截止频率时应\red{检查最近的非目标频带}。
-
-\begin{example}[两路信号的频带安排]
-  \label{eg:ctft-two-channel-fdm}
-  若两路信号都限制在 $|\omega|\leq\omega_m$，选择
-  $\omega_{c,1}=4\omega_m$、$\omega_{c,2}=8\omega_m$。两路正频率副本分别位于
-  \[
-    [3\omega_m,5\omega_m],\qquad [7\omega_m,9\omega_m].
-  \]
-  负频率侧对称。解调任一路时，最近的非目标中心频率都是 $4\omega_m$，故可取 $\omega_p=2\omega_m$，满足 $\omega_m<\omega_p<3\omega_m$。频带安排见\cref{fig:ctft-two-channel-fdm}。
-\end{example}
 
 \begin{figure}[htbp]
   \centering
@@ -1331,7 +1373,15 @@ $t\cos(\omega t)$ 是奇函数，积分为零，只留下
 \[
   X(\iu\omega)=-\iu\frac{2E}{T}\int_0^T t\sin(\omega t)\dd t.
 \]
-分部积分后就是\cref{eq:ctft-odd-ramp}。$\omega>0$ 且接近零时，括号为正，虚部为负，\red{正斜率对应负虚部}。端点跳变使频谱按 $1/\omega$ 振荡，\red{端点跳变使衰减变慢}。相位只取 $\pm\pi/2$，虚部的零点上相位没有定义，见\cref{fig:ctft-odd-ramp-spectrum}。
+分部积分时取 $u=t$、$\dd v=\sin(\omega t)\dd t$，则
+\[
+  \int_0^T t\sin(\omega t)\dd t
+   =\left[-\frac{t\cos(\omega t)}{\omega}
+           +\frac{\sin(\omega t)}{\omega^2}\right]_0^T
+   =-\frac{T\cos(\omega T)}{\omega}
+     +\frac{\sin(\omega T)}{\omega^2},
+\]
+代回得到\cref{eq:ctft-odd-ramp}。$\omega>0$ 且接近零时，括号为正，虚部为负，\red{正斜率对应负虚部}。端点跳变使频谱按 $1/\omega$ 振荡，\red{端点跳变使衰减变慢}。相位只取 $\pm\pi/2$，虚部的零点上相位没有定义，见\cref{fig:ctft-odd-ramp-spectrum}。
 
 \begin{figure}[htbp]
   \centering

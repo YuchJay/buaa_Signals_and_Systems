@@ -90,23 +90,25 @@
   \qquad a\ne0,
   \label{eq:affine-time-transformation}
 \end{equation}
-缩放、反转和时移同时出现。若原信号在 $t=\tau$ 处有一个特征点，则它在新信号中的位置满足
+按括号内的形式，先把 $x(t)$ 变成 $x(at)$：$a<0$ 时翻转，再按 $|a|$ 压缩或扩展；然后平移 $-b/a$。每一步都记录端点、峰值和跳变点的位置，幅度保持不变。完整作图过程见\cref{ex:signals-affine-triangle}。
+
+作图后还可逐点核对。若原信号在 $t=\tau$ 处有一个特征点，则它在新信号中的位置满足
 \begin{equation}
   at+b=\tau,
   \qquad
   t=\frac{\tau-b}{a}.
   \label{eq:feature-point-mapping}
 \end{equation}
-这个对应关系一次处理全部变换，无需猜测平移和缩放的先后顺序。
+这个对应关系用于检查各步变换后的最终位置。
 
 \begin{example}[画出复合变换的关键位置]
-  设 $y(t)=x(-2t+4)=x\bigl(-2(t-2)\bigr)$。原信号在 $t=\tau$ 处的特征点满足
+  设 $y(t)=x(-2t+4)=x\bigl(-2(t-2)\bigr)$。先翻转，特征点从 $\tau$ 到 $-\tau$；再二倍压缩，到 $-\tau/2$；最后向右平移 $2$，到 $2-\tau/2$。代回自变量核对：
   \[
     -2t+4=\tau,
     \qquad
     t=2-\frac{\tau}{2}.
   \]
-  因而原点 $\tau=0$ 移到 $t=2$；原来相距 $2$ 的两点在新图像中只相距 $1$，且左右顺序颠倒。图像经历了二倍压缩、时间反转和向右平移，但实际作图时直接映射特征点更不容易出错。
+  原点 $\tau=0$ 移到 $t=2$；原来相距 $2$ 的两点在新图像中只相距 $1$，且左右顺序颠倒。
 \end{example}
 
 \begin{intuition}
@@ -592,6 +594,32 @@ $\sinc(t)$ 的非零零点位于整数处，而 $\Sa(t)$ 的非零零点位于 $
   \]
   第一个广义积分条件收敛；第二个积分\red{说明抽样函数是能量信号}。
 \end{theorem}
+
+面积公式可用\red{引入参数后求导}计算。设 $a>0$，
+\[
+  I(a)=\int_0^\infty\e^{-at}\frac{\sin t}{t}\dd t.
+\]
+指数因子使积分绝对收敛。对 $a$ 求导，并用欧拉公式展开正弦：
+\begin{align*}
+  I'(a)
+  &=-\int_0^\infty\e^{-at}\sin t\dd t\\
+  &=-\frac1{2\iu}\int_0^\infty
+      \left[\e^{-(a-\iu)t}-\e^{-(a+\iu)t}\right]\dd t\\
+  &=-\frac1{2\iu}\left(\frac1{a-\iu}-\frac1{a+\iu}\right)
+   =-\frac1{a^2+1}.
+\end{align*}
+于是 $I(a)=-\arctan a+C$。由 $|\sin t/t|\le1$，
+$|I(a)|\le\int_0^\infty\e^{-at}\dd t=1/a$，故 $a\to\infty$ 时 $I(a)\to0$，得到
+\[
+  C=\frac{\pi}{2},\qquad I(a)=\frac{\pi}{2}-\arctan a.
+\]
+让 $a\to0^+$，得 $\int_0^\infty\sin t/t\dd t=\pi/2$。这里的极限与广义积分一致：分部积分可将
+$\int_R^\infty\e^{-at}\sin t/t\dd t$ 的绝对值统一控制在 $2/R$ 内，再在有限区间上令 $a\to0^+$ 即可。利用偶性，
+\[
+  \int_{-\infty}^{\infty}\frac{\sin t}{t}\dd t
+    =2\times\frac{\pi}{2}=\pi.
+\]
+平方积分的计算见\cref{eg:ctft-sinc-energy}。
 
 尺度和时移决定主瓣的位置与宽度。对 $B>0$，
 \begin{equation}

@@ -31,6 +31,21 @@
 \end{align}
 其中 $B_0$ 是\red{一个周期内的平均值}，$B_n,C_n$ 分别记录余弦和正弦谐波的权重。取积分区间时最重要的是\red{完整覆盖一个周期}，不一定要从 $0$ 开始。
 
+系数中的 $1/T_0$ 与 $2/T_0$ 来自基函数的积分。以 $[0,T_0]$ 为例，
+\[
+  \int_0^{T_0}1\dd t=T_0,\qquad
+  \int_0^{T_0}\cos^2(n\omega_0t)\dd t
+  =\int_0^{T_0}\sin^2(n\omega_0t)\dd t=\frac{T_0}{2}.
+\]
+不同谐波的乘积以及正弦、余弦之间的乘积在完整周期上的积分为零。
+将级数两边乘以 $\cos(m\omega_0t)$ 再积分，只剩
+\[
+  \int_0^{T_0}x(t)\cos(m\omega_0t)\dd t
+  =B_m\int_0^{T_0}\cos^2(m\omega_0t)\dd t
+  =\frac{T_0}{2}B_m.
+\]
+乘以正弦可求 $C_m$，直接积分则求 $B_0$。
+
 \subsection{收敛条件与跳变点}
 
 常用的 Dirichlet 条件可概括为：
@@ -60,10 +75,12 @@
   \]
   该信号为偶信号，所以 $C_n=0$。取 $[-T/2,T/2]$ 为一个周期，得到
   \begin{align*}
-    B_0&=\frac{2T_1}{T},\\
+    B_0&=\frac1T\int_{-T_1}^{T_1}1\dd t=\frac{2T_1}{T},\\
     B_n&=\frac{2}{T}\int_{-T_1}^{T_1}\cos(n\omega_0t)\dd t
-    =\frac{2\sin(n\omega_0T_1)}{n\pi},\\
-    C_n&=0.
+    =\frac{2}{T}\left[\frac{\sin(n\omega_0t)}{n\omega_0}\right]_{-T_1}^{T_1}\\
+    &=\frac{4\sin(n\omega_0T_1)}{Tn\omega_0}
+     =\frac{2\sin(n\omega_0T_1)}{n\pi},\\
+    C_n&=\frac2T\int_{-T_1}^{T_1}\sin(n\omega_0t)\dd t=0.
   \end{align*}
   因而
   \[
@@ -71,7 +88,18 @@
     +\sum_{n=1}^{\infty}
     \frac{2\sin(2\pi nT_1/T)}{n\pi}\cos(n\omega_0t).
   \]
-  图中同时画出原矩形波和有限项部分和。偶对称性使正弦系数消失，是计算前最值得先检查的结构。
+  例如取 $T=4T_1$，则 $\omega_0T_1=\pi/2$，
+  \[
+    B_0=\frac12,\quad B_1=\frac2\pi,\quad B_2=0,\quad
+    B_3=-\frac{2}{3\pi},\quad B_4=0,\quad B_5=\frac{2}{5\pi}.
+  \]
+  于是
+  \[
+    x(t)=\frac12+\frac2\pi\left[
+      \cos(\omega_0t)-\frac{\cos(3\omega_0t)}3
+      +\frac{\cos(5\omega_0t)}5-\cdots\right].
+  \]
+  \Cref{fig:rectangular-fourier-series} 同时画出矩形波和有限项部分和。先用偶对称性消去正弦项，再检查哪些余弦系数为零。
 
   \begin{figure}[htbp]
     \centering
@@ -113,6 +141,21 @@
 \end{equation}
 若信号是偶函数，则 $C_k=0$；若信号是奇函数，则 $B_0=B_k=0$。这些对称性\red{在积分前直接消去一半系数}。
 
+对前面的矩形波，复指数系数也可直接积分。$k\ne0$ 时，
+\begin{align*}
+  A_k&=\frac1T\int_{-T_1}^{T_1}\e^{-\iu k\omega_0t}\dd t
+      =\frac1T\left[\frac{\e^{-\iu k\omega_0t}}{-\iu k\omega_0}\right]_{-T_1}^{T_1}\\
+     &=\frac{\e^{\iu k\omega_0T_1}-\e^{-\iu k\omega_0T_1}}
+             {\iu k\omega_0T}
+      =\frac{\sin(k\omega_0T_1)}{k\pi}.
+\end{align*}
+$k=0$ 须单独积分，$A_0=2T_1/T$。该信号满足 $A_{-k}=A_k$，把正负频率配对可得
+\[
+  A_k\e^{\iu k\omega_0t}+A_{-k}\e^{-\iu k\omega_0t}
+  =2A_k\cos(k\omega_0t),
+\]
+与三角形式的 $B_k=2A_k$ 一致。
+
 \section{正交基、傅里叶基与其他展开}
 \label{sec:fourier-orthogonal-bases}
 
@@ -127,11 +170,19 @@
   =T_0\,\mathbf{1}_{k=\ell},
   \label{eq:fourier-exponential-orthogonality}
 \end{equation}
-其中 $\mathbf{1}_{k=\ell}$ 在 $k=\ell$ 时为 $1$，否则为 $0$。证明只需对 $k=\ell$ 积分常数 $1$；对 $k\neq\ell$ 积分指数 $\e^{\iu(k-\ell)\omega_0t}$，利用 $(k-\ell)\omega_0T_0=2\pi(k-\ell)$ 即得零。
+其中 $\mathbf{1}_{k=\ell}$ 在 $k=\ell$ 时为 $1$，否则为 $0$。当 $k=\ell$，被积函数为 $1$，积分等于 $T_0$；当 $k\ne\ell$，
+\begin{align*}
+  \langle e_k,e_\ell\rangle
+  &=\int_{t_0}^{t_0+T_0}\e^{\iu(k-\ell)\omega_0t}\dd t\\
+  &=\frac{\e^{\iu(k-\ell)\omega_0t_0}}
+          {\iu(k-\ell)\omega_0}
+    \left[\e^{\iu(k-\ell)\omega_0T_0}-1\right]=0,
+\end{align*}
+因为方括号内为 $\e^{\iu2\pi(k-\ell)}-1=0$。
 
-将 $x(t)=\sum_kA_ke_k(t)$ 与 $e_r$ 取内积，立即得到
+将 $x(t)=\sum_kA_ke_k(t)$ 与 $e_r$ 取内积，逐项计算为
 \[
-  \langle x,e_r\rangle=T_0A_r,
+  \langle x,e_r\rangle=\sum_k A_k\langle e_k,e_r\rangle=T_0A_r,
   \qquad
   A_r=\frac{\langle x,e_r\rangle}{T_0},
 \]
