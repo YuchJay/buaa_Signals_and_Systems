@@ -1056,6 +1056,386 @@ $H(\e^{-\iu\omega_0})=H^*(\e^{\iu\omega_0})$。两项才能合成实余弦：
 
 若另知 $x[n]=0$（$n>0$），则对 $n<0$ 有 $x[-n]=0$，所以 $x[n]=2x_{\mathrm o}[n]$。奇分量的零点恒为零，不能由虚部确定 $x[0]$；再用能量与零点符号条件可求该样值。频域指数拆分、奇分量作图和能量核对的具体计算见\cref{ex:dtft-imaginary-energy-recovery}。
 
-% 本轮施工边界：materials/chapter4.pdf 第 13 页中部至第 16 页末。
-% 第 17 页“Review”及之后的离散傅里叶级数、有限点 DFT 留待下一轮。
+
+\section{离散傅里叶级数与有限点 DFT}
+\label{sec:dtft-dft}
+
+\subsection{四种傅里叶表示}
+\label{sec:fourier-representations}
+
+前面已经分别讨论了连续时间和离散时间的傅里叶表示。按时域对象与频域对象的连续性、离散性，可以作如下区分：
+\begin{table}[H]
+  \centering
+  \caption{四种傅里叶表示的对象和频域形式}
+  \label{tab:fourier-representations}
+  \begin{tabular}{c c c c}
+    \toprule
+    表示 & 时域对象 & 频域对象 & 频域形式 \\
+    \midrule
+    CTFS & 连续时间周期信号 & 离散频率系数 & 离散谱线 \\
+    CTFT & 连续时间非周期信号 & 连续频率函数 & 连续频谱 \\
+    DTFT & 离散时间序列 & 连续频率函数 & $2\pi$ 周期频谱 \\
+    DFT & $N$ 个离散样值 & $N$ 个离散频率样值 & 有限数组 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+表中的 DFT（离散傅里叶变换，discrete Fourier transform）与离散傅里叶级数（discrete-time Fourier series, DTFS）使用同一组有限维复指数。若 $x[n]$ 是 $N$ 周期序列，记一个周期内的级数系数为 $a_k$；若只给出 $N$ 个样值并把它们作为有限序列，通常把对应的频域样值记作 $X[k]$。本章采用
+\begin{equation}
+  X[k]=\sum_{n=0}^{N-1}x[n]\e^{-\iu2\pi kn/N},\qquad
+  x[n]=\frac1N\sum_{k=0}^{N-1}X[k]\e^{\iu2\pi kn/N}.
+  \label{eq:dft-pair}
+\end{equation}
+若采用级数的归一化约定
+$a_k=N^{-1}\sum_nx[n]\e^{-\iu2\pi kn/N}$，则 $X[k]=Na_k$。这只是归一化位置不同，复指数基和可恢复的信息相同。
+
+\subsection{从 DTFT 到 DFT}
+\label{sec:dtft-to-dft}
+
+设有限序列满足
+\[
+  x[n]=0,\qquad n\notin\{0,1,\ldots,N-1\}.
+\]
+它的 DTFT 是有限和
+\begin{equation}
+  X(\e^{\iu\omega})=\sum_{n=0}^{N-1}x[n]\e^{-\iu\omega n}.
+  \label{eq:finite-sequence-dtft}
+\end{equation}
+在一个完整的 $2\pi$ 周期内取 $N$ 个等间隔频率点
+\begin{equation}
+  \omega_k=\frac{2\pi k}{N},\qquad k=0,1,\ldots,N-1,
+  \label{eq:dft-frequency-grid}
+\end{equation}
+就得到
+\begin{equation}
+  X[k]=X(\e^{\iu\omega_k})
+  =\sum_{n=0}^{N-1}x[n]\e^{-\iu2\pi kn/N}.
+  \label{eq:dft-from-dtft}
+\end{equation}
+因此
+\[
+  \Delta\omega=\frac{2\pi}{N}
+\]
+是 DFT 的频率采样间隔。\red{DFT 是有限长序列 DTFT 的等间隔采样}；它只保留 $N$ 个频率点，不能把这 $N$ 个数直接当作连续频谱函数。
+
+还可以把这 $N$ 个时域样值作周期延拓：
+\begin{equation}
+  \widetilde{x}[n]=x[n\bmod N],
+  \qquad \widetilde{x}[n+N]=\widetilde{x}[n].
+  \label{eq:dft-periodic-extension}
+\end{equation}
+对周期延拓序列作离散傅里叶级数，系数为
+\[
+  a_k=\frac1N\sum_{n=0}^{N-1}x[n]\e^{-\iu2\pi kn/N}
+      =\frac{X[k]}{N}.
+\]
+有限向量、周期延拓和有限序列的 DTFT 是三个不同对象：前者只有 $N$ 个给定分量，第二个在时域按 $N$ 周期重复，第三个在频率上是连续的 $2\pi$ 周期函数。\red{周期延拓不能无说明地代替有限序列}。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.94\textwidth]{07-dtft/dft-sampling.pdf}
+  \caption{有限长序列的 DTFT 与 DFT 采样点。右图曲线是连续的 $2\pi$ 周期 DTFT，圆点是 $\omega_k=2\pi k/N$ 的 $N$ 个样值，不表示频域冲激谱线。}
+  \label{fig:dtft-dft-sampling}
+\end{figure}
+
+当频率用 $[-\pi,\pi)$ 的顺序显示时，仍然只有同一组 $N$ 个点。$k>N/2$ 的点可解释为负频率，因为
+\[
+  \omega_{N-r}=2\pi-\frac{2\pi r}{N}
+  \equiv-\frac{2\pi r}{N}\pmod{2\pi}.
+\]
+公式计算通常按 $k=0,\ldots,N-1$ 排列；中心化显示只改变点的排列顺序。特别地，$\pi$ 和 $-\pi$ 对离散时间复指数是同一个频率。
+
+\subsection{正交性与逆变换}
+\label{sec:dft-inverse}
+
+DFT 可逆的原因是 $N$ 个复指数向量彼此正交。对 $n,m\in\{0,1,\ldots,N-1\}$，有
+\begin{equation}
+  \sum_{k=0}^{N-1}\e^{\iu2\pi k(n-m)/N}
+  =\begin{cases}
+    N,&n=m,\\
+    0,&n\ne m.
+  \end{cases}
+  \label{eq:dft-orthogonality}
+\end{equation}
+证明时令 $r=\e^{\iu2\pi(n-m)/N}$。当 $n=m$ 时，每一项都是 $1$，和为 $N$。当 $n\ne m$ 时，$r^N=1$ 且 $r\ne1$，故有限等比和为
+\[
+  \sum_{k=0}^{N-1}r^k=\frac{1-r^N}{1-r}=0.
+\]
+这里 $|n-m|\le N-1$，所以分母确实不为零。
+
+将正变换代入逆变换，得到
+\begin{align}
+  \frac1N\sum_{k=0}^{N-1}X[k]\e^{\iu2\pi kn/N}
+  &=\frac1N\sum_{k=0}^{N-1}
+    \left(\sum_{m=0}^{N-1}x[m]\e^{-\iu2\pi km/N}\right)
+    \e^{\iu2\pi kn/N}\\
+  &=\frac1N\sum_{m=0}^{N-1}x[m]
+    \sum_{k=0}^{N-1}\e^{\iu2\pi k(n-m)/N}\\
+  =x[n],
+  \label{eq:dft-inverse-proof}
+\end{align}
+其中 $n=0,1,\ldots,N-1$。交换两个有限和后，内层和由正交关系消去所有 $m\ne n$ 的项，只留下 $x[n]$。
+
+\subsection{矩阵表示与下标周期性}
+\label{sec:dft-matrix}
+
+定义 DFT 矩阵
+\[
+  W_{k,n}=\e^{-\iu2\pi kn/N},\qquad k,n=0,1,\ldots,N-1.
+\]
+令
+\[
+  \mathbf{x}=[x[0],x[1],\ldots,x[N-1]]^{\mathsf T},\qquad
+  \mathbf{X}=[X[0],X[1],\ldots,X[N-1]]^{\mathsf T},
+\]
+则
+\begin{equation}
+  \mathbf{X}=\mathbf{W}\mathbf{x},\qquad
+  \mathbf{x}=\frac1N\mathbf{W}^{H}\mathbf{X},\qquad
+  \mathbf{W}^{-1}=\frac1N\mathbf{W}^{H}.
+  \label{eq:dft-matrix}
+\end{equation}
+矩阵的每一行对应一个频率点，每一列对应一个时域下标；其元素也可写成 $v_k^n$，其中 $v_k=\e^{-\iu2\pi k/N}$。这是一类 Vandermonde 型矩阵。正交关系给出
+$\mathbf W^H\mathbf W=N\mathbf I$，所以它的逆矩阵正是 $N^{-1}\mathbf W^H$。
+
+更一般地，若取 $N$ 个两两不同的频率点
+$\omega_0,\ldots,\omega_{N-1}$，并令
+$v_k=\e^{-\iu\omega_k}$，由有限长序列 DTFT 得到的方程组为
+\[
+  \begin{bmatrix}
+    X(\e^{\iu\omega_0})\\
+    X(\e^{\iu\omega_1})\\
+    \vdots\\
+    X(\e^{\iu\omega_{N-1}})
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    1&v_0&\cdots&v_0^{N-1}\\
+    1&v_1&\cdots&v_1^{N-1}\\
+    \vdots&\vdots&&\vdots\\
+    1&v_{N-1}&\cdots&v_{N-1}^{N-1}
+  \end{bmatrix}
+  \begin{bmatrix}
+    x[0]\\x[1]\\\vdots\\x[N-1]
+  \end{bmatrix}.
+\]
+这是 Vandermonde 型方程组，其行列式为
+\[
+  \det\mathbf V
+  =\prod_{0\le r<s\le N-1}(v_s-v_r).
+\]
+由于 $v_0,\ldots,v_{N-1}$ 两两不同，行列式不为零，故矩阵可逆。于是，\red{对时域已知长度为 $N$ 的有限序列，任取 $N$ 个不同频率处的 DTFT 样值，就能恢复全部 $x[0],\ldots,x[N-1]$，再由有限和式恢复任意 $\omega$ 处的整个 DTFT}：
+\[
+  X(\e^{\iu\omega})
+  =\sum_{n=0}^{N-1}x[n]\e^{-\iu\omega n}.
+\]
+这里的可恢复性依赖于“时域只有 $N$ 个未知样值”这一前提。任意连续频谱函数不能仅凭 $N$ 个点恢复；同时，恢复出整个有限和 DTFT 也不意味着可以把 DFT 数组本身直接当作连续频率函数。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.86\textwidth]{07-dtft/dft-matrix-flow.pdf}
+  \caption{DFT 的有限维线性变换。输入向量由 $N$ 个时域样值组成，经过 DFT 矩阵得到 $N$ 个频域样值。}
+  \label{fig:dft-matrix-flow}
+\end{figure}
+
+由指数因子的周期性，DFT 下标按 $N$ 周期理解：
+\begin{equation}
+  X[k+N]=X[k].
+  \label{eq:dft-index-periodicity}
+\end{equation}
+这与 DTFT 的频率周期性
+$X(\e^{\iu(\omega+2\pi)})=X(\e^{\iu\omega})$
+相互对应，但含义不同：前者是有限数组下标的周期折回，后者是连续频率函数的周期性。计算和存储时保留 $k=0,\ldots,N-1$ 即可；需要负频率显示时，再按模 $N$ 重排。\red{DFT 的 $N$ 个下标是一组完整频率索引}。
+
+\begin{pitfall}
+  把 DFT 的 $N$ 个点画成 $N$ 条频域冲激，或把 $X[k]$ 直接当作连续函数，都会混淆 DFT 与 DTFT。DFT 点是频谱样值；只有常数、正弦等序列的 DTFT 才会在广义函数意义下出现频域冲激串。
+\end{pitfall}
+
+\subsection{基 2 快速傅里叶变换}
+\label{sec:fft}
+
+直接按定义计算 $N$ 点 DFT 时，每个 $X[k]$ 都要把 $N$ 个时域样值乘上不同的旋转因子再相加，运算量随 $N^2$ 增长。快速傅里叶变换（fast Fourier transform, FFT）利用复指数的重复关系，把一个 $N$ 点 DFT 拆成两个 $N/2$ 点 DFT，再继续拆分。下面讨论最常用的基 2（radix-2）时间抽取结构，要求
+$N=2^p$。
+
+记
+\[
+  W_N=\e^{-\iu2\pi/N},\qquad
+  X[k]=\sum_{n=0}^{N-1}x[n]W_N^{kn}.
+\]
+把下标分成偶数和奇数两组：
+\[
+  E[k]=\sum_{r=0}^{N/2-1}x[2r]W_{N/2}^{kr},\qquad
+  O[k]=\sum_{r=0}^{N/2-1}x[2r+1]W_{N/2}^{kr}.
+\]
+这里 $E[k]$ 是偶下标样值组成的 $N/2$ 点 DFT，$O[k]$ 是奇下标样值组成的 $N/2$ 点 DFT。利用
+$W_N^{2kr}=W_{N/2}^{kr}$，可得
+\begin{equation}
+  X[k]=E[k]+W_N^kO[k],\qquad
+  X[k+N/2]=E[k]-W_N^kO[k],
+  \quad 0\le k<N/2.
+  \label{eq:fft-decimation}
+\end{equation}
+第二式来自
+\[
+  W_N^{(k+N/2)(2r+1)}
+  =-W_N^{k(2r+1)};
+\]
+也可以直接使用 $W_N^{k+N/2}=-W_N^k$。因此，两个输出共用同一对较小 DFT，只需先算一次 $W_N^kO[k]$，再分别相加和相减。
+
+\begin{intuition}
+  \textbf{蝶形的含义。}
+  设上支路输入为 $A$，下支路输入为 $B$，下支路先乘旋转因子 $W$。蝶形输出只有两项：
+  \[
+    A+WB,\qquad A-WB.
+  \]
+  图中的两条交叉线表示同一对输入同时送入“加”和“减”两个结果；它们不是额外的信号，也不表示时间上的先后。一个蝶形把两个数变成两个数，信息量没有减少，却把两个输出中重复的计算合并了。
+\end{intuition}
+
+以 $N=8$ 为例，先把
+\[
+  x[0],x[2],x[4],x[6]
+\]
+送入一个 $4$ 点 DFT，把
+\[
+  x[1],x[3],x[5],x[7]
+\]
+送入另一个 $4$ 点 DFT；再按\cref{eq:fft-decimation} 合并。两个 $4$ 点 DFT 又各自拆成两个 $2$ 点 DFT，$2$ 点 DFT 最后只剩下
+\[
+  A+B,\qquad A-B,
+\]
+因为此时旋转因子为 $1$。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.98\textwidth]{07-dtft/fft-flow.pdf}
+  \caption{基 2 FFT 的流图。左图先说明一个蝶形的两项运算；右图以 8 点 DFT 为例，从位倒序输入开始，依次合并 2 点、4 点和 8 点 DFT。每列的节点是该层已经算出的中间结果，红色因子表示需要乘上的旋转因子。}
+  \label{fig:fft-flow}
+\end{figure}
+
+\subsubsection{怎样读 8 点 FFT 流图}
+\label{sec:fft-flow-reading}
+
+流图应从左向右读，每一列代表一次合并：
+
+\begin{enumerate}
+  \item 第一列把相邻的两项组成四个 $2$ 点 DFT。每个蝶形只用加法和减法。
+  \item 第二列把每两个 $2$ 点结果合成一个 $4$ 点 DFT。这里出现 $W_4^1=-\iu$，所以相应支路要先乘 $-\iu$。
+  \item 第三列把两个 $4$ 点结果合成一个 $8$ 点 DFT。四个蝶形分别使用 $W_8^0,W_8^1,W_8^2,W_8^3$；$W_8^0=1$ 的乘法可以省略。
+  \item 右端的 $X[0],\ldots,X[7]$ 已按自然下标排列。左端出现
+    \[
+      x[0],x[4],x[2],x[6],x[1],x[5],x[3],x[7]
+    \]
+    是因为输入下标先按三位二进制倒序排列。它只是存放顺序的改变，不是把原序列的样值改了。
+\end{enumerate}
+
+例如，原下标 $3$ 的二进制写法是 $011$，倒序后为 $110$，对应左端的第 $6$ 个位置，因此 $x[3]$ 出现在 $x[7]$ 后面。按位倒序后，第一层正好把将在同一个 $2$ 点 DFT 中配对的样值放在相邻位置。若不采用原地流图，也可以保留自然输入顺序，用程序中的索引表完成同样的配对；\red{位倒序是数据排列规则，不是 FFT 的新变换}。
+
+对一般 $N=2^p$，共有 $\log_2N$ 层，每层 $N/2$ 个蝶形，所以蝶形总数为
+\[
+  \frac{N}{2}\log_2N.
+\]
+递推关系
+\[
+  T(N)=2T(N/2)+O(N)
+\]
+给出
+\[
+  T(N)=O(N\log_2N).
+\]
+FFT 的优势来自复指数因子的重复使用；流图中的同一旋转因子会在许多位置反复出现，不能把每条连线都当成一次全新的 $N$ 项求和。\red{先看蝶形，再看层数，最后数运算量}。
+
+\subsection{循环卷积与 DFT 的乘法性质}
+\label{sec:dft-circular-convolution}
+
+普通离散卷积会把两个有限序列的长度相加减一。DFT 的乘法性质对应的是\emph{循环卷积}，因为 DFT 把 $N$ 个样值看作一个周期。设 $x[n]$ 和 $h[n]$ 都只给出 $0,\ldots,N-1$ 内的样值，把下标按模 $N$ 折回，定义
+\begin{equation}
+  y_{\mathrm c}[n]
+  =\sum_{m=0}^{N-1}x[m]\,
+    h[(n-m)\bmod N],
+  \qquad n=0,\ldots,N-1.
+  \label{eq:circular-convolution}
+\end{equation}
+例如 $n=0$ 时，$h[-m]$ 要折回到 $h[(-m)\bmod N]$，所以参与相乘的顺序是
+\[
+  h[0],h[N-1],h[N-2],\ldots,h[1].
+\]
+这就是“先翻转，再按周期平移”的含义。负下标没有被删掉，而是绕回一个周期的右端。
+
+\begin{example}
+  设
+  \[
+    x[n]=\{1,2,3,4\},\qquad
+    h[n]=\{2,-1,0,1\},
+    \qquad 0\le n\le3.
+  \]
+  循环卷积的四个输出分别为
+  \begin{align*}
+    y_{\mathrm c}[0]&=1\cdot2+2\cdot1+3\cdot0+4\cdot(-1)=0,\\
+    y_{\mathrm c}[1]&=1\cdot(-1)+2\cdot2+3\cdot1+4\cdot0=6,\\
+    y_{\mathrm c}[2]&=1\cdot0+2\cdot(-1)+3\cdot2+4\cdot1=8,\\
+    y_{\mathrm c}[3]&=1\cdot1+2\cdot0+3\cdot(-1)+4\cdot2=6.
+  \end{align*}
+  所以
+  \[
+    y_{\mathrm c}[n]=\{0,6,8,6\}.
+  \]
+\end{example}
+
+在本例中，普通线性卷积的长度为 $4+4-1=7$。循环卷积只有 $4$ 个输出，线性卷积超过第 $3$ 个下标的部分会绕回前面并与前面的结果相加。对于其他题目，先判断题目要求的是普通卷积还是循环卷积；\red{看到模 $N$ 折回，就不能直接套线性卷积的有限支撑范围}。
+
+设 $X[k]$、$H[k]$ 分别是 $x[n]$、$h[n]$ 的 $N$ 点 DFT，$Y_{\mathrm c}[k]$ 是\cref{eq:circular-convolution} 的 DFT。则
+\begin{equation}
+  Y_{\mathrm c}[k]=X[k]H[k],
+  \qquad
+  y_{\mathrm c}[n]
+  =\frac1N\sum_{k=0}^{N-1}X[k]H[k]\e^{\iu2\pi kn/N}.
+  \label{eq:dft-circular-product}
+\end{equation}
+证明时把 $x[m]$ 与 $h[(n-m)\bmod N]$ 都写成逆 DFT。由于
+\[
+  \sum_{m=0}^{N-1}\e^{\iu2\pi m(r-s)/N}
+  =
+  \begin{cases}
+    N,&r=s,\\
+    0,&r\ne s,
+  \end{cases}
+\]
+不同频率下标的交叉项全部消失，只留下 $X[k]H[k]$。因此，时域的循环卷积在 DFT 域中变成逐点乘法；逆 DFT 再把乘积恢复为一个周期内的 $N$ 个输出样值。
+
+\subsection{用 FFT 计算线性卷积}
+\label{sec:fft-linear-convolution}
+
+若要求普通线性卷积，不能直接把两个原长度序列分别做 DFT 后相乘，因为这会得到循环卷积。设 $x[n]$ 长度为 $N_1$，$h[n]$ 长度为 $N_2$，先在尾部补零，使两者都成为长度 $N$ 的序列，其中
+\begin{equation}
+  N\ge N_1+N_2-1.
+  \label{eq:fft-zero-padding}
+\end{equation}
+若使用基 2 FFT，通常再取满足条件的最小 $N=2^p$。然后按下列顺序计算：
+\[
+  \widetilde X[k]=\operatorname{DFT}_N\{x_{\mathrm{zp}}[n]\},\qquad
+  \widetilde H[k]=\operatorname{DFT}_N\{h_{\mathrm{zp}}[n]\},
+\]
+\[
+  \widetilde Y[k]=\widetilde X[k]\widetilde H[k],
+  \qquad
+  y[n]=\operatorname{IDFT}_N\{\widetilde Y[k]\}.
+\]
+因为线性卷积最多只有 $N_1+N_2-1$ 个非零位置，补零后循环卷积的折回部分没有非零尾项可叠加，所以
+\[
+  y_{\mathrm c}[n]=y_{\mathrm{lin}}[n],
+  \qquad 0\le n\le N_1+N_2-2.
+\]
+若 $N<N_1+N_2-1$，线性卷积的尾部会折回开头，结果便发生循环混叠。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.96\textwidth]{07-dtft/fft-convolution-flow.pdf}
+  \caption{用 FFT 计算线性卷积的流程。两个序列先补零到同一长度，再分别变换、逐点相乘，最后作逆变换。补零长度不足时，线性卷积的尾部会在循环卷积中折回。}
+  \label{fig:fft-convolution-flow}
+\end{figure}
+
+\begin{pitfall}
+  “频域相乘等于时域卷积”需要先看卷积的边界。DTFT 对应普通线性卷积；有限点 DFT 的逐点相乘对应 $N$ 点循环卷积。用 FFT 计算线性卷积时，补零长度必须满足\cref{eq:fft-zero-padding}，否则得到的只是发生了折回的循环结果。
+\end{pitfall}
+
 \endgroup
