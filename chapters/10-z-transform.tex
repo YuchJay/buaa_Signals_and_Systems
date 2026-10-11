@@ -4,7 +4,7 @@
 \section{用差分方程描述因果 LTI 系统}
 \label{sec:dt-difference-equation}
 
-离散时间系统同样常用一类方程描述：把输入、输出及其若干次延时样值联系起来。第七章讨论离散 LTI 系统的频率响应时，已经用过一次由常系数差分方程求 $H(\e^{\iu\omega})$ 的做法；本节补全方程的来源、辅助条件和时域递推解法，写清它在什么条件下才对应一个因果 LTI 系统。
+离散时间系统同样常用一类方程描述：把输入、输出及其若干次延时样值联系起来。第七章讨论离散 LTI 系统的频率响应时，已经用过一次由常系数差分方程求 $H(\e^{\iu\omega})$ 的做法；这里先写清辅助条件和时域递推解法；建立 Z 变换后，\cref{sec:z-solve-difference-equation}将把方程、系统函数和单位延时器方框图连起来，并处理非零初始状态。
 
 \subsection{差分方程与递推形式}
 
@@ -34,7 +34,10 @@ $N$ 阶线性常系数差分方程（linear constant-coefficient difference equa
   方程 $y[n]-\frac12y[n-1]=x[n]$ 配不同的辅助条件，得到完全不同的系统。取输入 $x[n]=\impulse[n]$：
   \begin{itemize}
     \item 若 $y[-1]=0$，逐项算出 $y[0]=1$，$y[1]=\frac12$，$y[2]=\frac14$，即 $y[n]=\left(\frac12\right)^n\stepfun[n]$，对应一个因果系统的脉冲响应。
-    \item 若改取 $y[1]=0$，递推方向只能向左，得到 $y[0]=-2$，$y[-1]=-4$，即 $y[n]=-2^{-n}\stepfun[-n-1]$，对应非因果系统。
+    \item 若改取 $y[1]=0$ 并从右向左递推，先由 $n=1$ 的方程得到
+    $y[0]=0$，再由 $n=0$ 得到 $y[-1]=-2$，由 $n=-1$ 得到
+    $y[-2]=-4$。故 $y[n]=-\left(\frac12\right)^n\stepfun[-n-1]$，
+    对应非因果系统。
   \end{itemize}
   \red{差分方程本身不构成一个确定的系统}，与连续时间的情形相同。
 \end{example}
@@ -94,65 +97,10 @@ $N$ 阶线性常系数差分方程（linear constant-coefficient difference equa
     H(\e^{\iu\omega})
     =\frac{\sum_{k=0}^{M}b_k\e^{-\iu\omega k}}{\sum_{k=0}^{N}a_k\e^{-\iu\omega k}},
   \]
-  它正是 $h[n]$ 的 DTFT。
+  当单位圆位于 $H(z)$ 的 ROC 内时，它正是 $h[n]$ 的 DTFT。
 \end{remark}
 
-\section{递推法求单位脉冲响应}
-\label{sec:dt-recursive-impulse-example}
-
-\begin{workedexample}[递推求脉冲响应并判定稳定性]
-  \label{ex:dt-recursive-impulse}
-  因果、初始静止的离散 LTI 系统满足
-  \[
-    y[n]-\frac12y[n-1]=x[n].
-  \]
-  求单位脉冲响应 $h[n]$；判断系统是否 BIBO 稳定；按定义求和写出 $h[n]$ 的 Z 变换，并指出收敛域。
-\end{workedexample}
-
-\begin{solution}
-  把方程改写成递推形式
-  \[
-    y[n]=x[n]+\frac12y[n-1].
-  \]
-  令 $x[n]=\impulse[n]$，初始静止给出 $h[n]=0$（$n<0$），从 $n=0$ 起逐项计算：
-  \begin{align*}
-    h[0]&=\impulse[0]+\frac12h[-1]=1,\\
-    h[1]&=\impulse[1]+\frac12h[0]=\frac12,\\
-    h[2]&=\impulse[2]+\frac12h[1]=\frac14,\\
-    h[3]&=\impulse[3]+\frac12h[2]=\frac18.
-  \end{align*}
-  从 $n=1$ 起，输入 $\impulse[n]$ 每步都为零，因此每一步只是把上一个值乘 $\frac12$，连续三步得到 $\left(\frac12\right)^3$。归纳得
-  \[
-    \boxed{h[n]=\left(\frac12\right)^n\stepfun[n]}.
-  \]
-  它只在非负下标处非零，故系统因果；样值见\cref{fig:ex-dt-recursive-answer}。
-  \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.78\textwidth]{10-z-transform/examples/recursive-answer.pdf}
-    \caption{例题 \ref{ex:dt-recursive-impulse} 的单位脉冲响应。$h[0]=1$，每个样值都是前一个的一半，序列向右侧无限延伸。}
-    \label{fig:ex-dt-recursive-answer}
-  \end{figure}
-
-  稳定性用绝对值求和判断。等比级数公比为 $\frac12$，绝对值小于 $1$，
-  \[
-    \sum_{n=-\infty}^{\infty}|h[n]|=\sum_{n=0}^{\infty}\left(\frac12\right)^n=2<\infty,
-  \]
-  故系统 BIBO 稳定。
-
-  按定义求 $h[n]$ 的 Z 变换，
-  \[
-    H(z)=\sum_{n=-\infty}^{\infty}h[n]z^{-n}
-    =\sum_{n=0}^{\infty}\left(\frac12z^{-1}\right)^n
-    =\frac1{1-\frac12z^{-1}}.
-  \]
-  等比级数在 $\left|\frac12z^{-1}\right|<1$ 时收敛，即 $|z|>\frac12$。极点 $z=\frac12$ 落在单位圆内，单位圆 $|z|=1$ 位于收敛域中，与稳定性结论一致。
-\end{solution}
-
-\begin{technique}
-  递推求 $h[n]$ 时写清三件事：输入的脉冲位置、每一步用到的上一个输出、初始静止给出的负下标零值。算出前四个样值后先看比值是否恒定，恒定即为等比，公比恰好是方程中 $y[n-1]$ 的系数。最后用绝对值求和判稳定，并核对收敛域是否包含单位圆。
-\end{technique}
-
-\section{初始静止与输入超前项}
+\subsection{初始静止与输入超前项}
 \label{sec:dt-initial-rest-example}
 
 \begin{workedexample}[输入含超前冲激时的递推]
@@ -169,7 +117,7 @@ $N$ 阶线性常系数差分方程（linear constant-coefficient difference equa
   \begin{figure}[H]
     \centering
     \includegraphics[width=0.78\textwidth]{10-z-transform/examples/first-order-difference-given.pdf}
-    \caption{例题 \ref{ex:dt-recursive-difference} 的输入序列：$n=-1$ 处有一个权为 $-2$ 的冲激，$n=0$ 至 $4$ 取值为 $1$。}
+    \caption{例题 \ref{ex:dt-recursive-difference} 的输入序列：$n=-1$ 处有一个权为 $-2$ 的冲激，从 $n=0$ 起取值为 $1$（图中绘至 $n=4$）。}
     \label{fig:ex-dt-difference-given}
   \end{figure}
 \end{workedexample}
@@ -216,161 +164,1414 @@ $N$ 阶线性常系数差分方程（linear constant-coefficient difference equa
   输入含 $\impulse[n+n_0]$ 时，先按初始静止把零区间确定下来，再从最早的非零下标开始递推。逐项算到输入转为常值后，可用稳态值移位：把递推式两边减去稳态值，使余量成为等比数列，一次求出闭式。首项必须与逐项计算的最早几个值对上，否则差值公式用错了起点。
 \end{technique}
 
-\section{含输入延时项的差分方程}
-\label{sec:dt-input-delay-example}
+\section{Z 变换的定义与收敛域}
+\label{sec:z-transform-definition}
 
-\begin{workedexample}[含输入延时项的方程]
-  \label{ex:dt-input-delay}
-  因果、初始静止的离散 LTI 系统满足
-  \[
-    y[n]-\frac16y[n-1]-\frac16y[n-2]=2x[n]+x[n-1].
-  \]
-  求单位脉冲响应 $h[n]$，判断系统的稳定性，再求 $x[n]=\left(\frac12\right)^n\stepfun[n]$ 时的零状态响应。
-\end{workedexample}
+前面用差分方程描述离散时间系统，已经看到了延时项
+$x[n-k]$、$y[n-k]$ 如何逐步累积成系统的记忆。把同一个方程移到复频域后，
+延时可以化成关于 $z$ 的乘法，递推关系也就变成代数关系。本节先建立
+Z 变换（Z-transform）的定义，再用收敛域区分同一个代数式所对应的不同序列。
 
-\begin{solution}
-  先取 $x[n]=\impulse[n]$。右端只在 $n=0,1$ 处提供数值：
-  \[
-    2\impulse[n]+\impulse[n-1]=
-    \begin{cases}
-      2,&n=0,\\
-      1,&n=1,\\
-      0,&\text{其他}.
-    \end{cases}
-  \]
-  递推式
-  \[
-    y[n]=\frac16y[n-1]+\frac16y[n-2]+2\impulse[n]+\impulse[n-1]
-  \]
-  从 $n=0$ 起逐项计算，负下标处由初始静止取零：
-  \begin{align*}
-    h[0]&=\frac16h[-1]+\frac16h[-2]+2=2,\\
-    h[1]&=\frac16h[0]+\frac16h[-1]+1=\frac13+1=\frac43,\\
-    h[2]&=\frac16h[1]+\frac16h[0]=\frac29+\frac13=\frac59,\\
-    h[3]&=\frac16h[2]+\frac16h[1]=\frac5{54}+\frac29=\frac{17}{54},\\
-    h[4]&=\frac16h[3]+\frac16h[2]=\frac{17}{324}+\frac5{54}=\frac{47}{324}.
-  \end{align*}
-  前两项受输入直接激励，从 $n=2$ 起输入为零，递推依特征根展开。解特征方程
-  \[
-    \lambda^2-\frac16\lambda-\frac16=0
-    \quad\Longleftrightarrow\quad
-    \bigl(\lambda-\tfrac12\bigr)\bigl(\lambda+\tfrac13\bigr)=0,
-  \]
-  两个特征根为 $\frac12$ 与 $-\frac13$，$n\geq0$ 上的脉冲响应应取
-  \[
-    h[n]=A\left(\frac12\right)^n+B\left(-\frac13\right)^n.
-  \]
-  用前两个样值定系数：
-  \[
-    A+B=2,\qquad \frac A2-\frac B3=\frac43.
-  \]
-  第二式两端乘 $6$ 得 $3A-2B=8$，与第一式联立解得 $A=\frac{12}5$、$B=-\frac25$。因此
-  \[
-    \boxed{h[n]=\frac{12}5\left(\frac12\right)^n\stepfun[n]
-                  -\frac25\left(-\frac13\right)^n\stepfun[n]}.
-  \]
-  两个参数的绝对值都小于 $1$，故 $\sum_{n=-\infty}^{\infty}|h[n]|<\infty$，系统 BIBO 稳定。
+\subsection{定义及其与 DTFT、拉氏变换的关系}
+\label{subsec:z-transform-definition}
 
-  求给定输入下的零状态响应时，逐点做卷积和代价较高，改用 Z 变换。对原方程逐项变换，
+\begin{definition}[双边 Z 变换]
+  对离散时间序列 $x[n]$，其双边 Z 变换定义为
+  \begin{equation}
+    X(z)=\ZT\{x[n]\}
+    =\sum_{n=-\infty}^{+\infty}x[n]z^{-n},
+    \qquad z\in\C.
+    \label{eq:z-transform-definition}
+  \end{equation}
+  使级数绝对收敛的 $z$ 的集合称为 $X(z)$ 的收敛域
+  （region of convergence, ROC），记为 $\mathcal R_X$。
+\end{definition}
+
+复变量 $z$ 可以写成极坐标形式
+\begin{equation}
+  z=r\e^{\iu\omega},
+  \qquad r=|z|,\quad \omega=\arg z.
+  \label{eq:z-transform-polar}
+\end{equation}
+这里 $r$ 是模，$\omega$ 是辐角。代入定义式可得
+\begin{align}
+  X\bigl(r\e^{\iu\omega}\bigr)
+  &=\sum_{n=-\infty}^{+\infty}
+    x[n]r^{-n}\e^{-\iu\omega n} \notag\\
+  &=\operatorname{DTFT}\{x[n]r^{-n}\}.
+  \label{eq:z-transform-dtft-link}
+\end{align}
+因此，固定半径 $r$ 后，$X(r\e^{\iu\omega})$ 就是序列
+$x[n]r^{-n}$ 的 DTFT。半径 $r$ 改变时，先对序列乘上指数权重
+$r^{-n}$，再沿圆周改变角度 $\omega$；\red{半径改变会改变加权序列}。
+复平面中的模和辐角可以直接画成一条固定半径的圆周与一条径向线，
+如\cref{fig:z-transform-polar}所示。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.56\textwidth]{10-z-transform/polar-contour.pdf}
+  \caption{Z 平面中的极坐标参数。固定 $r$ 时，$z=r\e^{\iu\omega}$ 沿圆周逆时针绕行；
+  径向长度为模 $r$，转过的角度为辐角 $\omega$。}
+  \label{fig:z-transform-polar}
+\end{figure}
+
+取 $r=1$，有
+\begin{equation}
+  X(\e^{\iu\omega})
+  =\sum_{n=-\infty}^{+\infty}x[n]\e^{-\iu\omega n},
+  \label{eq:z-transform-unit-circle}
+\end{equation}
+当 $r=1$ 时，该式就是 DTFT。拉氏变换与 Z 变换的对应关系可以并排记忆：
+
+\begin{center}
+  \begin{tabular}{p{0.24\textwidth}p{0.31\textwidth}p{0.31\textwidth}}
+  \toprule
+  & 拉氏变换 & Z 变换\\
+  \midrule
+  复变量 & $s=\sigma+\iu\omega$ & $z=r\e^{\iu\omega}$\\
+  \shortstack{傅里叶变换\\所在位置} & 虚轴 $\sigma=0$，即 $s=\iu\omega$ &
+    单位圆 $r=1$，即 $z=\e^{\iu\omega}$\\
+  收敛域的几何形状 & 半平面或竖直带状区域 &
+    圆外、圆内或环形区域\\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Z 反变换}
+\label{subsec:z-transform-inverse}
+
+若半径为 $r$ 的圆周完整地落在 $\mathcal R_X$ 内，则
+$X(r\e^{\iu\omega})$ 是 $x[n]r^{-n}$ 的 DTFT。由 DTFT 反变换式，
+\begin{align}
+  x[n]r^{-n}
+  &=\frac{1}{2\pi}\int_{-\pi}^{\pi}
+    X\bigl(r\e^{\iu\omega}\bigr)\e^{\iu\omega n}\dd\omega, \notag\\
+  x[n]
+  &=\frac{1}{2\pi}\int_{-\pi}^{\pi}
+    X(z)z^n\dd\omega.
+\end{align}
+令 $z=r\e^{\iu\omega}$，则
+\begin{equation}
+  \dd z=\iu r\e^{\iu\omega}\dd\omega
+  =\iu z\dd\omega,
+  \qquad
+  \dd\omega=\frac{1}{\iu z}\dd z.
+\end{equation}
+当 $\omega$ 从 $-\pi$ 变化到 $\pi$ 时，$z$ 沿圆周绕行一周，于是得到
+Z 反变换公式
+\begin{equation}
+  x[n]
+  =\frac{1}{2\pi\iu}\oint_{|z|=r}
+    X(z)z^{n-1}\dd z
+  =\frac{1}{2\pi\iu}\oint
+    X(z)z^{n-1}\dd z.
+  \label{eq:z-transform-inverse}
+\end{equation}
+积分路径必须是一条\red{位于 ROC 内的闭合圆周}，并按\red{逆时针方向绕行}。
+因此，写出有理式 $X(z)$ 时，不能只写分式本身；还要同时说明 ROC。
+
+\subsection{两个常见的 Z 变换}
+\label{subsec:z-transform-basic-pairs}
+
+第一个常见变换对是右边指数序列：
+\[
+  a\in\C\setminus\{0\}.
+\]
+\begin{equation}
+  a^n\stepfun[n]
+  \zpair
+  \frac{1}{1-az^{-1}},
+  \qquad |z|>|a|.
+  \label{eq:z-transform-right-exponential}
+\end{equation}
+直接计算时，
+\begin{align}
+  X(z)
+  &=\sum_{n=0}^{+\infty}a^nz^{-n}
+    =\sum_{n=0}^{+\infty}(az^{-1})^n \notag\\
+  &=\lim_{N\to+\infty}
+    \frac{1-(az^{-1})^{N+1}}{1-az^{-1}}.
+\end{align}
+只有在
+\[
+  |az^{-1}|<1,
+  \qquad\text{即}\qquad |z|>|a|
+\]
+时，余项 $(az^{-1})^{N+1}$ 才趋于零，因而得到
+\[
+  X(z)=\frac{1}{1-az^{-1}}.
+\]
+
+第二个常见变换对是左边序列：
+\begin{equation}
+  -a^n\stepfun[-n-1]
+  \zpair
+  \frac{1}{1-az^{-1}},
+  \qquad |z|<|a|.
+  \label{eq:z-transform-left-exponential}
+\end{equation}
+此时
+\begin{align}
+  X(z)
+  &=-\sum_{n=-\infty}^{-1}a^nz^{-n}
+    =-\sum_{n=1}^{+\infty}a^{-n}z^n
+    =-\sum_{n=1}^{+\infty}(a^{-1}z)^n \notag\\
+  &=-\lim_{N\to+\infty}
+    \frac{a^{-1}z-(a^{-1}z)^{N+1}}{1-a^{-1}z}.
+\end{align}
+这次要求
+\[
+  |a^{-1}z|<1,
+  \qquad\text{即}\qquad |z|<|a|.
+\]
+余项趋于零后，
+\[
+  X(z)
+  =-\frac{a^{-1}z}{1-a^{-1}z}
+  =\frac{1}{1-az^{-1}}.
+\]
+
+\begin{remark}[同一个代数式不能单独确定序列]
+  两个变换对的代数式完全相同，极点都在 $z=a$；右边序列对应极点外侧的
+	  收敛域，左边序列对应极点内侧的收敛域：\red{外侧取右边，内侧取左边}。
+	  因而必须把 ROC 和代数式一起写出：
+	  \red{代数式相同不代表序列相同}。
+\end{remark}
+
+两条序列的支撑方向和 ROC 方向如\cref{fig:z-exponential-rocs}所示：
+右边序列取极点外侧，左边序列取极点内侧。
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.94\textwidth]{10-z-transform/exponential-rocs.pdf}
+  \caption{取 $a=0.9$ 示意两个基本指数变换对的序列支撑与 ROC。
+  右边序列只在 $n\geq0$ 有样值，
+  收敛域为极点外侧；左边序列只在 $n\leq-1$ 有样值，收敛域为极点内侧。}
+  \label{fig:z-exponential-rocs}
+\end{figure}
+
+\subsection{几个典型序列}
+\label{subsec:z-transform-typical-sequences}
+
+\begin{example}[双边指数序列]
+\label{eg:z-two-sided-exponential}
+  设 $b\neq0$。对双边序列 $x[n]=b^{|n|}$，按正、负下标拆成
   \[
-    \left(1-\frac16z^{-1}-\frac16z^{-2}\right)Y(z)
-    =\left(2+z^{-1}\right)X(z),
+    x[n]=b^n\stepfun[n]+b^{-n}\stepfun[-n-1].
   \]
-  故
+  右边部分要求 $|z|>|b|$，左边部分要求
+  $|z|<|b|^{-1}$，形式上分别得到
   \[
-    H(z)=\frac{2+z^{-1}}{\left(1-\frac12z^{-1}\right)\left(1+\frac13z^{-1}\right)}.
-  \]
-  输入 $\left(\frac12\right)^n\stepfun[n]$ 的变换为 $X(z)=1/\left(1-\frac12z^{-1}\right)$，它使 $H(z)$ 中第一个因子重复：
-  \[
-    Y(z)=\frac{2+z^{-1}}
-      {\left(1-\frac12z^{-1}\right)^2\left(1+\frac13z^{-1}\right)}.
-  \]
-  设
-  \[
-    Y(z)=\frac{P}{1-\frac12z^{-1}}
-      +\frac{Q}{\left(1-\frac12z^{-1}\right)^2}
-      +\frac{R}{1+\frac13z^{-1}}.
-  \]
-  记 $q=z^{-1}$，清除分母得到多项式恒等式
-  \[
-    2+q=P\left(1-\tfrac12q\right)\left(1+\tfrac13q\right)
-        +Q\left(1+\tfrac13q\right)
-        +R\left(1-\tfrac12q\right)^2.
-  \]
-  依次代入使各因子为零的 $q$：
-  \begin{align*}
-    q&=2:\quad 4=Q\left(1+\tfrac23\right)\Rightarrow Q=\frac{12}5,\\
-    q&=-3:\quad -1=R\left(1+\tfrac32\right)^2\Rightarrow R=-\frac4{25},\\
-    q&=0:\quad 2=P+Q+R\Rightarrow P=2-\frac{12}5+\frac4{25}=-\frac6{25}.
-  \end{align*}
-  反演时用两个标准变换对
-  \[
-    \frac1{1-\frac12z^{-1}}\longleftrightarrow\left(\frac12\right)^n\stepfun[n],
+    \frac{1}{1-bz^{-1}},
     \qquad
-    \frac1{\left(1-\frac12z^{-1}\right)^2}
-    \longleftrightarrow(n+1)\left(\frac12\right)^n\stepfun[n],
+    -\frac{1}{1-b^{-1}z^{-1}}.
   \]
-  得到
+  两个收敛域的交集为
   \[
-    y[n]=\left[\frac{12}5(n+1)-\frac6{25}\right]\left(\frac12\right)^n\stepfun[n]
-      -\frac4{25}\left(-\frac13\right)^n\stepfun[n].
+    |b|<|z|<|b|^{-1}.
   \]
-  把方括号内合并，
-  \[
-    \boxed{
-    y[n]=\left[\frac{60n+54}{25}\left(\frac12\right)^n
-      -\frac4{25}\left(-\frac13\right)^n\right]\stepfun[n]}.
-  \]
+  只有 $0<|b|<1$ 时这个环带才非空，序列才有 Z 变换；$|b|\geq1$ 时没有
+  共同 ROC。双边序列的变换必须\red{先检查两侧 ROC 是否相交}。
+\end{example}
 
-  用原递推式核对。输入满足 $x[0]=1$，$x[1]=\frac12$，$x[2]=\frac14$，负下标为零：
+\begin{example}[左右两边收敛域相交的序列]
+\label{eg:z-mixed-sided-exponential}
+  考察
+  \[
+    x[n]=\left(\frac12\right)^n\stepfun[-n-1]
+      +\left(\frac13\right)^n\stepfun[n].
+  \]
+  左边部分的变换和 ROC 为
+  \[
+    -\frac{1}{1-\frac12z^{-1}},
+    \qquad |z|<\frac12,
+  \]
+  右边部分的变换和 ROC 为
+  \[
+    \frac{1}{1-\frac13z^{-1}},
+    \qquad |z|>\frac13.
+  \]
+  \red{取两者的 ROC 交集}，得到
+  \begin{equation}
+    X(z)
+    =-\frac{1}{1-\frac12z^{-1}}
+      +\frac{1}{1-\frac13z^{-1}}
+    =-\frac{\frac16z^{-1}}
+      {\left(1-\frac12z^{-1}\right)
+       \left(1-\frac13z^{-1}\right)},
+    \qquad
+    \frac13<|z|<\frac12.
+    \label{eq:z-transform-mixed-sided}
+  \end{equation}
+  也可以写成
+  \[
+    X(z)=-\frac{\frac16z}
+      {(z-\frac12)(z-\frac13)}.
+  \]
+  两个极点把复平面分成圆内、环带和圆外；只有两项 ROC 的交集，
+  即 $\frac13<|z|<\frac12$，才是整个序列的收敛域。
+  两个环带例子的几何关系见\cref{fig:z-two-sided-rocs}。
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.88\textwidth]{10-z-transform/two-sided-rocs.pdf}
+  \caption{双边指数与混合序列的 ROC。左图的两条边界为 $|b|$ 和 $|b|^{-1}$；
+  右图的环带为 $1/3<|z|<1/2$，原点是零点，叉号表示极点。}
+  \label{fig:z-two-sided-rocs}
+\end{figure}
+\end{example}
+
+\begin{example}[右边余弦序列]
+\label{eg:z-cosine}
+  由欧拉公式，
+  \[
+    \cos(\omega_0n)\stepfun[n]
+    =\frac12\e^{\iu\omega_0n}\stepfun[n]
+      +\frac12\e^{-\iu\omega_0n}\stepfun[n].
+  \]
+  两项都是右边序列，且共同 ROC 为 $|z|>1$，所以
+  \begin{align}
+    X(z)
+    &=\frac12\frac{1}{1-\e^{\iu\omega_0}z^{-1}}
+      +\frac12\frac{1}{1-\e^{-\iu\omega_0}z^{-1}} \notag\\
+    &=\frac{1-z^{-1}\cos\omega_0}
+      {1-2z^{-1}\cos\omega_0+z^{-2}},
+    \qquad |z|>1.
+    \label{eq:z-transform-cosine}
+  \end{align}
+  右边余弦的时域样值和单位圆外的 ROC 如\cref{fig:z-cosine-roc}所示。
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.94\textwidth]{10-z-transform/cosine-roc.pdf}
+  \caption{右边余弦序列及其 ROC。时域只保留 $n\geq0$ 的样值，
+  两个共轭极点位于单位圆上，ROC 为 $|z|>1$。}
+  \label{fig:z-cosine-roc}
+\end{figure}
+\end{example}
+
+\begin{example}[右边正弦序列]
+\label{eg:z-sine}
+  同样地，
+  \[
+    \sin(\omega_0n)\stepfun[n]
+    =\frac{1}{2\iu}\e^{\iu\omega_0n}\stepfun[n]
+      -\frac{1}{2\iu}\e^{-\iu\omega_0n}\stepfun[n].
+  \]
+  因而
+  \begin{align}
+    X(z)
+    &=\frac{1}{2\iu}\frac{1}{1-\e^{\iu\omega_0}z^{-1}}
+      -\frac{1}{2\iu}\frac{1}{1-\e^{-\iu\omega_0}z^{-1}} \notag\\
+    &=\frac{z^{-1}\sin\omega_0}
+      {1-2z^{-1}\cos\omega_0+z^{-2}},
+    \qquad |z|>1.
+    \label{eq:z-transform-sine}
+  \end{align}
+  右边正弦的样值从 $n=0$ 的零点开始，图示见\cref{fig:z-sine-roc}。
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.94\textwidth]{10-z-transform/sine-roc.pdf}
+  \caption{右边正弦序列及其 ROC。$n=0$ 处样值为零，两个共轭极点位于单位圆上，
+  收敛域仍为 $|z|>1$。}
+  \label{fig:z-sine-roc}
+\end{figure}
+\end{example}
+
+\subsection{三个还需记住的变换对}
+\label{subsec:z-transform-remaining-pairs}
+
+单位冲激和两个阶跃序列给出
+\begin{align}
+  \impulse[n]
+  &\zpair 1,
+  &&\mathcal R_X=\text{整个 }z\text{ 平面}, \label{eq:z-transform-impulse}\\
+  \stepfun[n]
+  &\zpair \frac{1}{1-z^{-1}},
+  &&|z|>1, \label{eq:z-transform-right-step}\\
+  \stepfun[-n-1]
+  &\zpair -\frac{1}{1-z^{-1}},
+  &&|z|<1. \label{eq:z-transform-left-step}
+\end{align}
+	这里 $\stepfun[-n-1]$ 的支撑从 $n=-1$ 开始，不包含 $n=0$；这个
+	\red{端点约定使两个阶跃互补}，也就是\red{左阶跃不含零点}。
+
+\subsection{Z 变换收敛域性质}
+\label{subsec:z-transform-roc-properties}
+
+收敛域的判断先从绝对收敛开始。对任意 $z$，有
+\begin{equation}
+  \left|X(z)\right|
+  =\left|\sum_{n=-\infty}^{+\infty}x[n]z^{-n}\right|
+  \leq\sum_{n=-\infty}^{+\infty}|x[n]||z|^{-n}.
+  \label{eq:z-transform-absolute-convergence}
+\end{equation}
+右端有限时，左端的 Z 变换绝对收敛。由序列左右支撑和指数权重的变化，
+可以得到下面六条几何性质：
+
+\begin{enumerate}[label=\arabic*., leftmargin=2.4em]
+  \item 有限长序列的收敛域是全平面。若把 $z=0$ 或 $z=\infty$ 作为扩展
+    复平面上的特殊点，则它们是否允许要看序列是否含有相应方向的幂次项。
+  \item \red{右边序列向圆外延伸}，收敛域在某个圆之外。
+  \item \red{左边序列向圆内延伸}，收敛域在某个圆之内。
+  \item 双边序列的收敛域是两个圆之间的环带。
+  \item 因果序列是右边序列，所以收敛域向外延伸，包含 $z=\infty$ 的方向。
+  \item 稳定序列的收敛域\red{包含单位圆}。
+\end{enumerate}
+
+下面保留其中两步判断的计算过程。设右边序列从 $n_0$ 开始，
+并且 $X(z)$ 在 $|z|=r_0$ 处收敛。取 $r_1>r_0$，则
+\begin{align}
+  \sum_{n=n_0}^{+\infty}|x[n]|r_1^{-n}
+  &=\sum_{n=n_0}^{+\infty}
+    |x[n]|r_0^{-n}\left(\frac{r_1}{r_0}\right)^{-n} \notag\\
+  &\leq
+    \max\left\{\left(\frac{r_1}{r_0}\right)^{-n_0},1\right\}
+    \sum_{n=n_0}^{+\infty}|x[n]|r_0^{-n}
+  <+\infty.
+  \label{eq:z-transform-right-roc-proof}
+\end{align}
+所以，只要某个半径处收敛，所有更大的半径也收敛，ROC 必然向圆外延伸。
+左边序列的证明方向相反：已知某个半径处收敛时，所有更小的半径也收敛，
+ROC 向圆内延伸。双边序列同时受到左右两侧的限制，两个方向的条件相交后
+留下环带。
+
+有限长序列只含有限项，级数退化为有限项和，所以除可能的 $z=0$ 或
+$z=\infty$ 外，所有有限非零 $z$ 都收敛。右边、左边和双边序列的 ROC
+都不包含极点。对有理变换，ROC 的圆形边界由极点模的极值确定；序列的左右
+支撑决定取边界的哪一侧。
+
+对离散 LTI 系统，BIBO 稳定的条件是
+\begin{equation}
+  \sum_{n=-\infty}^{+\infty}|h[n]|<+\infty.
+  \label{eq:z-transform-stability-condition}
+\end{equation}
+在单位圆 $|z|=1$ 上，
+\begin{align}
+  |H(z)|
+  &=\left|\sum_{n=-\infty}^{+\infty}h[n]z^{-n}\right| \notag\\
+  &\leq\sum_{n=-\infty}^{+\infty}|h[n]||z|^{-n}
+   =\sum_{n=-\infty}^{+\infty}|h[n]|<+\infty.
+  \label{eq:z-transform-unit-circle-roc}
+\end{align}
+因此单位圆包含在 ROC 内，稳定性可以从 ROC 是否包含单位圆来判断。
+
+\subsection{拉氏变换与 Z 变换的收敛域对比}
+\label{subsec:laplace-z-roc-comparison}
+
+拉氏变换和 Z 变换在收敛域上的六条判断可以一一对照：
+
+\begin{center}
+\begin{tabular}{p{0.18\textwidth}p{0.35\textwidth}p{0.35\textwidth}}
+  \toprule
+  信号类型 & 拉氏变换收敛域 & Z 变换收敛域\\
+  \midrule
+  有限长信号 & 除可能的端点外为全平面 &
+    除可能的 $0$、$\infty$ 外为全平面\\
+  右边信号 & 某条边界线右侧的半平面 &
+    某个边界圆外侧\\
+  左边信号 & 某条边界线左侧的半平面 &
+    某个边界圆内侧\\
+  双边信号 & 两条边界线之间的带状区域 &
+    两个边界圆之间的环带\\
+  因果信号 & 右边信号，ROC 向 $\operatorname{Re}\{s\}=+\infty$ 延伸 &
+    右边信号，ROC 向 $|z|=\infty$ 延伸\\
+  稳定信号 & ROC 包含虚轴 &
+    ROC 包含单位圆\\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+这组对应关系可以记为：\red{拉氏看虚轴，Z 变换看单位圆}；
+拉氏变换中的半平面和带状区域，在 Z 平面中分别变成圆内、圆外和环带。
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\textwidth]{10-z-transform/laplace-z-folding.pdf}
+  \caption{拉氏变换与 Z 变换的几何对应。把拉氏复频域中的虚轴想成沿频率方向
+  卷曲并闭合成单位圆，半平面和带状区域随之对应到圆内、圆外和环带。}
+  \label{fig:laplace-z-folding}
+\end{figure}
+\begin{intuition}[把虚轴卷曲成单位圆]
+  拉氏变换的复频域中，$\iu\omega$ 轴是一条竖直直线；Z 变换的复频域中，
+  对应的位置是单位圆。可以把 $\iu\omega$ 轴沿图示的频率方向
+  \red{卷曲、闭合成一个圆}：左、右两侧的区域随之对应到圆内、圆外，
+  竖直带状区域对应到环带。
+  这句话只用来帮助记住收敛域的形状，真正判断时仍要回到级数是否绝对收敛。
+\end{intuition}
+判断一个有理式对应哪一个序列，必须\red{把极点和 ROC 一起看}。
+
+\subsection{同一有理式的三种逆变换}
+\label{subsec:z-transform-three-inverses}
+
+\begin{example}[由 ROC 决定逆 Z 变换]
+\label{eg:z-inverse-three-rocs}
+  已知
+  \begin{equation}
+    X(z)=\frac{z}{\left(z-\frac12\right)(z-2)},
+    \label{eq:z-inverse-three-rocs-given}
+  \end{equation}
+	  求 $x[n]$。先把 $X(z)$ 除以 $z$ 做部分分式，再乘回 $z$：
+	  \red{先除后乘的顺序}。
+  \begin{align}
+    \frac{X(z)}{z}
+    &=\frac{1}{\left(z-\frac12\right)(z-2)}
+      =-\frac{2/3}{z-\frac12}+\frac{2/3}{z-2}, \notag\\
+    X(z)
+    &=-\frac23\frac{z}{z-\frac12}
+      +\frac23\frac{z}{z-2} \notag\\
+    &=-\frac23\frac{1}{1-\frac12z^{-1}}
+      +\frac23\frac{1}{1-2z^{-1}}.
+    \label{eq:z-inverse-three-rocs-pfd}
+  \end{align}
+  现在逐个考察 ROC。两个极点为 $z=\frac12$ 和 $z=2$，所以有三种可能：
+  \begin{enumerate}[label=\arabic*., leftmargin=2.4em]
+    \item 若 $\lvert z\rvert>2$，两项都取右边序列，
+      \[
+        x_1[n]
+        =-\frac23\left(\frac12\right)^n\stepfun[n]
+          +\frac23\,2^n\stepfun[n].
+      \]
+    \item 若 $\frac12<\lvert z\rvert<2$，第一项取右边序列，
+      第二项取左边序列，
+      \[
+        x_2[n]
+        =-\frac23\left(\frac12\right)^n\stepfun[n]
+          -\frac23\,2^n\stepfun[-n-1].
+      \]
+    \item 若 $\lvert z\rvert<\frac12$，两项都取左边序列，
+      \[
+        x_3[n]
+        =\frac23\left(\frac12\right)^n\stepfun[-n-1]
+          -\frac23\,2^n\stepfun[-n-1].
+      \]
+  \end{enumerate}
+  同一个有理式可以对应三个不同的序列；\red{给定 ROC 后才能确定序列}，
+  再据此为每个部分分式选取右边或左边的标准变换对。
+  三种 ROC 与三种序列的对应关系见\cref{fig:z-inverse-three-rocs}。
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.98\textwidth]{10-z-transform/inverse-three-rocs.pdf}
+  \caption{同一有理式在三个 ROC 下的逆 Z 变换。左、中、右分别对应两项右边、
+  第一项右边第二项左边、两项左边；阴影区域表示选定的 ROC。}
+  \label{fig:z-inverse-three-rocs}
+\end{figure}
+\end{example}
+
+\begin{intuition}[先除 $z$，再乘 $z$]
+  遇到分子含有 $z$、分母写成 $(z-a)(z-b)$ 的有理式时，可以先除以
+  $z$ 做部分分式，把每一项化为 $\frac{1}{z-a}$ 的形式；部分分式完成后
+  再乘回 $z$，就能改写成
+  $\frac{1}{1-az^{-1}}$ 这样的标准变换对。最后根据 ROC 选择右边序列
+  或左边序列。
+\end{intuition}
+
+\section{Z 变换的性质}
+\label{sec:z-transform-properties}
+\raggedbottom
+
+以下使用双边 Z 变换。记 $x[n]\zpair X(z)$ 的收敛域为 $R$；
+涉及两个序列时，分别记为 $R_1$、$R_2$。变换式和收敛域需要一同使用，
+尤其要留意相加、相乘后出现的极零相消。
+
+\subsection{线性}
+
+若 $x[n]\zpair X(z)$、$y[n]\zpair Y(z)$，则对常数 $\alpha,\beta$，
+\begin{equation}
+  \alpha x[n]+\beta y[n]\zpair \alpha X(z)+\beta Y(z),
+  \qquad \text{ROC 至少包含 }R_1\cap R_2.
+  \label{eq:z-linearity}
+\end{equation}
+在两个级数都绝对收敛的区域，可以把求和拆开：
+\[
+  \sum_n\bigl(\alpha x[n]+\beta y[n]\bigr)z^{-n}
+  =\alpha\sum_nx[n]z^{-n}+\beta\sum_ny[n]z^{-n}.
+\]
+所以\red{先取两收敛域的交集}。如果有理式中的极点被相消，实际收敛域可能
+\red{因相消而扩大}。例如 $a\neq0$ 时，
+\[
+  a^n\stepfun[n]-a^n\stepfun[n-1]=\impulse[n].
+\]
+两项各自的 ROC 都为 $|z|>|a|$，相减后只剩 $1$，收敛域变成全平面。
+
+\subsection{移位}
+
+对整数 $n_0$，
+\begin{equation}
+  x[n-n_0]\zpair z^{-n_0}X(z).
+  \label{eq:z-time-shift}
+\end{equation}
+令 $m=n-n_0$，便有
+\begin{align*}
+  \ZT\{x[n-n_0]\}
+  &=\sum_{n=-\infty}^{+\infty}x[n-n_0]z^{-n}\\
+  &=\sum_{m=-\infty}^{+\infty}x[m]z^{-(m+n_0)}
+    =z^{-n_0}X(z).
+\end{align*}
+\red{延时乘负幂}；超前 $n_0$ 个样本则乘 $z^{n_0}$。
+对有限非零的 $z$，收敛域不变；\red{原点和无穷远另查}，因为乘上
+$z^{-n_0}$ 可能改变这两个特殊点处的收敛情况。
+例如 $\impulse[n]\zpair1$，而 $\impulse[n-1]\zpair z^{-1}$，
+后一式排除 $z=0$。
+
+与 DTFT 的时移性质对照：
+\[
+  x[n-n_0]\fourierpair
+  \e^{-\iu\omega n_0}X(\e^{\iu\omega}).
+\]
+当单位圆位于 ROC 内时，把 Z 变换式中的 $z$ 换成 $\e^{\iu\omega}$，
+就得到这个关系。
+
+\subsection{Z 域微分}
+
+在收敛环域内部逐项求导：
+\begin{align*}
+  \frac{\dd X(z)}{\dd z}
+  &=\sum_{n=-\infty}^{+\infty}x[n]\frac{\dd z^{-n}}{\dd z}\\
+  &=-\sum_{n=-\infty}^{+\infty}nx[n]z^{-n-1}.
+\end{align*}
+两边乘 $-z$，得到
+\begin{equation}
+  nx[n]\zpair-z\frac{\dd X(z)}{\dd z}.
+  \label{eq:z-differentiation}
+\end{equation}
+\red{乘下标对应 Z 域微分}，微分前后的开收敛环域相同。
+边界是否收敛仍需逐点检查。对应的 DTFT 性质是
+\[
+  nx[n]\fourierpair
+  \iu\frac{\dd X(\e^{\iu\omega})}{\dd\omega}.
+\]
+由链式法则 $\dd X(\e^{\iu\omega})/\dd\omega
+=\iu z\,\dd X(z)/\dd z$，两种写法相符。
+
+从指数序列出发，还能得到重复极点所对应的变换对。以下取 $a\neq0$。
+先对右边指数求导：
+\begin{align}
+  a^n\stepfun[n]&\zpair\frac{1}{1-az^{-1}},
+    &&|z|>|a|,\notag\\
+  na^n\stepfun[n]
+    &\zpair-z\frac{\dd}{\dd z}\frac{1}{1-az^{-1}}
+      =\frac{az^{-1}}{(1-az^{-1})^2},
+    &&|z|>|a|.
+  \label{eq:z-weighted-right-exponential}
+\end{align}
+左边指数的变换式相同、ROC 相反：
+\begin{align}
+  -a^n\stepfun[-n-1]&\zpair\frac{1}{1-az^{-1}},
+    &&|z|<|a|,\notag\\
+  -na^n\stepfun[-n-1]
+    &\zpair\frac{az^{-1}}{(1-az^{-1})^2},
+    &&|z|<|a|.
+  \label{eq:z-weighted-left-exponential}
+\end{align}
+这里\red{同式仍须区分左右边}。
+
+再用移位性质去掉分子中的 $az^{-1}$。记
+$v[n]=na^n\stepfun[n]$，则
+\[
+  v[n+1]=(n+1)a^{n+1}\stepfun[n+1]
+  \zpair z\frac{az^{-1}}{(1-az^{-1})^2}
+  =\frac{a}{(1-az^{-1})^2}.
+\]
+两边除以 $a$：
+\begin{equation}
+  (n+1)a^n\stepfun[n+1]
+  \zpair\frac{1}{(1-az^{-1})^2},
+  \qquad |z|>|a|.
+  \label{eq:z-squared-right-pair}
+\end{equation}
+$n=-1$ 处系数 $n+1$ 为零，因此左边也可以写成
+$(n+1)a^n\stepfun[n]$。对左边序列做相同的超前操作，
+\begin{equation}
+  -(n+1)a^n\stepfun[-n-2]
+  \zpair\frac{1}{(1-az^{-1})^2},
+  \qquad |z|<|a|.
+  \label{eq:z-squared-left-pair}
+\end{equation}
+后一序列\red{从负二下标向左延伸}；$n=-1$ 处的系数同样为零，所以
+即使写成 $-(n+1)a^n\stepfun[-n-1]$，有效非零端点仍是 $-2$。
+\cref{fig:z-weighted-exponentials,fig:z-squared-pairs}
+分别画出乘下标和超前后的序列及其 ROC。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.88\textwidth]{10-z-transform/weighted-exponentials.pdf}
+  \caption{取 $a=1$ 时，$na^n\stepfun[n]$ 与
+  $-na^n\stepfun[-n-1]$ 的样值和 ROC。
+  两者的变换式均为 $z^{-1}/(1-z^{-1})^2$，单位圆内外分别对应左边、右边序列。}
+  \label{fig:z-weighted-exponentials}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.88\textwidth]{10-z-transform/squared-pairs.pdf}
+  \caption{取 $a=1$ 时，分子为 $1$ 的二阶变换对。
+  右边序列从 $n=0$ 取值 $1$，左边序列从 $n=-2$ 向左取值；
+  $n=-1$ 处两者都为零。}
+  \label{fig:z-squared-pairs}
+\end{figure}
+
+\subsection{序列指数加权}
+
+对非零常数 $a$，
+\begin{equation}
+  a^nx[n]\zpair X\left(\frac za\right).
+  \label{eq:z-exponential-weighting}
+\end{equation}
+直接代入定义：
+\[
+  \ZT\{a^nx[n]\}
+  =\sum_na^nx[n]z^{-n}
+  =\sum_nx[n]\left(\frac za\right)^{-n}
+  =X\left(\frac za\right).
+\]
+若原 ROC 为 $r_1<|z|<r_2$，新 ROC 就是
+$|a|r_1<|z|<|a|r_2$，即\red{半径按模缩放}。
+若 $a=\e^{\iu\omega_0}$，模不变，极点和零点在 Z 平面上旋转
+$\omega_0$；单位圆上的关系为
+$\e^{\iu\omega_0n}x[n]\fourierpair X(\e^{\iu(\omega-\omega_0)})$，
+对应\red{复指数调制产生频移}。
+
+\subsection{时域扩展}
+
+离散下标只取整数。扩展 $k$ 倍（$k$ 为正整数）时，定义插零序列
+\begin{equation}
+  x_{(k)}[n]=
+  \begin{cases}
+    x[n/k],&n\text{ 是 }k\text{ 的整数倍},\\
+    0,&n\text{ 不是 }k\text{ 的整数倍}.
+  \end{cases}
+  \label{eq:z-time-expansion-definition}
+\end{equation}
+也就是\red{相邻样值间插入零}，每两个原样值之间插入 $k-1$ 个零。
+例如 $k=3$ 时，
+\[
+  \ldots,\ x[0],\ 0,\ 0,\ x[1],\ 0,\ 0,\ x[2],\ \ldots
+\]
+依次位于 $n=0,1,2,3,4,5,6,\ldots$。只对非零位置求和：
+\[
+  \ZT\{x_{(k)}[n]\}
+  =\sum_{m=-\infty}^{+\infty}x[m]z^{-km}
+  =X(z^k).
+\]
+于是
+\begin{equation}
+  x_{(k)}[n]\zpair X(z^k),
+  \qquad r_1^{1/k}<|z|<r_2^{1/k}.
+  \label{eq:z-time-expansion}
+\end{equation}
+ROC 的半径开 $k$ 次方，\red{插零不产生比例系数}。
+与 DTFT 对照，$x_{(k)}[n]\fourierpair X(\e^{\iu k\omega})$；
+在单位圆上代入 $z=\e^{\iu\omega}$ 即得到这一结果。
+
+\subsection{卷积性质}
+
+若 $x[n]\zpair X(z)$、$h[n]\zpair H(z)$，且两个 ROC 有公共区域，则
+\begin{equation}
+  x[n]\conv h[n]\zpair X(z)H(z),
+  \qquad \text{ROC 至少包含 }R_1\cap R_2.
+  \label{eq:z-convolution}
+\end{equation}
+在公共绝对收敛区域内交换求和次序，再令 $m=n-k$：
+\begin{align*}
+  \ZT\{x[n]\conv h[n]\}
+  &=\sum_n\sum_kx[k]h[n-k]z^{-n}\\
+  &=\sum_kx[k]z^{-k}\sum_mh[m]z^{-m}
+    =X(z)H(z).
+\end{align*}
+\red{时域卷积对应 Z 域相乘}。DTFT 也有
+$x[n]\conv h[n]\fourierpair X(\e^{\iu\omega})H(\e^{\iu\omega})$，
+但使用普通 DTFT 还须检查单位圆上的收敛条件。
+相乘后如有极零相消，\red{实际 ROC 可以扩大}。
+
+\begin{example}[卷积中的极零相消]
+\label{eg:z-convolution-cancellation}
+  设 $a,b\neq0$，
+  \[
+    x[n]=a^n\stepfun[n],\qquad
+    y[n]=b^n\stepfun[n]-ab^{n-1}\stepfun[n-1],
+  \]
+  求 $x[n]\conv y[n]$。
+  第一项的变换为
+  \[
+    X(z)=\frac{1}{1-az^{-1}},\qquad |z|>|a|.
+  \]
+  对 $y[n]$，先变换 $b^n\stepfun[n]$，再用延时性质：
+  \[
+    Y(z)=\frac{1}{1-bz^{-1}}
+      -\frac{az^{-1}}{1-bz^{-1}}
+      =\frac{1-az^{-1}}{1-bz^{-1}}.
+  \]
+  当 $a\neq b$ 时，$Y(z)$ 的 ROC 为 $|z|>|b|$；若 $a=b$，
+  两项在时域相减只剩 $\impulse[n]$，此时 $Y(z)=1$。
+  将两变换相乘：
+  \[
+    X(z)Y(z)=
+      \frac{1}{1-az^{-1}}
+      \frac{1-az^{-1}}{1-bz^{-1}}
+      =\frac{1}{1-bz^{-1}}.
+  \]
+  两个输入序列都为因果序列，卷积也为因果序列，所以
+  \[
+    x[n]\conv y[n]=b^n\stepfun[n],\qquad \text{ROC 为 }|z|>|b|.
+  \]
+  相消前的公共区域是 $|z|>\max\{|a|,|b|\}$（$a\neq b$）。
+  当 $|a|>|b|$ 时，极点 $a$ 被相消，ROC 向内扩大到 $|z|>|b|$。
+\end{example}
+
+\subsection{累加性质}
+
+令
+$s[n]=\sum_{k=-\infty}^{n}x[k]=x[n]\conv\stepfun[n]$，
+由阶跃变换及卷积性质，
+\begin{equation}
+  \sum_{k=-\infty}^{n}x[k]\zpair
+  \frac{X(z)}{1-z^{-1}},
+  \qquad \text{ROC 至少包含 }R\cap\{|z|>1\}.
+  \label{eq:z-accumulation}
+\end{equation}
+\red{累加等于与阶跃卷积}，变换式中增加因子 $1/(1-z^{-1})$；
+若分子恰好消去 $z=1$ 的极点，收敛域还可能扩大。
+这与拉氏变换中时域积分对应除以 $s$ 的关系相似。
+阶跃的 Z 变换 ROC 不包含单位圆，因而\red{单位圆不能直接代入}：
+累加序列的 DTFT 是否存在及是否含直流冲激，需按第七章的累加性质另行判断。
+
+\begin{example}[两种部分分式写法]
+\label{eg:z-inverse-two-methods}
+  已知
+  \[
+    X(z)=\frac{10z}{z^2-3z+2},\qquad |z|>2,
+  \]
+  求 $x[n]$。ROC 在所有极点外侧，各项均取右边序列。
+
+  第一种写法先化为 $z^{-1}$ 的有理式：
   \begin{align*}
-    y[0]&=\frac16y[-1]+\frac16y[-2]+2x[0]+x[-1]=2,\\
-    y[1]&=\frac16y[0]+\frac16y[-1]+2x[1]+x[0]
-        =\frac13+0+1+1=\frac73,\\
-    y[2]&=\frac16y[1]+\frac16y[0]+2x[2]+x[1]
-        =\frac7{18}+\frac13+\frac12+\frac12=\frac{31}{18}.
+    X(z)&=\frac{10z^{-1}}{1-3z^{-1}+2z^{-2}}\\
+      &=\frac{10z^{-1}}{(1-2z^{-1})(1-z^{-1})}
+        =\frac{A}{1-2z^{-1}}+\frac{B}{1-z^{-1}}.
   \end{align*}
-  把 $n=0,1,2$ 代入反演结果：
+  比较分子 $10z^{-1}=A(1-z^{-1})+B(1-2z^{-1})$，有
+  $A+B=0$、$-A-2B=10$，解得 $A=10$、$B=-10$。
   \[
-    y[0]=\frac{54}{25}-\frac4{25}=2,
+    X(z)=\frac{10}{1-2z^{-1}}-\frac{10}{1-z^{-1}}
+    \quad\Longrightarrow\quad
+    x[n]=10\cdot2^n\stepfun[n]-10\stepfun[n].
   \]
-  \[
-    y[1]=\frac{114}{25}\cdot\frac12+\frac4{75}
-        =\frac{57}{25}+\frac4{75}
-        =\frac{171+4}{75}=\frac{175}{75}=\frac73,
-  \]
-  \[
-    y[2]=\frac{174}{25}\cdot\frac14-\frac4{225}
-        =\frac{87}{50}-\frac4{225}
-        =\frac{783-8}{450}=\frac{775}{450}=\frac{31}{18}.
-  \]
-  三处取值都与递推结果一致。负下标处取零，与初始静止条件吻合。
-\end{solution}
 
-\begin{technique}
-  右端含 $x[n-1]$ 等延时项时，脉冲响应开头几个样值由输入直接决定，之后才依特征根展开，定系数要用最早的两个非零样值。输入使某个一次因子重复时，部分分式必须同时保留二次项与一次项。系数在清除分母后的多项式恒等式中求出，三处 $q$ 的取值分别给出 $Q$、$R$ 与 $P$。反演后务必回到原递推式核对 $n=0,1,2$，逐个样值对照能查出系数或输入取值上的错误。
-\end{technique}
+  第二种写法按“除 $z$ 再乘 $z$”计算：
+  \begin{align*}
+    \frac{X(z)}z
+      &=\frac{10}{(z-1)(z-2)}
+        =-\frac{10}{z-1}+\frac{10}{z-2},\\
+    X(z)&=-\frac{10z}{z-1}+\frac{10z}{z-2}
+      =-\frac{10}{1-z^{-1}}+\frac{10}{1-2z^{-1}}.
+  \end{align*}
+  仍得同一个序列。两种方法都须\red{化成标准变换对}；反演后
+  $x[0]=0$，也与 $X(z)$ 在 $z\to\infty$ 时的极限一致。
+\end{example}
 
-\section{由单位延时器构成的方框图}
+\begin{example}[含重复极点的反演]
+\label{eg:z-inverse-repeated-pole}
+  已知
+  \[
+    X(z)=\frac{2z+4}{(z-1)(z-2)^2},\qquad |z|>2,
+  \]
+  求 $x[n]$。仍按\red{除后分解，再乘回}的顺序：
+  \[
+    \frac{X(z)}z
+      =\frac{2z+4}{z(z-1)(z-2)^2}
+      =\frac{A}{z}+\frac{B}{z-1}
+       +\frac{C}{z-2}+\frac{D}{(z-2)^2}.
+  \]
+  乘回公分母，分别令 $z=0,1,2$，得到
+  $A=-1$、$B=6$、$D=4$。再比较三次项系数
+  $A+B+C=0$，得 $C=-5$。因此
+  \begin{align*}
+    X(z)&=-1+\frac{6z}{z-1}-\frac{5z}{z-2}
+              +\frac{4z}{(z-2)^2}\\
+      &=-1+\frac{6}{1-z^{-1}}-\frac{5}{1-2z^{-1}}
+              +\frac{4z^{-1}}{(1-2z^{-1})^2}.
+  \end{align*}
+  最后一项对照\cref{eq:z-weighted-right-exponential}：
+  分子 $4z^{-1}$ 是标准分子 $2z^{-1}$ 的两倍，
+  \red{二阶极点对应乘下标}。逐项反演得
+  \[
+    x[n]=-\impulse[n]+6\stepfun[n]-5\cdot2^n\stepfun[n]
+            +n2^{n+1}\stepfun[n].
+  \]
+  常数 $-1$ 对应 $-\impulse[n]$，不能漏掉。代入 $n=0,1$，
+  分别有 $x[0]=0$、$x[1]=0$；这与原式从 $z^{-2}$ 项开始展开相符。
+\end{example}
+
+\section{Z 变换的初值定理与终值定理}
+\label{sec:z-initial-final-value}
+
+\subsection{初值定理}
+
+若 $x[n]$ 为因果序列，并且 Z 变换的 ROC 向无穷远延伸，则
+\begin{equation}
+  x[0]=\lim_{z\to\infty}X(z).
+  \label{eq:z-initial-value}
+\end{equation}
+因为
+$X(z)=x[0]+x[1]z^{-1}+x[2]z^{-2}+\cdots$，
+令 $z\to\infty$，正下标项消失，仅留下零下标项。
+\red{因果条件使负下标项消失}，故不能把这条公式直接用于任意双边序列。
+初值定理也可用来\red{核查反演的零下标样值}；上面两道反演题的极限均为零。
+
+\subsection{终值定理}
+
+对因果序列，若有限终值 $x[\infty]=\lim_{n\to\infty}x[n]$ 存在，
+则
+\begin{equation}
+  x[\infty]=\lim_{z\to1}(z-1)X(z).
+  \label{eq:z-final-value}
+\end{equation}
+这里沿实轴从 $z>1$ 趋近 $z=1$。终值存在时，常用的另一写法
+$\lim_{z\to1}(1-z^{-1})X(z)$ 与上式相同，因为
+$z-1=z(1-z^{-1})$，而 $z\to1$。
+
+对因果有理变换，使用终值定理前应\red{先检查极点条件}。令
+\[
+  D(z)=(1-z^{-1})X(z).
+\]
+约去公共因子后，$D(z)$ 的全部极点都必须严格位于单位圆内。
+等价地，$X(z)$ 除了允许在 $z=1$ 有一个简单极点外，其他极点都在单位圆内。
+这个条件使一阶差分
+\[
+  d[n]=x[n]-x[n-1]
+\]
+的因果响应绝对可和。由 $x[n]=\sum_{k=0}^{n}d[k]$，原序列便有有限终值。
+
+例如 $x[n]=\stepfun[n]$ 时，
+$X(z)=1/(1-z^{-1})$，终值为
+$\lim_{z\to1}z=1$。但因果性本身\red{不能保证终值存在}：
+$x[n]=(-1)^n\stepfun[n]$ 对应 $X(z)=1/(1+z^{-1})$，
+极点 $z=-1$ 位于单位圆上，序列持续振荡；即使形式上代入得到零，也不能
+据此断言序列的终值为零。
+
+\section{利用 Z 变换解差分方程}
+\label{sec:z-solve-difference-equation}
+
+\cref{sec:dt-difference-equation}已经给出差分方程、初始静止和逐项递推的关系。
+利用移位性质，每次延时都变成乘 $z^{-1}$，同一个系统就有三种表示：
+\red{差分方程、系统函数、方框图}。例如
+\[
+  y[n]+y[n-1]-6y[n-2]=x[n-1]
+\]
+直接写出样值之间的关系；变换后得到 $H(z)$，便于反演求响应；
+单位延时器方框图则把递推过程画成可以实现的信号流。
+三种表示之间可以互相转换。求解时还须\red{先确定辅助条件}：
+因果、初始静止选定零状态系统，稳定性可以选定另一种 ROC，
+非零初始状态则要保留单边变换的初值项。
+
+\subsection{差分方程与系统函数互相转换}
+\label{subsec:z-system-function}
+
+在零状态条件下，对\cref{eq:dt-lccde}作双边 Z 变换，得到
+\[
+  A(z)Y(z)=B(z)X(z),\qquad
+  A(z)=\sum_{k=0}^{N}a_kz^{-k},\quad
+  B(z)=\sum_{k=0}^{M}b_kz^{-k}.
+\]
+系统函数（system function）是单位脉冲响应的 Z 变换，
+\begin{equation}
+  H(z)=\ZT\{h[n]\}=\frac{B(z)}{A(z)},\qquad
+  Y(z)=H(z)X(z).
+  \label{eq:z-system-function-ratio}
+\end{equation}
+这里的比值表示\red{零状态输入输出关系}。同一个有理式仍须连同 ROC 才能
+确定 $h[n]$；因果有理系统的 ROC 在最外侧极点之外，并包含无穷远。
+若给出独立的非零初始状态，总响应还含零输入项，不能直接写成 $Y=HX$。
+
+\begin{example}[由方程求系统函数，再由系统函数还原方程]
+\label{eg:z-equation-system-function}
+  对因果、初始静止系统
+  \[
+    y[n]+y[n-1]-6y[n-2]=x[n-1],
+  \]
+  逐项变换：
+  \[
+    Y(z)+z^{-1}Y(z)-6z^{-2}Y(z)=z^{-1}X(z).
+  \]
+  因而
+  \[
+    H(z)=\frac{z^{-1}}{1+z^{-1}-6z^{-2}}
+    =\frac{z^{-1}}{(1+3z^{-1})(1-2z^{-1})},
+    \qquad |z|>3.
+  \]
+
+  反过来，若
+  \[
+    H(z)=\frac{1-z^{-1}}
+      {(1-\frac12z^{-1})(1-2z^{-1})}
+    =\frac{1-z^{-1}}{1-\frac52z^{-1}+z^{-2}},
+  \]
+  先交叉相乘，再把 $z^{-k}$ 还原为延时 $k$：
+  \[
+    \boxed{y[n]-\frac52y[n-1]+y[n-2]=x[n]-x[n-1]}.
+  \]
+  \red{分母对应输出延时项}，分子对应输入延时项；移项时须保留系数的符号。
+\end{example}
+
+\subsection{由单位延时器构成方框图}
 \label{sec:dt-block-diagram}
 
-离散时间的方框图用三种基本单元：加法器、数乘器与单位延时器。单位延时器把当前的输入存下来，下一个时刻输出 $x[n-1]$，它承担的记忆作用与连续时间里的积分器相当。
+方框图使用加法器、数乘器和单位延时器。单位延时器的系统函数是 $z^{-1}$：
+输入 $w[n]$，输出 $w[n-1]$；再接一个延时器，就得到 $w[n-2]$。
+它存的是上一个样值，与连续时间积分器存储累积面积的作用相对应。
+\red{初始静止对应延时器初值为零}。
 
-一阶差分方程
+对二阶方程
 \[
-  y[n]+ay[n-1]=bx[n]
+  a_0y[n]+a_1y[n-1]+a_2y[n-2]
+  =b_0x[n]+b_1x[n-1]+b_2x[n-2],
+  \qquad a_0\ne0,
 \]
-先解出 $y[n]$，
+先引入中间序列 $w[n]$，使
 \begin{equation}
-  y[n]=-ay[n-1]+bx[n],
-  \label{eq:dt-block-diagram-form}
+  a_0w[n]+a_1w[n-1]+a_2w[n-2]=x[n].
+  \label{eq:z-delay-denominator}
 \end{equation}
-右端需要 $x[n]$ 与 $y[n-1]$ 各乘一个系数后相加。把 $y[n]$ 经单位延时器得到 $y[n-1]$，数乘 $-a$ 后与 $bx[n]$ 相加，即得 $y[n]$；计算结果又送回延时器，构成反馈，这正是\cref{eq:dt-recursive-form} 递推性质的图形表示。
+再组合输出
+\begin{equation}
+  y[n]=b_0w[n]+b_1w[n-1]+b_2w[n-2].
+  \label{eq:z-delay-numerator}
+\end{equation}
+把\cref{eq:z-delay-denominator}及其延时一、二步的式子分别乘
+$b_0,b_1,b_2$ 后相加，就得到原输入输出方程。因此，在零状态下，
+这条延时链实现的系统函数正是 $B(z)/A(z)$。
 
-\begin{remark}[两种方框图的对应]
-  连续时间用积分器，离散时间用单位延时器，两者的差别只在存储量的含义：积分器存的是累积面积，延时器存的是上一个样值。初始静止在连续时间对应积分器初值为零，在离散时间对应\red{延时器初值为零}，也就是 $y[n]=0$（$n<n_0$）。方框图中每个延时器都需要初值，这也是 $N$ 阶方程需要 $N$ 个辅助条件的原因。
-\end{remark}
+画图时先解出当前样值：
+\[
+  w[n]=\frac1{a_0}\bigl(x[n]-a_1w[n-1]-a_2w[n-2]\bigr).
+\]
+当前输入与两条反馈相加，再乘 $1/a_0$；延时链上的三个样值按
+$b_0,b_1,b_2$ 加权后汇入输出。\cref{fig:z-delay-chain}画出了这两部分。
+\red{反馈系数取移项后的符号}；\red{系数为一可不写}，
+系数为零的支路可以不画。
 
-\begin{remark}[与变换域解法的衔接]
-  初始静止下对\cref{eq:dt-lccde} 两端作 Z 变换，延时 $k$ 变成乘 $z^{-k}$，差分方程化为关于 $z$ 的代数方程。本节两道递推例题都能用这条路线重算：分母的因式分解给出特征根，$H(z)$ 的分母因式与 $h[n]$ 的指数项一一对应，部分分式系数由初始静止条件确定。高阶方程用变换域求解的代数步骤少得多，这是后续各节展开 Z 变换方法的主要动因。
-\end{remark}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.94\textwidth]{10-z-transform/delay-chain.pdf}
+  \caption{二阶差分方程的共享延时链。左侧按分母系数反馈，右侧按分子系数组合输出。}
+  \label{fig:z-delay-chain}
+\end{figure}
+
+\begin{example}[由差分方程画方框图]
+\label{eg:z-delay-equation-diagrams}
+  第一种方程含输入延时：
+  \[
+    y[n]+y[n-1]-6y[n-2]=x[n-1].
+  \]
+  可取
+  \[
+    w[n]=x[n]-w[n-1]+6w[n-2],\qquad y[n]=w[n-1].
+  \]
+  输出从第一个延时器后引出；当前 $w[n]$ 到输出的系数为零。
+
+  第二种方程写成超前下标：
+  \[
+    y[n+2]-5y[n+1]+6y[n]=x[n+2]-3x[n].
+  \]
+  令 $m=n+2$，先把当前输出的下标统一为 $m$，再把 $m$ 改回 $n$：
+  \[
+    y[n]-5y[n-1]+6y[n-2]=x[n]-3x[n-2].
+  \]
+  于是
+  \[
+    w[n]=x[n]+5w[n-1]-6w[n-2],\qquad
+    y[n]=w[n]-3w[n-2].
+  \]
+  两图见\cref{fig:z-delay-equation-examples}。
+  \red{先统一当前样值的下标}，再读取反馈与前向系数，可避免把超前项画成延时项。
+\end{example}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\textwidth]{10-z-transform/delay-equation-examples.pdf}
+  \caption{两种差分方程的实现。上图输出取 $w[n-1]$；下图输出取 $w[n]-3w[n-2]$。}
+  \label{fig:z-delay-equation-examples}
+\end{figure}
+
+\begin{example}[由方框图求方程和系统函数]
+\label{eg:z-delay-readback}
+  对\cref{fig:z-delay-readback}，先标出延时链入口 $w[n]$，沿支路逐项写出
+  \[
+    w[n]=x[n]-\frac56w[n-1]-\frac16w[n-2],
+    \qquad
+    y[n]=w[n]-\frac14w[n-1].
+  \]
+  反馈部分给出分母，输出组合给出分子：
+  \[
+    H(z)=\frac{1-\frac14z^{-1}}
+      {1+\frac56z^{-1}+\frac16z^{-2}}.
+  \]
+  因而输入输出方程为
+  \[
+    \boxed{y[n]+\frac56y[n-1]+\frac16y[n-2]
+      =x[n]-\frac14x[n-1]}.
+  \]
+  \red{先写中间样值关系}，再消去 $w[n]$；不要把输出端的加权支路当成反馈支路。
+\end{example}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.84\textwidth]{10-z-transform/delay-readback.pdf}
+  \caption{反馈系数为 $-5/6,-1/6$，输出系数为 $1,-1/4$ 的延时器方框图。}
+  \label{fig:z-delay-readback}
+\end{figure}
+
+\begin{example}[串联系统的相消与等效方程]
+\label{eg:z-delay-cascade}
+  \cref{fig:z-delay-cascade}的两级系统以 $c[n]$ 连接。分别读图：
+  \begin{align*}
+    c[n]-\frac12c[n-1]&=x[n]-x[n-1],\\
+    y[n]+\frac14y[n-1]-\frac18y[n-2]
+      &=c[n]-\frac12c[n-1].
+  \end{align*}
+  串联系统的系统函数相乘，
+  \begin{align*}
+    H(z)&=\frac{1-z^{-1}}{1-\frac12z^{-1}}\,
+      \frac{1-\frac12z^{-1}}{1+\frac14z^{-1}-\frac18z^{-2}}\\
+      &=\frac{1-z^{-1}}{1+\frac14z^{-1}-\frac18z^{-2}}.
+  \end{align*}
+  在上面两式中直接消去 $c[n]-\frac12c[n-1]$，也得到
+  \[
+    \boxed{y[n]+\frac14y[n-1]-\frac18y[n-2]=x[n]-x[n-1]}.
+  \]
+  \red{串联相乘后约去公因子}，得到约简的零状态传递关系。
+  若各级延时器带有非零初值，仍须在各级方程中保留这些状态，
+  不能仅凭约分后的系统函数恢复全部初始响应。
+\end{example}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.97\textwidth]{10-z-transform/delay-cascade.pdf}
+  \caption{两级串联的延时器实现。中间序列为 $c[n]$，第一极点因子与第二级分子相消。}
+  \label{fig:z-delay-cascade}
+\end{figure}
+
+\subsection{题型一：初始静止下求单位脉冲响应与零状态响应}
+\label{subsec:z-zero-state}
+
+初始静止时，先由方程求 $H(z)$，再按输入求 $X(z)$，
+最后对 $Y(z)=H(z)X(z)$ 作部分分式反演。求单位脉冲响应只需令
+$x[n]=\impulse[n]$，此时 $X(z)=1$，故 $Y(z)=H(z)$。
+\red{因果条件选定右边反演}；阶跃因子必须随反演项一起写出。
+
+\begin{example}[输入延时一拍的单位脉冲响应]
+\label{eg:z-delayed-impulse-response}
+  求\cref{eg:z-equation-system-function}第一个因果系统的单位脉冲响应。
+  初始静止下，
+  \begin{align*}
+    H(z)&=\frac{z^{-1}}{(1+3z^{-1})(1-2z^{-1})}\\
+      &=-\frac{1/5}{1+3z^{-1}}+\frac{1/5}{1-2z^{-1}},
+      \qquad |z|>3.
+  \end{align*}
+  两项都取右边序列，得到
+  \[
+    \boxed{h[n]=-\frac15(-3)^n\stepfun[n]
+                       +\frac15\,2^n\stepfun[n]}.
+  \]
+  用时域递推检查开头几项：
+  \begin{align*}
+    h[0]&=-h[-1]+6h[-2]+\impulse[-1]=0,\\
+    h[1]&=-h[0]+6h[-1]+\impulse[0]=1,\\
+    h[2]&=-h[1]+6h[0]+\impulse[1]=-1,\\
+    h[3]&=-h[2]+6h[1]+\impulse[2]=7.
+  \end{align*}
+  与反演一致。\red{输入延时使零下标响应为零}；
+  两个极点 $-3,2$ 都在单位圆外，因果系统不稳定。
+\end{example}
+
+\begin{example}[输入与系统的极点重合]
+\label{eg:z-repeated-pole-response}
+  因果、初始静止系统满足
+  \[
+    y[n]-3y[n-1]+2y[n-2]=x[n]-x[n-1],
+    \qquad x[n]=2^n\stepfun[n].
+  \]
+  求 $y[n]$。先写系统函数和输入变换：
+  \[
+    H(z)=\frac{1-z^{-1}}
+      {(1-z^{-1})(1-2z^{-1})}
+      =\frac1{1-2z^{-1}},\qquad |z|>2,
+    \qquad
+    X(z)=\frac1{1-2z^{-1}},\quad |z|>2.
+  \]
+  输入使极点 $z=2$ 重复，
+  \[
+    Y(z)=\frac1{(1-2z^{-1})^2}
+    \quad\Longrightarrow\quad
+    \boxed{y[n]=(n+1)2^n\stepfun[n]}.
+  \]
+  也可写成 $(n+1)2^n\stepfun[n+1]$，因为 $n=-1$ 处系数为零。
+  递推前三项为
+  \[
+    y[0]=1,\qquad y[1]=3+2-1=4,\qquad
+    y[2]=3\cdot4-2\cdot1+4-2=12.
+  \]
+  这与闭式中的 $1,4,12$ 相同。
+  \red{重复极点带来下标因子}，分子中的公因子则先相消；
+  两种操作应在反演前分清。
+\end{example}
+
+\subsection{题型二：由稳定性选定 ROC，再求双边输入的响应}
+\label{subsec:z-stable-two-sided-response}
+
+稳定 LTI 系统满足 $\sum_n|h[n]|<\infty$，其系统函数的 ROC 包含单位圆。
+对有理 $H(z)$，可以用这个条件选定每个极点对应的左右边序列。
+\red{稳定系统可以非因果}；仅当同时给出因果条件时，才可用
+“全部极点严格在单位圆内”判断稳定性。
+
+\begin{example}[稳定的双边系统与分段阶跃输入]
+\label{eg:z-stable-two-sided-system}
+  已知稳定 LTI 系统
+  \[
+    H(z)=\frac{1-z^{-1}}
+      {(1-\frac12z^{-1})(1-2z^{-1})}.
+  \]
+  求单位脉冲响应，并求
+  \[
+    x[n]=3\stepfun[-n-1]+2\stepfun[n]
+  \]
+  的输出。输入在负下标处取 $3$、非负下标处取 $2$，
+  如\cref{fig:z-stable-input-split}上图所示。
+
+  极点为 $\frac12,2$。唯一包含单位圆的 ROC 是
+  $\frac12<|z|<2$。分解得
+  \[
+    H(z)=\frac{1/3}{1-\frac12z^{-1}}
+           +\frac{2/3}{1-2z^{-1}},
+  \]
+  第一个极点取右边，第二个取左边：
+  \[
+    \boxed{h[n]=\frac13\left(\frac12\right)^n\stepfun[n]
+      -\frac23\,2^n\stepfun[-n-1]}.
+  \]
+  它在两侧都衰减，
+  \[
+    \sum_n|h[n]|=
+    \frac13\sum_{n=0}^{\infty}\left(\frac12\right)^n
+    +\frac23\sum_{n=-\infty}^{-1}2^n
+    =\frac43<\infty.
+  \]
+  系统稳定但非因果。
+
+  先用 $\stepfun[n]+\stepfun[-n-1]=1$ 把输入改写成
+  \[
+    x[n]=3-\stepfun[n].
+  \]
+  \red{先拆成常数与阶跃}，可以避开两侧输入变换的 ROC 不相交问题。
+  全时间轴上的指数 $a^n$ 是 LTI 系统的特征函数：
+  当 $a\ne0$ 且 $a$ 位于 $H(z)$ 的 ROC 内时，
+  \begin{align*}
+    y[n]&=\sum_{k=-\infty}^{\infty}h[k]a^{n-k}\\
+      &=a^n\sum_{k=-\infty}^{\infty}h[k]a^{-k}
+       =H(a)a^n.
+  \end{align*}
+  常数 $1=1^n$ 对应 $a=1$；本题 $H(1)=0$，所以常数 $3$ 的输出为零。
+
+  记单位阶跃的输出为 $s[n]$。$\stepfun[n]$ 的 ROC 是 $|z|>1$，
+  与系统 ROC 的交集为 $1<|z|<2$：
+  \begin{align*}
+    S(z)&=\frac{H(z)}{1-z^{-1}}
+      =\frac1{(1-\frac12z^{-1})(1-2z^{-1})}\\
+      &=-\frac{2/3}{1-\frac12z^{-1}}
+             +\frac{4/3}{1-2z^{-1}}.
+  \end{align*}
+  反演的实际 ROC 扩大为 $\frac12<|z|<2$，得到
+  \[
+    s[n]=-\frac23\left(\frac12\right)^n\stepfun[n]
+           -\frac43\,2^n\stepfun[-n-1].
+  \]
+  因而 $x[n]=3-\stepfun[n]$ 的输出为
+  \[
+    \boxed{y[n]=-s[n]
+      =\frac23\left(\frac12\right)^n\stepfun[n]
+         +\frac43\,2^n\stepfun[-n-1]}.
+  \]
+  非因果系统在阶跃到来之前也可以有输出；上式的左边项不能删掉。
+
+  若按零时刻将输入分为 $3\stepfun[-n-1]$ 和 $2\stepfun[n]$，
+  其两部分响应分别为
+  \begin{align*}
+    y_-[n]&=-3s[n]
+       =2\left(\frac12\right)^n\stepfun[n]
+          +4\,2^n\stepfun[-n-1],\\
+    y_+[n]&=2s[n]
+       =-\frac43\left(\frac12\right)^n\stepfun[n]
+          -\frac83\,2^n\stepfun[-n-1].
+  \end{align*}
+  相加仍为上面的 $y[n]$。图中的分割仅按输入所在的时间区间进行；
+  此系统非因果，$y_+[n]$ 在 $n<0$ 也非零。这里应称为
+  \red{过去输入与当前输入的响应}，不能直接套用因果系统中
+  “撤去输入、保留初始状态”的零输入响应定义。
+\end{example}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.74\textwidth]{10-z-transform/stable-input-split.pdf}
+  \caption{双边阶跃输入及其按零时刻的分割。负下标部分与非负下标部分相加得到原输入；响应同样按线性相加。}
+  \label{fig:z-stable-input-split}
+\end{figure}
+
+\begin{example}[用指数特征函数求周期输入的响应]
+\label{eg:z-stable-even-input}
+  对\cref{eg:z-stable-two-sided-system}的稳定系统，输入在所有偶数下标处取
+  $2$、奇数下标处取 $0$，如\cref{fig:z-stable-even-input}所示。
+  可写成
+  \[
+    x[n]=1^n+(-1)^n.
+  \]
+  $1,-1$ 均位于 ROC 内，分别代入系统函数：
+  \[
+    H(1)=0,\qquad
+    H(-1)=\frac{2}{(1+\frac12)(1+2)}=\frac49.
+  \]
+  因此
+  \[
+    \boxed{y[n]=\frac49(-1)^n},\qquad -\infty<n<\infty.
+  \]
+  \red{全时间轴指数直接代入系统函数}；
+  若输入还乘 $\stepfun[n]$，则有启动边界，须按变换与反演求响应。
+\end{example}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.83\textwidth]{10-z-transform/stable-even-input.pdf}
+  \caption{周期为二的输入与输出。输入的直流分量被系统消去，交替分量乘以 $H(-1)=4/9$。}
+  \label{fig:z-stable-even-input}
+\end{figure}
+
+\subsection{题型三：单边 Z 变换与非零初始状态}
+\label{subsec:z-unilateral-initial-state}
+
+题目给出 $y[-1],y[-2]$ 等初始状态时，用单边 Z 变换
+（unilateral Z-transform）保留递推起步时读到的旧样值：
+\begin{equation}
+  \widehat X(z)=\mathcal Z_{\mathrm u}\{x[n]\}
+    =\sum_{n=0}^{\infty}x[n]z^{-n}.
+  \label{eq:z-unilateral-definition}
+\end{equation}
+它只对非负下标求和，等于 $x[n]\stepfun[n]$ 的双边 Z 变换。
+\red{因果序列的单双边变换相同}；
+一般序列的单边变换只记录 $n\geq0$ 的样值，反演不能恢复负下标部分。
+其 ROC 向无穷远延伸，反演时各有理项取右边序列。
+
+单边变换的移位性质会留下边界项。例如
+\begin{align*}
+  \mathcal Z_{\mathrm u}\{x[n-1]\}
+    &=x[-1]+\sum_{n=1}^{\infty}x[n-1]z^{-n}\\
+    &=x[-1]+z^{-1}\widehat X(z).
+\end{align*}
+连续时间单边拉氏变换在求导时留下初值，
+离散时间单边 Z 变换则在移位时留下旧样值。
+\red{延时加旧值，超前减首值}。常用前三阶为
+\begin{align}
+  \mathcal Z_{\mathrm u}\{x[n-1]\}
+    &=z^{-1}\widehat X(z)+x[-1],\notag\\
+  \mathcal Z_{\mathrm u}\{x[n-2]\}
+    &=z^{-2}\widehat X(z)+x[-2]+x[-1]z^{-1},\notag\\
+  \mathcal Z_{\mathrm u}\{x[n-3]\}
+    &=z^{-3}\widehat X(z)+x[-3]+x[-2]z^{-1}+x[-1]z^{-2},
+    \label{eq:z-unilateral-delays}\\
+  \mathcal Z_{\mathrm u}\{x[n+1]\}
+    &=z\widehat X(z)-zx[0],\notag\\
+  \mathcal Z_{\mathrm u}\{x[n+2]\}
+    &=z^2\widehat X(z)-z^2x[0]-zx[1],\notag\\
+  \mathcal Z_{\mathrm u}\{x[n+3]\}
+    &=z^3\widehat X(z)-z^3x[0]-z^2x[1]-zx[2].
+    \label{eq:z-unilateral-advances}
+\end{align}
+延时后的旧样值按 $x[-k],\ldots,x[-1]$ 排列，权重从 $1$ 到 $z^{-(k-1)}$；
+超前时从完整变换中扣掉被越过的 $x[0],\ldots,x[k-1]$。
+令 $m=n\mp k$ 并重写求和上下限，就能逐项核对。
+
+\begin{example}[零输入、零状态与总响应的单边求解]
+\label{eg:z-unilateral-total-response}
+  方程在 $n\geq0$ 上满足
+  \[
+    y[n]+y[n-1]-6y[n-2]=x[n],
+  \]
+  给定
+  \[
+    x[n]=4^n\stepfun[n],\qquad y[-2]=0,\quad y[-1]=1.
+  \]
+  求零输入响应 $y_{\mathrm{zi}}[n]$、零状态响应
+  $y_{\mathrm{zs}}[n]$ 和总响应 $y[n]$。
+
+  输入的单边变换为
+  \[
+    \widehat X(z)=\frac1{1-4z^{-1}},\qquad |z|>4.
+  \]
+  对输出及两个延时项分别变换，保留旧样值：
+  \[
+    \widehat Y(z)+z^{-1}\widehat Y(z)+y[-1]
+    -6\bigl(z^{-2}\widehat Y(z)+y[-2]+z^{-1}y[-1]\bigr)
+    =\frac1{1-4z^{-1}}.
+  \]
+  代入初值后移项，
+  \[
+    (1+z^{-1}-6z^{-2})\widehat Y(z)
+    =\underbrace{\frac1{1-4z^{-1}}}_{\text{输入项}}
+      +\underbrace{(6z^{-1}-1)}_{\text{初始状态项}}.
+  \]
+  \red{输入项与初始状态项分开}，分别得到
+  \begin{align*}
+    \widehat Y_{\mathrm{zs}}(z)
+      &=\frac1{(1-4z^{-1})(1+3z^{-1})(1-2z^{-1})},\\
+    \widehat Y_{\mathrm{zi}}(z)
+      &=\frac{6z^{-1}-1}{(1+3z^{-1})(1-2z^{-1})}.
+  \end{align*}
+
+  零状态项设为三个一次分式。记 $q=z^{-1}$，在
+  \[
+    1=A(1+3q)(1-2q)+B(1-4q)(1-2q)+C(1-4q)(1+3q)
+  \]
+  中依次代入 $q=\frac14,-\frac13,\frac12$，得
+  \[
+    A=\frac87,\qquad B=\frac9{35},\qquad C=-\frac25.
+  \]
+  因而
+  \[
+    \widehat Y_{\mathrm{zs}}(z)
+    =\frac{8/7}{1-4z^{-1}}+\frac{9/35}{1+3z^{-1}}
+       -\frac{2/5}{1-2z^{-1}},
+  \]
+  \[
+    \boxed{y_{\mathrm{zs}}[n]
+      =\left[\frac87\,4^n+\frac9{35}(-3)^n-\frac25\,2^n\right]\stepfun[n]}.
+  \]
+
+  零输入项设
+  \[
+    \widehat Y_{\mathrm{zi}}(z)
+      =\frac{D}{1+3z^{-1}}+\frac{E}{1-2z^{-1}}.
+  \]
+  比较分子 $6q-1=D(1-2q)+E(1+3q)$，得到
+  \[
+    D+E=-1,\qquad -2D+3E=6,
+    \qquad D=-\frac95,\quad E=\frac45.
+  \]
+  于是
+  \[
+    \boxed{y_{\mathrm{zi}}[n]
+      =\left[-\frac95(-3)^n+\frac45\,2^n\right]\stepfun[n]}.
+  \]
+  对 $n\geq0$，两部分相加得到
+  \[
+    \boxed{y[n]
+      =\left[\frac87\,4^n-\frac{54}{35}(-3)^n+\frac25\,2^n\right]\stepfun[n]}.
+  \]
+  这里的阶跃因子表示单边反演所得的非负下标部分；
+  题目给出的 $y[-1]=1$ 仍是原系统的初始状态，不能被该因子置零。
+
+  回到方程核查最初三点。总响应递推为
+  \begin{align*}
+    y[0]&=x[0]-y[-1]+6y[-2]=0,\\
+    y[1]&=x[1]-y[0]+6y[-1]=10,\\
+    y[2]&=x[2]-y[1]+6y[0]=6.
+  \end{align*}
+  零状态响应取零初值，前三项为 $1,3,19$；
+  零输入响应保留给定初值、把 $x[n]$ 置零，前三项为 $-1,7,-13$。
+  两者逐点相加为 $0,10,6$，与总响应一致。
+  \red{零输入保留初值}，\red{零状态清零初值}；
+  单边变换把这两类激励写在同一个代数方程中，但求系统函数时只取零状态部分。
+\end{example}
