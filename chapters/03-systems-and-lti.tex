@@ -6,7 +6,7 @@
 \section{系统的数学描述}
 \label{sec:system-description}
 
-系统（system）接收输入信号，按照确定的规则产生输出信号。输入输出关系可用箭头流程图表示：
+\keyterm{系统（system）}接收输入信号，按照确定的规则产生输出信号。输入输出关系可用箭头流程图表示：
 \begin{equation}
   x(t)\longrightarrow\boxed{\text{系统}}\longrightarrow y(t),
   \qquad
@@ -15,7 +15,7 @@
 \end{equation}
 研究系统性质时，应检查\red{框中固定的输入输出规则}，不能只看一组特定的输入、输出波形。下文若写“$x$ 产生 $y$”，均指 $x$ 经过同一个待研究系统后得到 $y$。
 \begin{pitfall}[不能用一组输入输出判断系统性质]
-  看到某个输入恰好得到成比例的输出，并不能证明系统线性；看到某个输入平移后输出也恰好平移，也不能证明系统时不变。定义中的判据都要求对\red{任意允许的输入}成立。
+  看到某个输入恰好得到成比例的输出，并不能证明系统线性；看到某个输入平移后输出也恰好平移，也不能证明系统时不变。定义中的判据都要求对\blue{任意允许的输入}成立。
 \end{pitfall}
 
 \section{线性系统}
@@ -36,20 +36,20 @@
     a y_1+b y_2,
     \label{eq:linearity-test}
   \end{equation}
-  则称该系统为线性系统（linear system）。这一条件也称为叠加原理（superposition principle）。
+  则称该系统为\keyterm{线性系统（linear system）}。这一条件也称为叠加原理（superposition principle）。
 \end{definition}
 
 \cref{eq:linearity-test}可以拆成两个缺一不可的条件：
 \begin{itemize}
-  \item 若 $x\longrightarrow y$，则 $a x\longrightarrow a y$，称为齐次性（homogeneity）；
-  \item 若 $x_1\longrightarrow y_1$、$x_2\longrightarrow y_2$，则 $x_1+x_2\longrightarrow y_1+y_2$，称为可加性（additivity）。
+  \item 若 $x\longrightarrow y$，则 $a x\longrightarrow a y$，称为\keyterm{齐次性（homogeneity）}；
+  \item 若 $x_1\longrightarrow y_1$、$x_2\longrightarrow y_2$，则 $x_1+x_2\longrightarrow y_1+y_2$，称为\keyterm{可加性（additivity）}。
 \end{itemize}
 
 \noindent\textbf{判据 }
 对常见的显式系统公式，先检查：
 \begin{enumerate}
-  \item \red{每一项都有输入信号}，不得有与输入无关的常数项；
-  \item \red{每个输入均为一次}，不得有输入的乘积、平方、绝对值、指数等非线性运算。
+  \item \blue{每一项都有输入信号}，不得有与输入无关的常数项；
+  \item \blue{每个输入均为一次}，不得有输入的乘积、平方、绝对值、指数等非线性运算。
 \end{enumerate}
 第一条也可先用零输入检验。令 $a=b=0$，线性系统必满足
 \begin{equation}
@@ -101,7 +101,7 @@
       =a\sum_{k=-\infty}^{n}x_1[k]+b\sum_{k=-\infty}^{n}x_2[k]
       =ay_1[n]+by_2[n].
   \end{align*}
-  积分与累加的检验限于相应积分、求和存在的输入。判断线性应看\red{运算对线性组合的作用}。
+  积分与累加的检验\blue{限于相应积分、求和存在的输入}。判断线性应看\red{运算对线性组合的作用}。
 \end{example}
 
 \begin{example}[常数偏置与平方]
@@ -113,7 +113,7 @@
 \end{example}
 
 \begin{pitfall}[把“可加”误当成“线性”]
-  只验证“输入相加时输出也相加”还不够；系统还必须允许任意幅度缩放。遇到平方、绝对值、指数或输入之间的乘积时，\red{优先检查齐次性}，通常能迅速找到矛盾。
+  只验证“输入相加时输出也相加”还不够；系统还必须允许任意幅度缩放。遇到平方、绝对值、指数或输入之间的乘积时，\hl{优先检查齐次性}，通常能迅速找到矛盾。
 \end{pitfall}
 
 \section{时不变系统}
@@ -130,7 +130,7 @@
     x(t-t_0)\longrightarrow\boxed{\text{同一系统}}\longrightarrow y(t-t_0),
     \label{eq:ct-time-invariance}
   \end{equation}
-  则称该连续时间系统为时不变系统（time-invariant system）。离散时间系统的判据为：对任意整数 $n_0$，
+  则称该连续时间系统为\keyterm{时不变系统（time-invariant system）}。离散时间系统的判据为：对任意整数 $n_0$，
   \begin{equation}
     x[n-n_0]\longrightarrow\boxed{\text{同一系统}}\longrightarrow y[n-n_0].
     \label{eq:dt-time-invariance}
@@ -140,10 +140,10 @@
 \noindent\textbf{判据 }
 对 $y(t)$ 直接由若干 $x(\varphi(t))$ 构成的常见系统公式，先检查：
 \begin{enumerate}
-  \item \red{时间只出现在输入括号内}，公式中不应有裸露的 $t$；
-  \item 除固定平移外，输入括号内应\red{保持时间尺度和方向}，即保留 $t$，不能换成 $2t$、$-t$、$t^2$ 等其他时间函数。
+  \item \blue{时间只出现在输入括号内}，公式中不应有裸露的 $t$；
+  \item 除固定平移外，输入括号内应\blue{保持时间尺度和方向}，即保留 $t$，不能换成 $2t$、$-t$、$t^2$ 等其他时间函数。
 \end{enumerate}
-这两条可用于快速筛查；含积分、求和等结构时，仍应使用定义作严格判断。时不变性的含义是：\red{输入延迟多少，输出就只延迟同样多}，除此之外形状和幅值都不改变。严格判断时比较两条路径：
+这两条可用于快速筛查；含积分、求和等结构时，\blue{仍应使用定义作严格判断}。时不变性的含义是：\red{输入延迟多少，输出就只延迟同样多}，除此之外形状和幅值都不改变。严格判断时比较两条路径：
 \begin{enumerate}
   \item 先把输入换成 $x(t-t_0)$，再代入系统规则，得到输出 $y_1(t)$；
   \item 先由原输入得到 $y(t)$，再把输出中的\red{每一个显含时间变量}替换为 $t-t_0$，得到 $y_2(t)=y(t-t_0)$。
@@ -181,7 +181,7 @@
 
 \begin{definition}[因果系统]
   \label{def:causal-system}
-  若对任意时刻 $t_0$，只要两个输入在所有 $t\le t_0$ 上相同，相应输出在 $t_0$ 也必相同，则称连续时间系统为因果系统（causal system）。等价地，$y(t_0)$ 只能依赖输入在\red{当前与过去}的取值，不能依赖 $t>t_0$ 的输入。
+  若对任意时刻 $t_0$，只要两个输入在所有 $t\le t_0$ 上相同，相应输出在 $t_0$ 也必相同，则称连续时间系统为\keyterm{因果系统（causal system）}。等价地，$y(t_0)$ 只能依赖输入在\red{当前与过去}的取值，不能依赖 $t>t_0$ 的输入。
 
   对离散时间系统，把条件改为两个输入在所有 $n\le n_0$ 上相同；此时 $y[n_0]$ 只能依赖 $x[k]$（$k\le n_0$）。
 \end{definition}
@@ -193,7 +193,7 @@
   \qquad
   \varphi(n_0)\le n_0.
 \]
-即\red{输入括号内函数不晚于输出时刻}。积分或求和系统则检查整个读取区间；只要存在一个严格晚于输出时刻且确实影响输出的输入，就能判定系统非因果。
+即\red{输入括号内函数不晚于输出时刻}。积分或求和系统则\blue{检查整个读取区间}；只要存在一个严格晚于输出时刻且确实影响输出的输入，就能判定系统非因果。
 
 \begin{example}[延迟、超前与无记忆运算]
   $y(t)=x(t-1)$ 只读取过去输入，是因果系统；$y(t)=x(t+1)$ 读取未来输入，是非因果系统。$y(t)=x^2(t)$ 只依赖当前输入，因此虽非线性却因果。一般地，任何输出只依赖 $x(t)$ 或 $x[n]$ 当前值的\red{无记忆系统必然因果}。
@@ -206,13 +206,13 @@
     \qquad
     y[n]=\sum_{k=-\infty}^{n}x[k]
   \]
-  只汇总当前及过去输入，因而因果。若把上限改成 $t+1$ 或 $n+1$，当前输出就会使用未来输入，系统变为非因果。对积分、求和系统，\red{先比较上限与观察时刻}通常最快。
+  只汇总当前及过去输入，因而因果。若把上限改成 $t+1$ 或 $n+1$，当前输出就会使用未来输入，系统变为非因果。对积分、求和系统，\hl{先比较上限与观察时刻}通常最快。
 \end{example}
 
 \begin{example}[时间缩放系统]
   对 $y(t)=x(2t)$，取 $t_0=1$，输出读取 $x(2)$，属于未来输入，故非因果。对 $y(t)=x(t/2)$，正时间上看似只读取过去，但取 $t_0=-1$，输出读取 $x(-1/2)$，仍晚于 $-1$，所以也非因果。
 
-  离散反转系统 $y[n]=x[3-n]$ 可取 $n_0=1$：$y[1]=x[2]$ 读取未来样值，故非因果。判据须覆盖\red{正、负全部时刻}；找到一个违反定义的时刻即可。
+  离散反转系统 $y[n]=x[3-n]$ 可取 $n_0=1$：$y[1]=x[2]$ 读取未来样值，故非因果。判据须覆盖\blue{正、负全部时刻}；\hl{找到一个违反定义的时刻即可}。
 \end{example}
 
 \begin{pitfall}[用输入的具体波形代替依赖关系]
@@ -224,7 +224,7 @@
 
 \begin{definition}[无记忆系统]
   \label{def:memoryless-system}
-  若对任意时刻 $t_0$，输出 $y(t_0)$ 只依赖输入在同一时刻的值 $x(t_0)$，则称连续时间系统为无记忆系统（memoryless system）。离散时间系统的定义相同：$y[n_0]$ 只能依赖 $x[n_0]$，不能读取其他下标的输入样值。
+  若对任意时刻 $t_0$，输出 $y(t_0)$ 只依赖输入在同一时刻的值 $x(t_0)$，则称连续时间系统为\keyterm{无记忆系统（memoryless system）}。离散时间系统的定义相同：$y[n_0]$ 只能依赖 $x[n_0]$，不能读取其他下标的输入样值。
 \end{definition}
 
 \noindent\textbf{判据 }
@@ -249,7 +249,7 @@
 \end{remark}
 
 \begin{pitfall}[只检查原点或个别下标]
-  对 $y[n]=x[2n]$，在 $n=0$ 时确有 $y[0]=x[0]$，但系统性质要求对任意时刻成立。取 $n=1$，输出需要 $x[2]$，已经足以判定系统有记忆。检查内部输入下标与当前输出下标是否对\red{所有时刻恒相等}即可。
+  对 $y[n]=x[2n]$，在 $n=0$ 时确有 $y[0]=x[0]$，但系统性质要求对任意时刻成立。取 $n=1$，输出需要 $x[2]$，已经足以判定系统有记忆。检查内部输入下标与当前输出下标是否对\blue{所有时刻恒相等}即可。
 \end{pitfall}
 
 \section{可逆系统}
@@ -257,7 +257,7 @@
 
 \begin{definition}[可逆系统]
   \label{def:invertible-system}
-  若不同输入一定产生不同输出，也就是输出信号能够唯一确定输入信号，则称该系统为可逆系统（invertible system）。此时可以在原系统之后接入逆系统，使信号恢复为原输入：
+  若不同输入一定产生不同输出，也就是输出信号能够唯一确定输入信号，则称该系统为\keyterm{可逆系统（invertible system）}。此时可以在原系统之后接入\keyterm{逆系统}，使信号恢复为原输入：
   \begin{equation}
     x\longrightarrow\boxed{\text{原系统}}\longrightarrow y
     \longrightarrow\boxed{\text{逆系统}}\longrightarrow x.
@@ -284,11 +284,11 @@
   \[
     x[n]=y[n]-y[n-1].
   \]
-  因而在累加和存在的信号类上，它的逆系统是后向差分。验证逆系统时，应\red{把恢复公式代回原关系}。
+  因而在累加和存在的信号类上，它的逆系统是后向差分。验证逆系统时，应\hl{把恢复公式代回原关系}。
 \end{example}
 
 \begin{pitfall}[积分常数造成的不唯一]
-  若系统为 $y(t)=\dd x(t)/\dd t$，直接写 $x(t)=\int y(t)\dd t$ 会漏掉积分常数。事实上 $x(t)$ 与 $x(t)+C$ 有相同导数，所以微分系统在一般可微信号上不可逆；只有额外给定一个初值，才可能唯一恢复输入。看到积分或微分时，应检查\red{边界条件是否足够}。
+  若系统为 $y(t)=\dd x(t)/\dd t$，直接写 $x(t)=\int y(t)\dd t$ 会漏掉积分常数。事实上 $x(t)$ 与 $x(t)+C$ 有相同导数，所以微分系统在一般可微信号上不可逆；只有额外给定一个初值，才可能唯一恢复输入。看到积分或微分时，应检查\blue{边界条件是否足够}。
 \end{pitfall}
 
 \section{稳定系统}
@@ -296,7 +296,7 @@
 
 \begin{definition}[BIBO 稳定系统]
   \label{def:bibo-stable-system}
-  若每一个有界输入都产生有界输出，则称系统为有界输入有界输出稳定系统（bounded-input bounded-output stable system），简称 BIBO 稳定系统。连续时间的判据可写成
+  若\blue{每一个有界输入}都产生有界输出，则称系统为\keyterm{有界输入有界输出稳定系统（bounded-input bounded-output stable system）}，简称 BIBO 稳定系统。连续时间的判据可写成
   \[
     |x(t)|\le M_x<\infty,\ \forall t
     \quad\Longrightarrow\quad

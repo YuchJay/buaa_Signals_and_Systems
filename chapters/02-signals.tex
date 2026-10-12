@@ -10,7 +10,7 @@
 
 \begin{definition}[连续时间信号]
   \label{def:continuous-time-signal}
-  连续时间信号（continuous-time signal）是以连续变量为自变量的函数，通常记作
+  \keyterm{连续时间信号（continuous-time signal）}是以连续变量为自变量的函数，通常记作
   \[
     x(t),\quad t\in\R.
   \]
@@ -19,7 +19,7 @@
 
 \begin{definition}[离散时间信号]
   \label{def:discrete-time-signal}
-  离散时间信号（discrete-time signal）的自变量只取离散值。本书默认其定义域为整数集，记作
+  \keyterm{离散时间信号（discrete-time signal）}的自变量只取离散值。本书默认其定义域为整数集，记作
   \[
     x[n],\quad n\in\Z.
   \]
@@ -41,7 +41,7 @@
 \[
   y(t)=x\bigl(g(t)\bigr).
 \]
-在时刻 $t$ 观察 $y$，实际读取原信号在 $g(t)$ 处的值。判断图像怎样变化时，最好\red{跟踪一个具体的特征点}；只看括号里的正负号很容易弄反方向。
+在时刻 $t$ 观察 $y$，实际读取原信号在 $g(t)$ 处的值。判断图像怎样变化时，最好\hl{跟踪一个具体的特征点}；只看括号里的正负号很容易弄反方向。
 
 \subsection{时移}
 
@@ -50,13 +50,13 @@
   y(t)=x(t-t_0).
   \label{eq:continuous-time-shift}
 \end{equation}
-若 $t_0>0$，原来位于 $t=t_1$ 的特征点会出现在 $t=t_1+t_0$，所以图像\red{向右移动} $t_0$，称为延迟（delay）。$x(t+t_0)$ 则\red{向左移动} $t_0$，称为超前（advance）。
+若 $t_0>0$，原来位于 $t=t_1$ 的特征点会出现在 $t=t_1+t_0$，所以图像\red{向右移动} $t_0$，称为\keyterm{延迟（delay）}。$x(t+t_0)$ 则\red{向左移动} $t_0$，称为\keyterm{超前（advance）}。
 
 离散时间信号的规则相同：
 \[
   y[n]=x[n-n_0],\qquad n_0\in\Z.
 \]
-由于下标必须保持为整数，离散时间序列通常\red{只讨论整数点的平移}。
+由于下标必须保持为整数，离散时间序列通常\blue{只讨论整数点的平移}。
 
 \begin{pitfall}[括号内是减号，图像却向右]
   在 $x(t-t_0)$ 中，令内部自变量等于原特征点 $t_1$，得到 $t-t_0=t_1$，即新位置为 $t_1+t_0$。直接解这个方程，比背“左加右减”稳妥。
@@ -64,7 +64,7 @@
 
 \subsection{尺度变换与时间反转}
 
-尺度变换写成
+\keyterm{尺度变换}写成
 \begin{equation}
   y(t)=x(at),\qquad a\ne0.
   \label{eq:continuous-time-scaling}
@@ -73,12 +73,12 @@
 \begin{itemize}
   \item $|a|>1$ 时，图像沿时间轴\red{压缩}；
   \item $0<|a|<1$ 时，图像沿时间轴\red{扩展}；
-  \item $a<0$ 时，还会\red{关于纵轴翻转}。特别地，$x(-t)$ 是 $x(t)$ 的时间反转。
+  \item $a<0$ 时，还会\red{关于纵轴翻转}。特别地，$x(-t)$ 是 $x(t)$ 的\keyterm{时间反转}。
 \end{itemize}
 尺度变换只改变信号在时间轴上的位置，不改变其纵坐标取值。$Ax(t)$ 改变的是幅值，不属于自变量变换。
 
 \begin{pitfall}[离散时间不能任意缩放]
-  对序列来说，$x[2n]$ 只保留原序列的偶数下标样本；$x[n/2]$ 在奇数 $n$ 处甚至没有对应的整数下标，除非另外规定插值或补零方式。因此，离散时间尺度变换不能直接照搬连续时间图像的伸缩规则。
+  对序列来说，$x[2n]$ 只保留原序列的偶数下标样本；$x[n/2]$ 在奇数 $n$ 处甚至没有对应的整数下标，除非另外规定插值或补零方式。因此，离散时间尺度变换\blue{不能直接照搬}连续时间图像的伸缩规则。
 \end{pitfall}
 
 \subsection{一般仿射变换}
@@ -90,7 +90,7 @@
   \qquad a\ne0,
   \label{eq:affine-time-transformation}
 \end{equation}
-按括号内的形式，先把 $x(t)$ 变成 $x(at)$：$a<0$ 时翻转，再按 $|a|$ 压缩或扩展；然后平移 $-b/a$。每一步都记录端点、峰值和跳变点的位置，幅度保持不变。完整作图过程见\cref{ex:signals-affine-triangle}。
+按括号内的形式，先把 $x(t)$ 变成 $x(at)$：$a<0$ 时翻转，再按 $|a|$ 压缩或扩展；然后平移 $-b/a$。每一步都\hl{记录端点、峰值和跳变点的位置}，幅度保持不变。完整作图过程见\cref{ex:signals-affine-triangle}。
 
 作图后还可逐点核对。若原信号在 $t=\tau$ 处有一个特征点，则它在新信号中的位置满足
 \begin{equation}
@@ -136,7 +136,7 @@
     x(t+T)=x(t),
     \label{eq:continuous-time-periodicity}
   \end{equation}
-  则 $x(t)$ 是连续时间周期信号，$T$ 是它的一个周期。若所有正周期中存在最小值，则称其为基波周期（fundamental period），记作 $T_0$。
+  则 $x(t)$ 是连续时间周期信号，$T$ 是它的一个周期。若所有正周期中存在最小值，则称其为\keyterm{基波周期（fundamental period）}，记作 $T_0$。
 \end{definition}
 
 \begin{definition}[离散时间周期信号]
@@ -160,7 +160,7 @@
 \end{example}
 
 \begin{remark}[多个周期信号相加]
-  两个连续时间周期信号之和不一定周期。只有当\red{它们的周期之比为有理数}时，才能找到公共周期。离散时间周期均为整数，因此有限个离散时间周期信号之和仍然周期，其周期可取各周期的公倍数。
+  两个连续时间周期信号之和不一定周期。只有当\blue{它们的周期之比为有理数}时，才能找到公共周期。离散时间周期均为整数，因此有限个离散时间周期信号之和仍然周期，其周期可取各周期的公倍数。
 \end{remark}
 
 \subsection{奇信号与偶信号}
@@ -171,7 +171,7 @@
   \[
     x(-t)=x(t),\qquad t\in\R,
   \]
-  则称其为偶信号（even signal）。对离散时间信号，把上式换成 $x[-n]=x[n]$。
+  则称其为\keyterm{偶信号（even signal）}。对离散时间信号，把上式换成 $x[-n]=x[n]$。
 \end{definition}
 
 \begin{definition}[奇信号]
@@ -180,7 +180,7 @@
   \[
     x(-t)=-x(t),\qquad t\in\R,
   \]
-  则称其为奇信号（odd signal）。离散时间形式为 $x[-n]=-x[n]$。只要奇信号在原点有定义，就必有 $x(0)=0$ 或 $x[0]=0$。
+  则称其为\keyterm{奇信号（odd signal）}。离散时间形式为 $x[-n]=-x[n]$。只要奇信号在原点有定义，就必有 $x(0)=0$ 或 $x[0]=0$。
 \end{definition}
 
 偶信号关于纵轴对称，奇信号关于原点反对称。这里的判断只涉及时间反转，即使 $x$ 是复信号，也\red{不对信号值取共轭}。
@@ -246,11 +246,11 @@
   \end{cases}
   \label{eq:average-signal-power}
 \end{equation}
-前提是相应的积分、求和与极限存在。
+\blue{前提是相应的积分、求和与极限存在}。
 
 \begin{definition}[能量信号与功率信号]
   \label{def:energy-and-power-signals}
-  若 $0<E_x<\infty$，则称 $x$ 为能量信号（energy signal）；若 $0<P_x<\infty$，则称 $x$ 为功率信号（power signal）。按照这里采用的严格不等式，\red{零信号}既不归入能量信号，也不归入功率信号。
+  若 $0<E_x<\infty$，则称 $x$ 为\keyterm{能量信号（energy signal）}；若 $0<P_x<\infty$，则称 $x$ 为\keyterm{功率信号（power signal）}。按照这里采用的严格不等式，\red{零信号}既不归入能量信号，也不归入功率信号。
 \end{definition}
 
 非零能量信号的\red{平均功率为零}。若周期信号在一个周期内的能量有限且非零，则它的\red{总能量无限}，平均功率有限且非零。周期信号的平均功率可以在任意一个完整周期上计算：
@@ -290,7 +290,7 @@
 \end{example}
 
 \begin{pitfall}[能量信号和功率信号不是一对互补标签]
-  有些信号既没有有限非零能量，也没有有限非零平均功率。例如 $x(t)=t$ 的能量和平均功率都发散。判断时应回到\cref{eq:signal-energy,eq:average-signal-power}计算，不能因为它“不是能量信号”就直接断定它是功率信号。
+  有些信号既没有有限非零能量，也没有有限非零平均功率。例如 $x(t)=t$ 的能量和平均功率都发散。判断时应回到\cref{eq:signal-energy,eq:average-signal-power}计算，不能因为它“不是能量信号”就\red{直接断定它是功率信号}。
 \end{pitfall}
 
 \section{基本信号与信号分解}
@@ -300,7 +300,7 @@
 
 \begin{definition}[单位阶跃信号]
   \label{def:ct-unit-step}
-  连续时间单位阶跃信号（unit step signal）定义为
+  \keyterm{连续时间单位阶跃信号（unit step signal）}定义为
   \begin{equation}
     \stepfun(t)=
     \begin{cases}
@@ -319,7 +319,7 @@ $\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之�
   \[
     \stepfun(t)+\stepfun(-t)=1
   \]
-  并且与后续傅里叶分析中的对称处理一致。使用其他资料时，应先检查它在原点采用的约定。
+  并且与后续傅里叶分析中的对称处理一致。使用其他资料时，\blue{应先检查它在原点采用的约定}。
 \end{remark}
 
 两个移位阶跃之差可以\red{截取一个时间区间}。若 $t_1<t_2$，则
@@ -327,7 +327,7 @@ $\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之�
   x(t)=A\bigl[\stepfun(t-t_1)-\stepfun(t-t_2)\bigr]
   \label{eq:rectangular-pulse-with-steps}
 \end{equation}
-在区间 $(t_1,t_2)$ 内等于 $A$，在区间外等于零；两个端点的值由阶跃的零点约定决定。
+在区间 $(t_1,t_2)$ 内等于 $A$，在区间外等于零；\blue{两个端点的值由阶跃的零点约定决定}。
 
 \begin{example}[用阶跃信号表示有限时宽脉冲]
   一个从 $t=-2$ 开始、到 $t=3$ 结束、幅值为 $4$ 的脉冲可写成
@@ -338,14 +338,14 @@ $\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之�
 \end{example}
 
 \begin{pitfall}[只看阶跃函数前的正负号]
-  判断阶跃发生在哪里，应\red{令括号内的自变量等于零}。例如 $\stepfun(2t-4)$ 在 $t=2$ 跳变，而不是在 $t=4$。若还要判断跳变方向，再检查括号内自变量在跳变点两侧的正负。
+  判断阶跃发生在哪里，应\hl{令括号内的自变量等于零}。例如 $\stepfun(2t-4)$ 在 $t=2$ 跳变，而不是在 $t=4$。若还要判断跳变方向，再检查括号内自变量在跳变点两侧的正负。
 \end{pitfall}
 
 \subsection{连续时间单位冲激信号}
 
 \begin{definition}[单位冲激信号]
   \label{def:ct-unit-impulse}
-  连续时间单位冲激信号（unit impulse signal），也称狄拉克冲激（Dirac delta），记作 $\impulse(t)$。它在 $t\ne0$ 处为零，并具有单位面积：
+  \keyterm{连续时间单位冲激信号（unit impulse signal）}，也称狄拉克冲激（Dirac delta），记作 $\impulse(t)$。它在 $t\ne0$ 处为零，并具有单位面积：
   \begin{equation}
     \int_{-\infty}^{\infty}\impulse(t)\dd t=1.
     \label{eq:unit-area-impulse}
@@ -414,7 +414,7 @@ $\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之�
 更一般地，若信号在 $t=t_k$ 处发生大小为 $A_k$ 的跳变，那么它的广义导数中会出现 $A_k\impulse(t-t_k)$。向上跳变对应正冲激，向下跳变对应负冲激。
 
 \begin{pitfall}[把冲激当成“函数值为无穷大”]
-  写成“$\impulse(0)=\infty$”只能帮助形成粗略图像，不能作为计算规则。计算冲激时要看位置、权重和积分面积，并使用\red{抽样性质或尺度性质}；不要把 $t=0$ 代进一个所谓的函数值。
+  写成“$\impulse(0)=\infty$”只能帮助形成粗略图像，不能作为计算规则。计算冲激时要看位置、权重和积分面积，并使用\hl{抽样性质或尺度性质}；不要把 $t=0$ 代进一个所谓的函数值。
 \end{pitfall}
 
 \begin{example}[带尺度和位移的冲激]
@@ -430,7 +430,7 @@ $\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之�
 
 \begin{definition}[单位阶跃序列]
   \label{def:dt-unit-step}
-  离散时间单位阶跃序列定义为
+  \keyterm{离散时间单位阶跃序列}定义为
   \begin{equation}
     \stepfun[n]=
     \begin{cases}
@@ -443,7 +443,7 @@ $\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之�
 
 \begin{definition}[单位冲激序列]
   \label{def:dt-unit-impulse}
-  离散时间单位冲激序列（unit impulse sequence），也称单位样值序列或 Kronecker delta，定义为
+  \keyterm{离散时间单位冲激序列（unit impulse sequence）}，也称单位样值序列或 Kronecker delta，定义为
   \begin{equation}
     \impulse[n]=
     \begin{cases}
@@ -490,7 +490,7 @@ $\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之�
 \end{example}
 
 \begin{pitfall}[混用连续冲激与离散冲激的尺度规则]
-  连续时间冲激满足 $\impulse(at)=\impulse(t)/|a|$。离散序列的下标只能取整数，$\impulse[an]$ 会改变哪些下标被访问，\red{不能机械套用同一公式}。例如对任意非零整数 $a$，$\impulse[an]=\impulse[n]$，并不会多出 $1/|a|$。
+  连续时间冲激满足 $\impulse(at)=\impulse(t)/|a|$。离散序列的下标只能取整数，$\impulse[an]$ 会改变哪些下标被访问，\blue{不能机械套用同一公式}。例如对任意非零整数 $a$，$\impulse[an]=\impulse[n]$，并不会多出 $1/|a|$。
 \end{pitfall}
 
 \subsection{用单位冲激分解信号}
@@ -533,7 +533,7 @@ $\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之�
 
 \begin{definition}[抽样函数]
   \label{def:sampling-function}
-  抽样函数（sampling function）定义为
+  \keyterm{抽样函数（sampling function）}定义为
   \begin{equation}
     \Sa(t)=
     \begin{cases}
@@ -561,7 +561,7 @@ $\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之�
   \label{fig:sampling-functions}
 \end{figure}
 
-教材更常使用归一化抽样函数
+教材更常使用\keyterm{归一化抽样函数}
 \begin{equation}
   \sinc(t)=
   \begin{cases}
@@ -572,7 +572,7 @@ $\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之�
   \sinc(t)=\Sa(\pi t).
   \label{eq:normalized-sinc}
 \end{equation}
-$\sinc(t)$ 的非零零点位于整数处，而 $\Sa(t)$ 的非零零点位于 $k\pi$。看到 `sinc` 时，必须先确认作者是否把 $\pi$ 放进了函数定义。
+$\sinc(t)$ 的非零零点位于整数处，而 $\Sa(t)$ 的非零零点位于 $k\pi$。看到 `sinc` 时，\blue{必须先确认作者的约定}：$\pi$ 是否放进了函数定义。
 
 \begin{theorem}[抽样函数的常用性质]
   抽样函数满足
@@ -595,7 +595,7 @@ $\sinc(t)$ 的非零零点位于整数处，而 $\Sa(t)$ 的非零零点位于 $
   第一个广义积分条件收敛；第二个积分\red{说明抽样函数是能量信号}。
 \end{theorem}
 
-面积公式可用\red{引入参数后求导}计算。设 $a>0$，
+面积公式可用\hl{引入参数后求导}计算。设 $a>0$，
 \[
   I(a)=\int_0^\infty\e^{-at}\frac{\sin t}{t}\dd t.
 \]

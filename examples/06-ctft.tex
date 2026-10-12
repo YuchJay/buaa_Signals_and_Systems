@@ -43,7 +43,7 @@
     x(t)=\frac{\sin\bigl(2(t-2)\bigr)}{\pi(t-2)}.
     \label{eq:ex-ctft-phase-recovery-answer}
   \end{equation}
-  直接反演也可核对延迟的符号。$t\ne2$ 时，
+  直接反演也可\blue{核对延迟的符号}。$t\ne2$ 时，
   \[
     x(t)=\frac1{2\pi}\int_{-2}^{2}\e^{\iu\omega(t-2)}\dd\omega
       =\frac{\e^{2\iu(t-2)}-\e^{-2\iu(t-2)}}{2\pi\iu(t-2)}
@@ -60,7 +60,7 @@
 \end{solution}
 
 \begin{technique}
-  先把幅度和相位合成复频谱，再识别基本变换对。线性相位 $-\omega t_0$ 对应延迟 $t_0$；只看幅度谱无法确定信号的位置。
+  \hl{先把幅度和相位合成复频谱}，再识别基本变换对。线性相位 $-\omega t_0$ \red{对应延迟} $t_0$；\red{只看幅度谱无法确定信号的位置}。
   若通带改为 $|\omega|<1$，相位改为 $-\omega$，同样的方法给出
   $x(t)=\sin(t-1)/[\pi(t-1)]$。
 \end{technique}
@@ -96,7 +96,7 @@
       -\Sa^2\left(\frac{\omega}{2}\right)\e^{\iu3\omega}\\
     &=-2\iu\Sa^2\left(\frac{\omega}{2}\right)\sin(3\omega).
   \end{align*}
-  该结果为纯虚奇函数，与 $x(t)$ 是实奇信号相符。虚部见\cref{fig:ex-ctft-triangle-difference-answer}。
+  该结果为\red{纯虚奇函数}，与 $x(t)$ 是实奇信号相符。虚部见\cref{fig:ex-ctft-triangle-difference-answer}。
   \begin{figure}[H]
     \centering
     \includegraphics[width=0.72\textwidth]{06-ctft/examples/triangle-difference-answer.pdf}
@@ -106,7 +106,7 @@
 \end{solution}
 
 \begin{technique}
-  移位信号的线性组合宜先保留指数形式，最后再用欧拉公式合并。算完后检查时域与频域的奇偶性，可迅速发现移位符号写反的问题。
+  移位信号的线性组合宜\hl{先保留指数形式}，最后再用欧拉公式合并。算完后\blue{检查时域与频域的奇偶性}，可迅速发现\red{移位符号写反}的问题。
 \end{technique}
 
 \begin{workedexample}[由频谱乘积识别三角脉冲]
@@ -157,7 +157,7 @@
 \end{solution}
 
 \begin{technique}
-  看到频谱中出现平方，先尝试把它拆成两个已知频谱的乘积。逆变换随后变成时域卷积；矩形与矩形卷积可直接用重叠长度求出。
+  看到频谱中出现平方，先尝试把它\hl{拆成两个已知频谱的乘积}。\red{逆变换随后变成时域卷积}；矩形与矩形卷积\hl{可直接用重叠长度求出}。
 \end{technique}
 
 \begin{workedexample}[由输入和输出反求频率响应]
@@ -216,11 +216,11 @@
     h(t)=\frac1{2\pi}\operatorname{pv}\int_{-\infty}^{\infty}
       \frac{\tan(\omega/2)}{\omega}\cos(\omega t)\dd\omega.
   \]
-  这个 $H$ 只是由给定输入输出得到的形式频率响应；它含有奇数倍 $\pi$ 处的极点，不能据此把 $h(t)$ 当作普通函数，也不能据此断言系统因果或 BIBO 稳定。频谱在孤立点上的取值不影响通常的逆变换；若输入频谱在一段区间内恒为零，则那一频段的 $H$ 不能由这组输入输出确定。
+  这个 $H$ 只是由给定输入输出得到的形式频率响应；它含有奇数倍 $\pi$ 处的极点，不能据此把 $h(t)$ 当作普通函数，也\red{不能据此断言系统因果}或 BIBO 稳定。频谱在孤立点上的取值不影响通常的逆变换；若\blue{输入频谱在一段区间内恒为零}，则那一频段的 $H$ 不能由这组输入输出确定。
 \end{solution}
 
 \begin{technique}
-  先分别求 $X$、$Y$，再在输入频谱非零的频率上计算 $H=Y/X$。约分后还要检查零点：孤立零点可能对应可去间断点或极点，整段为零则表示该频带没有受到激励。
+  先分别求 $X$、$Y$，\hl{再在输入频谱非零的频率上计算} $H=Y/X$。\blue{约分后还要检查零点}：孤立零点可能对应可去间断点或极点，整段为零则表示\red{该频带没有受到激励}。
 \end{technique}
 
 % 来源：materials/chapter3.pdf，第 23--26 页。
@@ -271,7 +271,7 @@
 \end{solution}
 
 \begin{technique}
-  指数信号的卷积可先变成有理频谱的乘积。不同的一次因子用部分分式展开；相同因子合并成高次分母，再识别 $t^n\e^{-at}\stepfun(t)$。
+  指数信号的卷积可\hl{先变成有理频谱的乘积}。不同的一次因子用部分分式展开；\red{相同因子合并成高次分母}，再识别 $t^n\e^{-at}\stepfun(t)$。
 \end{technique}
 
 \begin{workedexample}[由指数输入和输出求单位冲激响应]
@@ -295,7 +295,7 @@
        -\frac{1}{3+\iu\omega}\right)
       =\frac{1}{(1+\iu\omega)(3+\iu\omega)}.
   \]
-  $X$ 在实频率轴上没有零点，故
+  $X$ \blue{在实频率轴上没有零点}，故
   \[
     H(\iu\omega)=\frac{2+\iu\omega}{(1+\iu\omega)(3+\iu\omega)}.
   \]
@@ -307,7 +307,7 @@
   \[
     h(t)=\frac12\bigl(\e^{-t}+\e^{-3t}\bigr)\stepfun(t),
   \]
-  如\cref{fig:ex-ctft-exponential-identification}。$h(t)$ 为因果且绝对可积的函数，该系统因而因果且 BIBO 稳定。
+  如\cref{fig:ex-ctft-exponential-identification}。$h(t)$ 为因果且绝对可积的函数，\red{该系统因而因果且 BIBO 稳定}。
   \begin{figure}[H]
     \centering
     \includegraphics[width=0.70\textwidth]{06-ctft/examples/exponential-identification-answer.pdf}
@@ -317,7 +317,7 @@
 \end{solution}
 
 \begin{technique}
-  先将输出频谱通分，再计算 $H=Y/X$，往往比直接对多个分式作除法更简洁。求出 $h$ 后，可用支撑区间和绝对可积性检查系统性质。
+  \hl{先将输出频谱通分}，再计算 $H=Y/X$，往往比直接对多个分式作除法更简洁。求出 $h$ 后，可\blue{用支撑区间和绝对可积性检查}系统性质。
 \end{technique}
 
 \begin{workedexample}[三个一次因子的部分分式展开]
@@ -364,7 +364,7 @@
 \end{solution}
 
 \begin{technique}
-  一次因子互异时，通分后代入各因子的零点即可求出系数。带正负号的指数之和可再适当因式分解，用于检查初值和符号。
+  \blue{一次因子互异时}，\hl{通分后代入各因子的零点}即可求出系数。带正负号的指数之和\red{可再适当因式分解}，用于检查初值和符号。
 \end{technique}
 
 \begin{workedexample}[用傅里叶变换求微分方程的零状态响应]
@@ -374,7 +374,7 @@
     \frac{\dd^2y(t)}{\dd t^2}+4\frac{\dd y(t)}{\dd t}+3y(t)
     =\frac{\dd x(t)}{\dd t}+2x(t).
   \]
-  系统初始静止。输入为 $x(t)=\e^{-t}\stepfun(t)$，求输出 $y(t)$。
+  系统初始松弛。输入为 $x(t)=\e^{-t}\stepfun(t)$，求输出 $y(t)$。
 \end{workedexample}
 
 \begin{solution}
@@ -417,7 +417,7 @@
     y(t)=\left(\frac14\e^{-t}+\frac12t\e^{-t}
                          -\frac14\e^{-3t}\right)\stepfun(t).
   \]
-  如\cref{fig:ex-ctft-differential-equation-response}，输出从零开始。虽然系统初始静止，但输入在零时刻跳变，$\dd x/\dd t$ 含有冲激，因此不应另行强加 $y'(0^+)=0$。
+  如\cref{fig:ex-ctft-differential-equation-response}，输出从零开始。虽然系统初始松弛，但\red{输入在零时刻跳变}，$\dd x/\dd t$ 含有冲激，因此不应另行强加 $y'(0^+)=0$。
   \begin{figure}[H]
     \centering
     \includegraphics[width=0.70\textwidth]{06-ctft/examples/differential-equation-answer.pdf}
@@ -427,7 +427,7 @@
 \end{solution}
 
 \begin{technique}
-  对初始静止系统，先将求导转换为频域乘以 $\iu\omega$，求出 $H$ 后再乘输入频谱。重根处的部分分式必须包含从一次到最高次的所有分母项；初值条件应区分跳变前与跳变后。
+  对初始松弛系统，\hl{先将求导转换为频域}乘以 $\iu\omega$，求出 $H$ 后再乘输入频谱。重根处的部分分式必须\red{包含从一次到最高次的所有分母项}；\blue{初值条件应区分跳变前与跳变后}。
 \end{technique}
 
 \begin{workedexample}[由两个移位三角频谱恢复信号]
@@ -488,7 +488,7 @@
 \end{solution}
 
 \begin{technique}
-  先把频谱移回原点并识别形状，再处理频移。三角频谱写成两个矩形的卷积后，逆变换就是两个 sinc 信号相乘；对称的正、负频移最终合成余弦。
+  \hl{先把频谱移回原点并识别形状}，再处理频移。三角频谱写成两个矩形的卷积后，逆变换就是\red{两个 sinc 信号相乘}；对称的\red{正、负频移最终合成余弦}。
 \end{technique}
 
 \begin{workedexample}[用能量归一化确定波形]
@@ -546,7 +546,7 @@
 \end{solution}
 
 \begin{technique}
-  先利用乘以 $\iu\omega$ 或 $(a+\iu\omega)$ 的关系定出频谱形状，能量条件只负责一个正比例常数。时域积分和帕塞瓦尔积分应给出同一个常数；两个结果不同时，先检查部分分式的符号和 $1/(2\pi)$。
+  先利用乘以 $\iu\omega$ 或 $(a+\iu\omega)$ 的关系\hl{定出频谱形状}，\red{能量条件只负责一个正比例常数}。时域积分和帕塞瓦尔积分\red{应给出同一个常数}；两个结果不同时，\blue{先检查部分分式的符号}和 $1/(2\pi)$。
 \end{technique}
 
 \begin{workedexample}[用一个周期的变换求三角波系数]
@@ -565,7 +565,7 @@
 \end{workedexample}
 
 \begin{solution}
-  取 $|t|<T/2$ 上的这一段，周期外置零，记为 $x_1$。它是峰值 $E$、底宽 $T$ 的三角脉冲。对照\cref{eq:ctft-triangle-pair}，其中的底宽参数取 $T/2$，
+  取 $|t|<T/2$ 上的这一段，\blue{周期外置零}，记为 $x_1$。它是峰值 $E$、底宽 $T$ 的三角脉冲。对照\cref{eq:ctft-triangle-pair}，其中的底宽参数取 $T/2$，
   \[
     X_1(\iu\omega)=\frac{ET}{2}\Sa^2\!\left(\frac{\omega T}{4}\right).
   \]
@@ -578,7 +578,7 @@
   \[
     A_k=\frac{2E\sin^2(k\pi/2)}{\pi^2 k^2}.
   \]
-  偶数 $k\neq 0$ 使 $\sin(k\pi/2)=0$，对应系数为零。信号为实偶函数，级数只含余弦：
+  偶数 $k\neq 0$ 使 $\sin(k\pi/2)=0$，\red{对应系数为零}。信号为实偶函数，级数只含余弦：
   \begin{equation}
     x(t)=\frac{E}{2}
     +\sum_{m=0}^{\infty}
@@ -597,7 +597,7 @@
 \end{solution}
 
 \begin{technique}
-  先划出一个周期并套已知的脉冲变换，再在 $k\omega_0$ 处取样、除以周期。偶函数只有余弦项。$\sin(k\pi/2)$ 在偶数 $k$ 为零，这些谐波可以在取样之前划掉。
+  \hl{先划出一个周期}并套已知的脉冲变换，再在 $k\omega_0$ 处取样、除以周期。\red{偶函数只有余弦项}。$\sin(k\pi/2)$ 在偶数 $k$ 为零，这些谐波可以\hl{在取样之前划掉}。
 \end{technique}
 
 \clearpage

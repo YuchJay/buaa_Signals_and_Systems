@@ -42,7 +42,7 @@
       \int_{\alpha-\pi}^{\alpha+\pi}G(\nu)\e^{\iu\nu n}\dd\nu
     =(-1)^n g[n].
   \]
-  积分长度保持 $2\pi$，可以使用任意基本区间。合并得到
+  积分长度保持 $2\pi$，\blue{可以使用任意基本区间}。合并得到
   \[
     x[n]=[1+(-1)^n]\bigl(s_{3\pi/8}[n]+s_{\pi/8}[n]\bigr).
   \]
@@ -56,7 +56,7 @@
       1,&n=0.
     \end{cases}}
   \]
-  全部奇数样值为零。对非零偶数 $n$，用
+  \red{全部奇数样值为零}。对非零偶数 $n$，用
   \[
     \sin\frac{3\pi n}{8}+\sin\frac{\pi n}{8}
     =2\sin\frac{\pi n}{4}\cos\frac{\pi n}{8}
@@ -72,7 +72,7 @@
 \end{solution}
 
 \begin{technique}
-  阶梯频谱可拆成不同半宽的矩形之和。反演时先选一个基本周期，确认该周期内包含几组副本；随后分别计算。若频谱每隔 $\pi$ 重复，积分中两份贡献在奇数 $n$ 处相消，可用来检查答案。零点样值另由频谱面积求出。
+  阶梯频谱可拆成不同半宽的矩形之和。反演时\hl{先选一个基本周期}，确认该周期内包含几组副本；随后分别计算。若频谱每隔 $\pi$ 重复，积分中两份贡献在奇数 $n$ 处相消，可用来检查答案。\hl{零点样值另由频谱面积求出}。
 \end{technique}
 
 \begin{workedexample}[高通矩形频谱的两种反演]
@@ -109,7 +109,7 @@
   \]
   这里频域恒为 $1$ 的背景对应 $\impulse[n]$。
 
-  另一种表示为 $X(\e^{\iu\omega})=R_{\pi/4}(\omega-\pi)$。矩形越过基本区间右边界的部分，按周期延拓出现在左边界附近。对逆变换作与上一题相同的换元，可得
+  另一种表示为 $X(\e^{\iu\omega})=R_{\pi/4}(\omega-\pi)$。矩形越过基本区间右边界的部分，\red{按周期延拓出现在左边界附近}。对逆变换作与上一题相同的换元，可得
   \[
     x[n]=(-1)^n s_{\pi/4}[n].
   \]
@@ -130,7 +130,7 @@
 \end{solution}
 
 \begin{technique}
-  高频通带跨过 $\pm\pi$ 边界时，可减去零频附近的低通矩形，也可把低通矩形平移半个周期。比较两个时域表达式时，分别检查 $n=0$ 与非零整数 $n$；只用正弦恒等式约分，容易漏掉零点的单位冲激项。
+  高频通带跨过 $\pm\pi$ 边界时，\hl{可减去零频附近的低通矩形}，也可\hl{把低通矩形平移半个周期}。比较两个时域表达式时，分别检查 $n=0$ 与非零整数 $n$；只用正弦恒等式约分，容易\red{漏掉零点的单位冲激项}。
 \end{technique}
 \begin{workedexample}[只有主值分式时的反演]
   \label{ex:dtft-principal-sum}
@@ -223,7 +223,7 @@
 \end{solution}
 
 \begin{technique}
-  先辨认阶跃频谱是否包含周期冲激。只有主值分式时，反演为 $u[n]-1/2$。与有限矩形卷积，可先按平移分界点逐个列乘积，再数正、负项归纳分段式；用左端平台、右端平台和 $n=0$ 三处核对，能检查是否误加了累加常数。
+  先\blue{辨认阶跃频谱是否包含周期冲激}。只有主值分式时，反演为 $u[n]-1/2$。与有限矩形卷积，可\hl{先按平移分界点逐个列乘积}，\hl{再数正、负项归纳分段式}；用左端平台、右端平台和 $n=0$ 三处核对，能检查是否\red{误加了累加常数}。
 \end{technique}
 
 \begin{workedexample}[指数输入通过指数脉冲响应的系统]
@@ -270,7 +270,7 @@
         -\frac{\beta}{\alpha-\beta}\beta^n\right)\stepfun[n]
       =\frac{\alpha^{n+1}-\beta^{n+1}}{\alpha-\beta}\stepfun[n]}.
   \]
-  各式在 $n<0$ 时直接规定为零，避免零参数的负次幂。
+  各式在 $n<0$ 时直接规定为零，\red{避免零参数的负次幂}。
 
   用时域前几个样值核对。两个序列在负下标都为零；翻转 $h[k]$ 为 $h[-k]$ 后，再平移为 $h[n-k]$，与 $x[k]$ 同下标配对：
   \begin{align*}
@@ -293,7 +293,7 @@
 \end{solution}
 
 \begin{technique}
-  先判断两个指数参数是否相等。不等时按一次因子拆部分分式；相等时使用多项式加权指数变换对。求得一般式后，再代入 $n=0,1,2$ 与直接卷积核对；含 $\alpha-\beta$ 的分母不能用于参数相等的情况。
+  \blue{先判断两个指数参数是否相等}。\hl{不等时按一次因子拆部分分式}；相等时\hl{使用多项式加权指数变换对}。求得一般式后，再代入 $n=0,1,2$ 与直接卷积核对；含 $\alpha-\beta$ 的分母\blue{不能用于参数相等的情况}。
 \end{technique}
 
 \begin{workedexample}[由一组输入输出反求系统]
@@ -327,14 +327,14 @@
               {(1-\tfrac12\e^{-\iu\omega})(1-\tfrac13\e^{-\iu\omega})}
       =\frac1{(1-\tfrac12\e^{-\iu\omega})(1-\tfrac13\e^{-\iu\omega})}.
   \]
-  因为 $X$ 对所有实数 $\omega$ 均非零，可在整个频率轴上相除：
+  因为 $X$ 对所有实数 $\omega$ 均非零，\blue{可在整个频率轴上相除}：
   \[
     H=\frac{Y}{X}
       =\frac1{1-\tfrac13\e^{-\iu\omega}},
     \qquad
     \boxed{h[n]=\left(\frac13\right)^n\stepfun[n]}.
   \]
-  所得系统因果且稳定。零点样值满足 $y[0]=x[0]h[0]=1$；下一点为
+  \red{所得系统因果且稳定}。零点样值满足 $y[0]=x[0]h[0]=1$；下一点为
   $y[1]=x[0]h[1]+x[1]h[0]=1/3+1/2=5/6$，与题给表达式一致。脉冲响应与幅度响应见\cref{fig:ex-dtft-identify-answer}。
   \begin{figure}[H]
     \centering
@@ -345,12 +345,12 @@
 \end{solution}
 
 \begin{technique}
-  反求系统时先化简 $Y$，再除以 $X$，并检查 $X$ 的零点。约分完成后才按已知变换对反演；最后用最前面的卷积样值核对，能发现部分分式的系数错误。
+  反求系统时先化简 $Y$，再除以 $X$，并检查 $X$ 的零点。\hl{约分完成后才按已知变换对反演}；最后用最前面的卷积样值核对，能发现\red{部分分式的系数错误}。
 \end{technique}
 
 \begin{workedexample}[差分方程与重复因子的反演]
   \label{ex:dtft-difference-equation}
-  因果、初始静止的离散 LTI 系统满足
+  因果、初始松弛的离散 LTI 系统满足
   \[
     y[n]-\frac16y[n-1]-\frac16y[n-2]=x[n].
   \]
@@ -379,7 +379,7 @@
     A+B=1,\qquad \frac A3-\frac B2=0
     \quad\Longrightarrow\quad A=\frac35,\quad B=\frac25.
   \]
-  因果条件选取右侧序列，两个参数的模都小于 $1$：
+  \blue{因果条件选取右侧序列}，两个参数的模都小于 $1$：
   \[
     \boxed{h[n]=\frac35\left(\frac12\right)^n\stepfun[n]
                     +\frac25\left(-\frac13\right)^n\stepfun[n]}.
@@ -410,7 +410,7 @@
     C=\frac35,\qquad E=\frac4{25},\qquad
     D=1-C-E=\frac6{25}.
   \]
-  这里代入的是多项式变量，$q=2,-3$ 用于求系数，不代表实频率点。
+  这里\red{代入的是多项式变量}，$q=2,-3$ 用于求系数，不代表实频率点。
 
   按\cref{eq:dtft-repeated-pole} 反演重复因子，再合并其余两项：
   \[
@@ -438,7 +438,7 @@
 \end{solution}
 
 \begin{technique}
-  先由差分方程得到 $H$，再求 $h$；输入确定后重新检查 $Y=HX$ 的因子次数。二次重复因子必须同时保留二次项和一次项。系数可在清除分母后的多项式恒等式中求出，反演后用原递推式检查 $n=0,1,2$，并确认负下标符合初始静止条件。
+  先由差分方程得到 $H$，再求 $h$；输入确定后重新检查 $Y=HX$ 的因子次数。二次重复因子必须\red{同时保留二次项和一次项}。系数可在\hl{清除分母后的多项式恒等式}中求出，反演后用原递推式检查 $n=0,1,2$，并\blue{确认负下标符合初始松弛条件}。
 \end{technique}
 \begin{workedexample}[窄 sinc 平方的三角频谱]
   \label{ex:dtft-sinc-square-narrow}
@@ -469,7 +469,7 @@
         0,&\pi/2<|\omega|\le\pi,
       \end{cases}}
   \]
-  再以 $2\pi$ 为周期延拓，见\cref{fig:ex-dtft-square-narrow-answer}。中央高度为 $1/4$；一个三角形的面积为 $\pi/8$，除以 $2\pi$ 后得 $1/16$，与 $z[0]$ 一致。零频值 $Z(1)=1/4$ 则是全部样值的和，与 $z[0]$ 不同。
+  再以 $2\pi$ 为周期延拓，见\cref{fig:ex-dtft-square-narrow-answer}。中央高度为 $1/4$；一个三角形的面积为 $\pi/8$，除以 $2\pi$ 后得 $1/16$，与 $z[0]$ 一致。零频值 $Z(1)=1/4$ \red{则是全部样值的和}，与 $z[0]$ 不同。
   \begin{figure}[H]
     \centering
     \includegraphics[width=0.90\textwidth]{07-dtft/examples/square-narrow-answer.pdf}
@@ -479,7 +479,7 @@
 \end{solution}
 
 \begin{technique}
-  矩形卷积先读重叠长度，确定三角形的底宽与峰值，再乘归一化系数。用频谱面积检查零点样值，用频谱零频值检查全序列求和；这两种核对不能混用。
+  \hl{矩形卷积先读重叠长度}，确定三角形的底宽与峰值，\hl{再乘归一化系数}。\blue{用频谱面积检查零点样值}，用频谱零频值检查全序列求和；\red{这两种核对不能混用}。
 \end{technique}
 
 \begin{workedexample}[低通与高通三角频谱的反演]
@@ -520,7 +520,7 @@
   \[
     \boxed{q[n]=(-1)^ng[n]=8(-1)^ns_{\pi/8}^2[n]},\qquad q[0]=\frac18.
   \]
-  两个序列的绝对值相同；高通序列的奇数样值反号，偶数样值不变，见\cref{fig:ex-dtft-triangle-answer}。低通谱的 $G(0)=1$，故 $\sum_n g[n]=1$；高通谱的 $Q(0)=0$，故 $\sum_n q[n]=0$，与交替符号相符。
+  \red{两个序列的绝对值相同}；高通序列的奇数样值反号，偶数样值不变，见\cref{fig:ex-dtft-triangle-answer}。低通谱的 $G(0)=1$，故 $\sum_n g[n]=1$；高通谱的 $Q(0)=0$，故 $\sum_n q[n]=0$，\red{与交替符号相符}。
   \begin{figure}[H]
     \centering
     \includegraphics[width=0.90\textwidth]{07-dtft/examples/triangle-answer.pdf}
@@ -530,7 +530,7 @@
 \end{solution}
 
 \begin{technique}
-  反演三角频谱时，先将半宽减半以构造两个矩形，再检查峰值所需的比例系数。高通图若是低通图在周期边界处的平移，可直接用 $(-1)^n$，并单独核对 $n=0$。
+  反演三角频谱时，\hl{先将半宽减半以构造两个矩形}，\blue{再检查峰值所需的比例系数}。高通图\blue{若是低通图在周期边界处的平移}，可直接用 $(-1)^n$，并单独核对 $n=0$。
 \end{technique}
 
 \begin{workedexample}[宽 sinc 平方与周期重叠]
@@ -563,7 +563,7 @@
         \displaystyle\frac12,&\pi/2<|\omega|\le\pi.
       \end{cases}}
   \]
-  外侧平台来自重叠，不能画成零。\cref{fig:ex-dtft-square-wide-folding} 显示三份普通三角形及其相加结果。
+  \red{外侧平台来自重叠}，\blue{不能画成零}。\cref{fig:ex-dtft-square-wide-folding} 显示三份普通三角形及其相加结果。
   \begin{figure}[H]
     \centering
     \includegraphics[width=0.92\textwidth]{07-dtft/examples/square-wide-folding.pdf}
@@ -592,7 +592,7 @@
 \end{solution}
 
 \begin{technique}
-  周期卷积先画普通卷积，再按 $2\pi$ 平移，逐段确定进入主周期的副本。若能化简整数位置上的正弦，也要在化简后检查零点；非零位置相同的两序列，仍可能相差一个单位冲激。
+  \hl{周期卷积先画普通卷积}，再按 $2\pi$ 平移，\hl{逐段确定进入主周期的副本}。若能化简整数位置上的正弦，也要\blue{在化简后检查零点}；非零位置相同的两序列，\red{仍可能相差一个单位冲激}。
 \end{technique}
 
 \begin{workedexample}[由频谱虚部、单侧条件与能量恢复序列]
@@ -625,7 +625,7 @@
       =\frac12\impulse[n+1]-\frac12\impulse[n-1]
         -\frac12\impulse[n+2]+\frac12\impulse[n-2].
   \]
-  先画出正负下标各点，再用单侧条件恢复，见\cref{fig:ex-dtft-recovery-alignment}。对 $n<0$，$x[-n]=0$，故 $x[n]=2x_{\mathrm o}[n]$；于是
+  \hl{先画出正负下标各点}，再用单侧条件恢复，见\cref{fig:ex-dtft-recovery-alignment}。对 $n<0$，$x[-n]=0$，故 $x[n]=2x_{\mathrm o}[n]$；于是
   \[
     x[-2]=-1,\qquad x[-1]=1,\qquad x[n]=0\quad(n\le-3).
   \]
@@ -665,6 +665,6 @@
 \end{solution}
 
 \begin{technique}
-  先确认实序列条件，再将 $\iu\Im X$ 拆成复指数以反演奇分量。单侧条件决定一侧样值与奇分量之间的倍数，零点由能量补足；若没有 $x[0]>0$，本题只能确定 $x[0]=\pm1$。
+  \blue{先确认实序列条件}，再将 $\iu\Im X$ \hl{拆成复指数以反演奇分量}。单侧条件决定一侧样值与奇分量之间的倍数，\red{零点由能量补足}；若没有 $x[0]>0$，本题只能确定 $x[0]=\pm1$。
 \end{technique}
 \endgroup

@@ -7,7 +7,7 @@
 \section{用微分方程描述因果 LTI 系统}
 \label{sec:ct-differential-equation}
 
-第四章从单位冲激响应 $h(t)$ 出发，把系统输出写成卷积积分。这条路径要求先求出 $h(t)$，而电路和力学系统中的元件关系往往直接给出另一类等式：输入、输出及其各阶导数之间的关系。本节把这类方程讲清楚，包括它为什么不能单独确定一个系统、补上什么条件才对应因果 LTI 系统，以及怎样一步步算出响应。后面几节引入拉普拉斯变换后，同样的响应会有更省力的算法，但时域解法仍是判断适用条件的基础。
+第四章把 LTI 系统的输出写成 $y=x\conv h$。电路和力学系统的元件关系则常直接给出输入、输出及其导数之间的方程。解这些方程时，除输入外还要知道起始状态。本节先用时域方法求响应；后面引入\keyterm{拉普拉斯变换（Laplace transform）}，把同一方程化为代数式，再连接系统函数、积分器方框图和初始条件。
 
 \subsection{微分方程给的是隐式关系}
 
@@ -16,7 +16,7 @@
   \frac{\dd y(t)}{\dd t}+ay(t)=bx(t),
   \label{eq:ct-first-order-generic}
 \end{equation}
-其中 $a=1/(RC)$，$b$ 由电源接法确定。同样的形式也出现在力学系统中：取车辆速度 $y(t)$、驱动力 $x(t)$，摩擦力使方程呈这个形状。
+其中 $a=b=1/(RC)$。同样的形式也出现在力学系统中：若质量为 $m$、黏性阻力系数为 $c$，取速度 $y(t)$、驱动力 $x(t)$，则 $my'+cy=x$，即 $a=c/m$、$b=1/m$。
 
 \cref{eq:ct-first-order-generic} 是\red{隐式（implicit）描述}：它约束输入与输出之间的关系，却没有把 $y(t)$ 写成 $x(t)$ 的显式表达式。要得到显式表达式必须解方程，而解方程还需要方程以外的信息。
 
@@ -37,41 +37,49 @@
     \quad
     y(0)=2\Rightarrow y(t)=1+\e^{-t}.
   \]
-  三条曲线满足同一个微分方程，却是三个不同的输入输出关系。\red{微分方程本身不构成一个确定的系统}。
+  \cref{fig:laplace-initial-condition-responses} 中三条曲线满足同一个微分方程，起始值却不同。\red{还须指定辅助条件}，才能从这组解中选出确定的响应。
 \end{example}
 
-\subsection{初始静止：因果 LTI 对辅助条件的要求}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.76\linewidth]{09-laplace-transform/initial-condition-responses}
+  \caption{同一输入、同一微分方程在三种起始状态下的响应。}
+  \label{fig:laplace-initial-condition-responses}
+\end{figure}
 
-要选定一个系统，必须补上辅助条件（auxiliary conditions）。初始储能不为零时，即使输入为零，输出也会因为储能释放而存在一段响应，整个系统也不再是线性的。讨论由微分方程描述的因果 LTI 系统时，统一采用初始静止（initial rest）条件。
+\subsection{初始松弛：因果 LTI 对辅助条件的要求}
 
-\begin{definition}[初始静止]
+要选定输入到输出的映射，必须补上\keyterm{辅助条件（auxiliary conditions）}。\blue{初始储能不为零时}，即使输入为零，也可能有储能释放引起的输出。把这组非零初值固定后，输入到总输出的映射通常不满足线性的零输入检验；系统的动力学方程仍然可以是线性的。讨论仅由输入引起的因果 LTI 响应时，采用\keyterm{初始松弛（initial rest）}条件。
+
+\begin{definition}[初始松弛]
   \label{def:ct-initial-rest}
-  若输入满足 $x(t)=0$（$t\leq t_0$），则输出也满足 $y(t)=0$（$t\leq t_0$）。
+  若输入满足 $x(t)=0$（$t<t_0$），则输出也满足 $y(t)=0$（$t<t_0$）。
 \end{definition}
 
-它\red{不等于让零时刻取值取零}，而是把归零的时刻跟着输入走。输入从 $t_0$ 起才非零，就以 $t_0$ 作为起算点。物理含义是：接入电源之前电路里没有任何储能；今天做实验和明天做实验，只差一个时间平移。
+输入从 $t_0$ 起才非零，就以 $t_0$ 作为起算点；起算时刻可以随输入平移。物理上，这对应接入电源之前没有初始储能。
 
-对 $N$ 阶方程，初始静止落在 $N$ 个初始条件上。一般的 $N$ 阶线性常系数微分方程（linear constant-coefficient differential equation）写作
+对 $N$ 阶方程，初始松弛首先要求系统的 $N$ 个独立状态为零。一般的 $N$ 阶线性常系数微分方程（linear constant-coefficient differential equation）写作
 \begin{equation}
   \sum_{k=0}^{N}a_k\frac{\dd^k y(t)}{\dd t^k}
   =\sum_{k=0}^{M}b_k\frac{\dd^k x(t)}{\dd t^k},
   \label{eq:ct-lccde}
 \end{equation}
-输出的最高求导阶数 $N$ 称为方程的阶。若 $x(t)=0$（$t\leq t_0$），初始静止要求
+其中 $a_N\ne0$，输出的最高求导阶数 $N$ 称为方程的阶。初始松弛时，启动前输出及其导数为零：
 \begin{equation}
-  y(t_0)=\left.\frac{\dd y(t)}{\dd t}\right|_{t=t_0}
-  =\cdots=\left.\frac{\dd^{N-1}y(t)}{\dd t^{N-1}}\right|_{t=t_0}=0.
+  y(t_0^-)=y'(t_0^-)=\cdots=y^{(N-1)}(t_0^-)=0.
   \label{eq:ct-initial-rest-conditions}
 \end{equation}
-在这组条件下，\cref{eq:ct-lccde} 描述的系统是\red{因果且线性时不变}的：输出只依赖输入当前与过去的取值，初始状态固定为零，输入叠加或平移时解按同样方式叠加或平移。
+若\blue{方程右端没有奇异项}，这些量在启动处连续，便也有 $y(t_0^+)=\cdots=y^{(N-1)}(t_0^+)=0$。右端若含冲激或冲激导数，则须比较两侧的奇异项，或跨越 $t_0$ 积分，先求跳变量。即使 $x$ 本身只是阶跃，右端的 $x'$ 也会产生冲激；\red{启动前后初值须分清}，本章末的\cref{eg:laplace-nonzero-initial-state} 会具体计算这种情况。
+
+选取初始松弛的因果解后，\cref{eq:ct-lccde} 描述因果 LTI 系统：输出由当前及过去的输入确定；方程线性且系数恒定，输入叠加或平移时，解随之叠加或平移。含冲激的输入按广义函数解释，仍沿用这一求解关系。
 
 \begin{pitfall}[把零状态响应与全响应混为一谈]
-  按初始静止解出的响应是零状态响应，即假设初始储能为零时的输出。题目若另外给出 $y(0^-)$、$y'(0^-)$ 之类的初始条件，总响应还要加上零输入响应，\red{不能直接写成 $Y(s)=H(s)X(s)$}。后续各节只讨论零状态响应；遇到带初始条件的题目，先拆成两项分别计算。
+  按初始松弛解出的响应是零状态响应，即假设初始储能为零时的输出。题目若另外给出 $y(0^-)$、$y'(0^-)$ 之类的初始条件，\red{总响应还要加上零输入响应}，不能直接写成 $Y(s)=H(s)X(s)$。后文会先用双边变换求零状态响应，再用单边变换保留初始项；遇到带初始条件的题目，先拆成两项分别计算。
 \end{pitfall}
 
 \subsection{时域求解的一般形式}
 
-初始静止下求解\cref{eq:ct-lccde}，解仍由两部分相加而成：
+初始松弛下求解\cref{eq:ct-lccde}，解仍由两部分相加而成：
 \[
   y(t)=y_{\mathrm h}(t)+y_{\mathrm p}(t).
 \]
@@ -79,20 +87,116 @@ $y_{\mathrm h}(t)$ 是齐次解，即右端取零后方程
 \[
   \sum_{k=0}^{N}a_k\frac{\dd^k y(t)}{\dd t^k}=0
 \]
-的通解，对应系统的自然响应；$y_{\mathrm p}(t)$ 是一个特解，形式通常与输入一致。方程的阶数决定齐次解中待定常数的个数。
+的通解，其指数形式由系统的特征根决定；$y_{\mathrm p}(t)$ 是一个特解，形式通常按右端函数选取。方程的阶数决定齐次解中待定常数的个数。
 
 手算按下面的顺序进行：
 
 \begin{enumerate}
-  \item 写出特征方程 $\sum_{k=0}^{N}a_ks^k=0$，由特征根写齐次解。单实根 $s$ 给出 $\e^{st}$；$r$ 重根给出 $t^{m}\e^{st}$（$m=0,\ldots,r-1$）；共轭复根 $s=\sigma\pm\iu\omega$ 给出 $\e^{\sigma t}\cos\omega t$ 与 $\e^{\sigma t}\sin\omega t$。
-  \item 按输入形式设特解。输入为 $t^{m}$ 时设同次多项式，输入为 $\e^{st}$ 时设 $Y\e^{st}$ 并代回求 $Y$。\red{特解与齐次解中某项重合时须乘 $t$}，否则代回后左边为零，系数定不出来。
-  \item 代入初始静止条件，定出齐次解中的待定常数。
-  \item 回代验证。把解及其导数代入原方程，检查在 $t=0^+$ 附近是否成立。
+  \item 写出特征方程 $\sum_{k=0}^{N}a_ks^k=0$，\hl{由特征根写齐次解}。单实根 $s$ 给出 $\e^{st}$；$r$ 重根给出 $t^{m}\e^{st}$（$m=0,\ldots,r-1$）；共轭复根 $s=\sigma\pm\iu\omega$ 给出 $\e^{\sigma t}\cos\omega t$ 与 $\e^{\sigma t}\sin\omega t$。
+  \item \hl{按右端形式设特解}。右端为 $t^{m}$ 时设同次多项式，为 $\e^{\lambda t}$ 时先设 $C\e^{\lambda t}$。若 $\lambda$ 是特征方程的 $r$ 重根，须改设 $Ct^r\e^{\lambda t}$；单重根对应乘一个 $t$。多项式或正弦形式重合时也须按相应重数补乘 $t$ 的幂。
+  \item 根据启动处的连续或跳变条件，求出右侧初值，再定出齐次解中的待定常数。
+  \item 把解代回 $t>t_0$ 的方程，并检查初值；有奇异输入时还须核对启动处的跳变关系。
 \end{enumerate}
 
 \begin{remark}[与时域卷积的关系]
-  初始静止下求出的响应既是零状态响应，按第四章的结论它又等于 $x(t)\conv h(t)$。由\cref{eq:ct-lccde} 解出的 $h(t)$ 就是该系统的单位冲激响应；只要能解出 $h(t)$，任意输入都可由卷积得到，同一个系统的不同输入只需重复最后一步卷积。
+  初始松弛下求出的响应既是零状态响应，按第四章的结论它又等于 $x(t)\conv h(t)$。由\cref{eq:ct-lccde} 解出的 $h(t)$ 就是该系统的单位冲激响应；只要能解出 $h(t)$，任意输入都可由卷积得到，同一个系统的不同输入只需重复最后一步卷积。
 \end{remark}
+
+\begin{example}[一阶方程的完整时域解法]
+\label{eg:ct-first-order-time-domain}
+  考虑零状态系统
+  \[
+    y'(t)+2y(t)=\e^{-3t}\stepfun(t).
+  \]
+  对 $t>0$，右端为 $\e^{-3t}$。先解齐次方程
+  \[
+    y_{\mathrm h}'(t)+2y_{\mathrm h}(t)=0,
+    \qquad
+    y_{\mathrm h}(t)=A\e^{-2t}.
+  \]
+  输入是 $\e^{-3t}$，设特解为 $y_{\mathrm p}(t)=B\e^{-3t}$。代回原方程：
+  \[
+    (-3B+2B)\e^{-3t}=\e^{-3t},
+    \qquad B=-1.
+  \]
+  因而
+  \[
+    y(t)=A\e^{-2t}-\e^{-3t}.
+  \]
+  本题右端没有冲激，$y$ 在 $0$ 处连续。零状态条件给出 $y(0^+)=0$，于是 $A=1$。最终
+  \[
+    \boxed{y(t)=\bigl(\e^{-2t}-\e^{-3t}\bigr)\stepfun(t)}.
+  \]
+  \cref{fig:laplace-first-order-time-domain} 同时画出响应和两项指数：启动时两项抵消，此后均衰减到零。
+\end{example}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.82\linewidth]{09-laplace-transform/examples/first-order-answer}
+  \caption{一阶微分方程 $\smash{y'+2y=\e^{-3t}\stepfun(t)}$ 的时域响应及其组成项。}
+  \label{fig:laplace-first-order-time-domain}
+\end{figure}
+
+\begin{pitfall}[齐次解不等于零输入响应]
+  上题初始储能为零，整个 $\e^{-2t}-\e^{-3t}$ 都是零状态响应；其中的齐次项 $\e^{-2t}$ 用于满足启动条件，不能把它单独算作零输入响应。若改为 $y(0^-)=2$，则对 $t\geq0$，
+  \[
+    y_{\mathrm{zi}}(t)=2\e^{-2t},\qquad
+    y_{\mathrm{zs}}(t)=\e^{-2t}-\e^{-3t},\qquad
+    y(t)=3\e^{-2t}-\e^{-3t}.
+  \]
+  \red{两种分解的依据不同}：齐次解与特解按方程形式划分，零输入与零状态响应按初始储能和外部输入划分。后文的单边变换直接保留这两种来源。
+\end{pitfall}
+
+\begin{example}[二阶方程中的重合特解]
+\label{eg:ct-second-order-time-domain}
+  考虑初始松弛的二阶系统
+  \[
+    y''(t)+3y'(t)+2y(t)=\e^{-t}\stepfun(t),
+    \qquad y(0^+)=y'(0^+)=0.
+  \]
+  对 $t>0$，特征方程为
+  \[
+    r^2+3r+2=(r+1)(r+2)=0,
+  \]
+  所以齐次解为
+  \[
+    y_{\mathrm h}(t)=A\e^{-t}+B\e^{-2t}.
+  \]
+  输入指数 $\e^{-t}$ 已经出现在齐次解中，特解必须乘一个 $t$：
+  \[
+    y_{\mathrm p}(t)=Ct\e^{-t}.
+  \]
+  逐项代入，
+  \[
+    y_{\mathrm p}'=C(1-t)\e^{-t},\qquad
+    y_{\mathrm p}''=C(t-2)\e^{-t},
+  \]
+  从而
+  \[
+    y_{\mathrm p}''+3y_{\mathrm p}'+2y_{\mathrm p}
+    =C\e^{-t}.
+  \]
+  因此 $C=1$，总解为
+  \[
+    y(t)=A\e^{-t}+B\e^{-2t}+t\e^{-t}.
+  \]
+  代入初始条件：
+  \[
+    A+B=0,\qquad -A-2B+1=0,
+  \]
+  得到 $A=-1$、$B=1$。所以
+  \[
+    \boxed{y(t)=\bigl(t\e^{-t}-\e^{-t}+\e^{-2t}\bigr)\stepfun(t)}.
+  \]
+  \cref{fig:laplace-second-order-time-domain} 中的 $t\e^{-t}$ 来自输入指数与特征根重合。后文的\cref{eg:laplace-repeated-pole-response} 用拉氏变换求解同一题，二重极点会给出相同的时间因子。
+\end{example}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.82\linewidth]{09-laplace-transform/repeated-pole-response}
+  \caption{二阶重合特解题的响应分解。}
+  \label{fig:laplace-second-order-time-domain}
+\end{figure}
 
 \section{双边拉普拉斯变换与收敛域}
 \label{sec:laplace-definition-roc}
@@ -109,14 +213,14 @@ $y_{\mathrm h}(t)$ 是齐次解，即右端取零后方程
   \qquad s=\sigma+\iu\omega.
   \label{eq:laplace-definition}
 \end{equation}
-这里 $\sigma$ 与 $\omega$ 都是实数，$s$ 是复频率。积分绝对收敛的 $s$ 值组成 $X(s)$ 的收敛域（region of convergence, ROC）：
+这里 $\sigma$ 与 $\omega$ 都是实数，$s$ 是复频率。\blue{积分绝对收敛}的 $s$ 值组成 $X(s)$ 的\keyterm{收敛域（region of convergence, ROC）}：
 \begin{equation}
   \mathcal R_X
   =\left\{s:\int_{-\infty}^{\infty}
       \left|x(t)\e^{-st}\right|\dd t<\infty\right\}.
   \label{eq:laplace-roc-definition}
 \end{equation}
-求收敛域时，先写 $s=\sigma+\iu\omega$，再检查指数加权后的积分是否有限。
+求收敛域时，先写 $s=\sigma+\iu\omega$，再\hl{代入权重，判断积分收敛}。
 
 固定 $\sigma$ 后，
 \begin{equation}
@@ -126,7 +230,7 @@ $y_{\mathrm h}(t)$ 是齐次解，即右端取零后方程
   =\FT\{x(t)\e^{-\sigma t}\}.
   \label{eq:laplace-fourier-link}
 \end{equation}
-因此，拉普拉斯变换是信号乘以实指数权重后的傅里叶变换。$\sigma>0$ 对正时间部分增加衰减，$\sigma<0$ 则增加增长；合适的 $\sigma$ 可以使原本不收敛的傅里叶积分收敛。若虚轴 $\sigma=0$ 位于 ROC 内，沿虚轴取值就得到\cref{sec:ctft-definition} 中的连续时间傅里叶变换。
+因此，拉普拉斯变换是\red{信号乘以实指数权重后的傅里叶变换}。$\sigma>0$ 对正时间部分增加衰减，$\sigma<0$ 则增加增长；合适的 $\sigma$ 可以使原本不收敛的傅里叶积分收敛。若虚轴 $\sigma=0$ 位于 ROC 内，沿虚轴取值就得到\cref{sec:ctft-definition} 中的连续时间傅里叶变换。
 
 在适用傅里叶反演公式时，取任意位于 ROC 内的实数 $\sigma$，有
 \begin{align}
@@ -140,7 +244,7 @@ $y_{\mathrm h}(t)$ 是齐次解，即右端取零后方程
     \int_{\sigma-\iu\infty}^{\sigma+\iu\infty}X(s)\e^{st}\dd s.
   \label{eq:laplace-inverse}
 \end{align}
-反演积分沿 $s$ 平面中实部固定为 $\sigma$ 的竖直直线进行；这条线必须选在 ROC 内。虚轴不在 ROC 中时，$X(\iu\omega)$ 不能直接当作该信号的傅里叶变换。
+反演积分沿 $s$ 平面中实部固定为 $\sigma$ 的竖直直线进行；\red{这条线必须选在 ROC 内}。虚轴不在 ROC 中时，$X(\iu\omega)$ 不能直接当作该信号的傅里叶变换。
 
 \subsection{单边指数与双边指数}
 \label{subsec:laplace-exponential-examples}
@@ -152,7 +256,7 @@ $y_{\mathrm h}(t)$ 是齐次解，即右端取零后方程
    =\frac{1}{s+a}, \qquad \operatorname{Re}\{s\}>-a.
   \label{eq:laplace-right-exponential}
 \end{align}
-当 $\operatorname{Re}\{s\}>-a$ 时，被积函数随 $t\to+\infty$ 衰减；等号处不衰减，积分不收敛。对左边信号 $x(t)=-\e^{-at}\stepfun(-t)$，
+当 $\operatorname{Re}\{s\}>-a$ 时，被积函数随 $t\to+\infty$ 衰减；\blue{等号处不衰减}，积分不收敛。对左边信号 $x(t)=-\e^{-at}\stepfun(-t)$，
 \begin{align}
   X(s)
   &=-\int_{-\infty}^{0}\e^{-(s+a)t}\dd t
@@ -170,7 +274,7 @@ $y_{\mathrm h}(t)$ 是齐次解，即右端取零后方程
   \[
     X(s)=\frac{1}{s+1}-\frac{1}{s+2}.
   \]
-  两个极点位于 $s=-1$ 和 $s=-2$。按 ROC 相对于极点的位置选择左右边指数项，可得到三种对应关系：
+  两个极点位于 $s=-1$ 和 $s=-2$。按 ROC 相对于极点的位置\hl{选择左右边指数项}，可得到三种对应关系：
   \begin{align*}
     \operatorname{Re}\{s\}>-1:\quad
       &x(t)=\bigl(\e^{-t}-\e^{-2t}\bigr)\stepfun(t),\\
@@ -216,7 +320,7 @@ ROC 是两项收敛半平面的交集。它落在两条竖直边界之间，说�
 \[
   \int_{-\infty}^{\infty}|h(t)|\dd t<\infty.
 \]
-当 $X(s)=H(s)$ 是冲激响应 $h(t)$ 的拉普拉斯变换时，本章按绝对收敛定义 ROC，因此虚轴属于 ROC 等价于 $h(t)$ 绝对可积，也就等价于系统 BIBO 稳定。于是\red{稳定系统的 ROC 包含虚轴}；虚轴不在 ROC 中时，系统不稳定。
+\blue{检查虚轴是否在 ROC 内}。当 $X(s)=H(s)$ 是冲激响应 $h(t)$ 的拉普拉斯变换时，本章按绝对收敛定义 ROC，因此虚轴属于 ROC 等价于 $h(t)$ 绝对可积，也就等价于系统 BIBO 稳定。于是\red{稳定系统的 ROC 包含虚轴}；虚轴不在 ROC 中时，系统不稳定。
 
 \section{常见的拉氏变换与基本性质}
 \label{sec:laplace-common-pairs-properties}
@@ -224,7 +328,7 @@ ROC 是两项收敛半平面的交集。它落在两条竖直边界之间，说�
 \subsection{常见的拉氏变换}
 \label{subsec:laplace-common-pairs}
 
-以下均按双边拉普拉斯变换定义列出变换对。信号表达式与收敛域要配套使用；同一个代数式若对应不同 ROC，可能代表不同信号。令 $a\in\mathbb{R}$、$\omega_0>0$，且 $n=1,2,\ldots$：
+以下均按双边拉普拉斯变换定义列出变换对。\blue{信号表达式与收敛域要配套使用}；同一个代数式若对应不同 ROC，可能代表不同信号。令 $a\in\mathbb{R}$、$\omega_0>0$，且 $n=1,2,\ldots$：
 \begin{align}
   \e^{-at}\stepfun(t)
     &\laplacepair \frac{1}{s+a},
@@ -366,7 +470,7 @@ ROC 是两项收敛半平面的交集。它落在两条竖直边界之间，说�
     H(s)=\frac{1}{(s+1)(s-1)}
         =\frac12\frac{1}{s-1}-\frac12\frac{1}{s+1}.
   \]
-  若系统因果，ROC 为 $\operatorname{Re}\{s\}>1$，对应
+  \hl{按 ROC 分三段}取反变换：若系统因果，ROC 为 $\operatorname{Re}\{s\}>1$，对应
   \[
     h(t)=\frac12\bigl(\e^t-\e^{-t}\bigr)\stepfun(t).
   \]
@@ -383,7 +487,7 @@ ROC 是两项收敛半平面的交集。它落在两条竖直边界之间，说�
 \subsection{初值与终值定理}
 \label{subsec:laplace-initial-final-value}
 
-初值定理适用于因果信号 $x(t)$。设 $x(0^+)$ 有限，$x(t)$ 在 $t>0$ 分段光滑且为指数阶，并且原点没有冲激或更高阶奇异项。若 $X(s)$ 为其拉普拉斯变换，则
+\keyterm{初值定理}适用于因果信号 $x(t)$。设 $x(0^+)$ 有限，$x(t)$ 在 $t>0$ 分段光滑且为指数阶，并且原点没有冲激或更高阶奇异项。若 $X(s)$ 为其拉普拉斯变换，则
 \begin{equation}
   x(0^+)=\lim_{s\to\infty}sX(s).
   \label{eq:laplace-initial-value-theorem}
@@ -408,13 +512,13 @@ ROC 是两项收敛半平面的交集。它落在两条竖直边界之间，说�
 \]
 最后一个积分在 $s\to+\infty$ 时趋于零。
 
-若因果信号存在有限终值，并满足终值定理的收敛条件，则
+若因果信号存在\blue{有限终值}，并满足\keyterm{终值定理}的收敛条件，则
 \begin{equation}
   x(\infty)=\lim_{t\to\infty}x(t)
   =\lim_{s\to0}sX(s).
   \label{eq:laplace-final-value-theorem}
 \end{equation}
-对有理变换，一个常用的充分条件是 $sX(s)$ 的所有极点都严格位于左半平面。若 $sX(s)$ 在虚轴上或右半平面有极点，不能直接套用该式。
+对有理变换，一个常用的充分条件是 $sX(s)$ 的所有极点都\blue{严格位于左半平面}。若 $sX(s)$ 在虚轴上或右半平面有极点，不能直接套用该式。
 
 终值定理也可从时间微分看出。对因果信号作部分积分，
 \begin{align}
@@ -443,7 +547,7 @@ $\lim_{s\to0}sX(s)=x(\infty)$。对有理变换，前述极点条件是检查终
 \begin{equation}
   x(t)=\sum_{n=0}^{\infty}p(t-nT).
 \end{equation}
-每向右平移 $nT$，变换乘以 $\e^{-nsT}$。在几何级数收敛且与 $P(s)$ 的 ROC 相交时，
+每向右平移 $nT$，变换乘以 $\e^{-nsT}$。在\blue{几何级数收敛}且与 $P(s)$ 的 ROC 相交时，
 \begin{align}
   X(s)
   &=P(s)\sum_{n=0}^{\infty}\e^{-nsT}
@@ -506,7 +610,7 @@ Y(s)
 \longrightarrow
 y(t).
 \]
-其中，先由方程确定\red{系统本身的输入输出关系}，再代入具体输入求响应；初始静止时使用双边变换求零状态响应，题目若给出非零初始条件，则改用单边变换\red{保留初始状态项}。
+其中，先由方程确定\red{系统本身的输入输出关系}，再代入具体输入求响应；初始松弛时使用双边变换求零状态响应，题目若给出非零初始条件，则改用单边变换\red{保留初始状态项}。
 
 \subsection{由微分方程得到系统函数}
 \label{subsec:laplace-system-function}
@@ -518,14 +622,14 @@ y(t).
   \sum_{k=0}^{M}b_k\frac{\dd^k x(t)}{\dd t^k}.
   \label{eq:laplace-system-function-ode}
 \end{equation}
-在初始静止条件下，双边拉普拉斯变换给出
+在初始松弛条件下，双边拉普拉斯变换给出
 \[
   A(s)Y(s)=B(s)X(s),
   \qquad
   A(s)=\sum_{k=0}^{N}a_ks^k,\quad
   B(s)=\sum_{k=0}^{M}b_ks^k.
 \]
-于是零状态系统函数为
+于是\keyterm{零状态系统函数}为
 \begin{equation}
   H(s)=\frac{Y(s)}{X(s)}
   =\frac{B(s)}{A(s)}
@@ -533,8 +637,8 @@ y(t).
   {\displaystyle\sum_{k=0}^{N}a_ks^k}.
   \label{eq:laplace-system-function-ratio}
 \end{equation}
-这里的 $H(s)$ 只描述系统本身，不包含某一道题的具体输入。分母决定自然响应的指数形式，分子决定输入经过系统后的微分组合；\red{初始静止是直接取比值的前提}。
-系统函数还须连同收敛域解释；对因果有理系统，收敛域取最右极点右侧。
+这里的 $H(s)$ 描述零状态传递关系，不包含具体输入。约分前的分母对应方程的特征多项式，分子对应输入的微分组合；约分可能消去某些模态，故系统函数不能恢复全部内部状态。\red{初始松弛是直接取比值的前提}。
+系统函数还须\blue{连同收敛域解释}；对因果有理系统，收敛域取最右极点右侧。
 
 \begin{example}[由微分方程求系统函数]
 \label{eg:laplace-ode-to-system-function}
@@ -542,7 +646,7 @@ y(t).
   \[
     y''(t)+4y'(t)+3y(t)=x'(t)+2x(t).
   \]
-  初始静止时，
+  初始松弛时，
   \[
     H(s)=\frac{Y(s)}{X(s)}
     =\frac{s+2}{s^2+4s+3}
@@ -565,7 +669,7 @@ y(t).
 \end{example}
 
 \begin{remark}[系统函数的复用]
-  一旦得到系统函数，改变输入时只需重新计算 $X(s)$，再求
+  一旦得到系统函数，改变输入时\hl{只需重新计算} $X(s)$，再求
   \[
     Y(s)=H(s)X(s).
   \]
@@ -583,63 +687,222 @@ y(t).
 \subsection{由积分器构成的方框图}
 \label{subsec:laplace-integrator-block-diagram}
 
-方框图的基本做法是先把最高阶导数单独写出。设 $a_2\ne0$，令 $w(t)$ 满足
+方框图用箭头表示信号的传递方向，用元件表示每一步运算。\cref{fig:laplace-block-elements} 给出三种基本元件：加法器输出各输入支路的和；数乘器输出输入的 $k$ 倍；积分器的输入 $v(t)$ 是输出 $q(t)$ 的导数，即
+\[
+  q'(t)=v(t),\qquad q(t)=q(t_0)+\int_{t_0}^{t}v(\tau)\dd\tau.
+\]
+积分器存储的 $q(t_0)$ 就是它的初始状态。\blue{零初值时}，其变换关系为 $Q(s)=V(s)/s$，因此方框内写 $1/s$；非零初值须另保留初始状态项。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.76\linewidth]{09-laplace-transform/block-elements}
+  \caption{方框图的三个基本元件：加法器、数乘器和积分器。}
+  \label{fig:laplace-block-elements}
+\end{figure}
+
+线上的实心点表示分支连接，同一个信号沿各支路复制，幅度不会因分支而分摊。没有实心点的交叉线不相连。圆圈内的加号表示相加，支路中的负系数则表示先反号再相加。
+
+\subsection{一阶积分器结构与反馈}
+
+对一阶方程
+\begin{equation}
+  y'(t)+ay(t)=bx(t),
+  \label{eq:laplace-first-order-state}
+\end{equation}
+先解出最高阶导数：
+\[
+  y'(t)=bx(t)-ay(t).
+\]
+在\cref{fig:laplace-block-first-order} 中，输入先乘 $b$，再与 $-ay(t)$ 相加，得到 $y'(t)$；积分器据此更新 $y(t)$。红色支路把输出送回入口，反馈方框中的 $-a$ 对应移项后的负系数。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.86\linewidth]{09-laplace-transform/block-first-order}
+  \caption{一阶系统 $y'+ay=bx$ 的积分器方框图。}
+  \label{fig:laplace-block-first-order}
+\end{figure}
+
+在初始松弛下，对\cref{eq:laplace-first-order-state} 作拉氏变换：
+\[
+  sY(s)=bX(s)-aY(s),
+  \qquad
+  H(s)=\frac{Y(s)}{X(s)}=\frac{b}{s+a}.
+\]
+取 $a=b=1$，图中加法器输入为 $x-y$，即 $y'=x-y$，所以 $H(s)=1/(s+1)$。开头三种起始状态的例子正对应这一结构：改变积分器初值会改变响应曲线，零状态系统函数仍保持不变。
+
+\subsection{二阶共享积分器链}
+
+考虑系统函数
+\[
+  H(s)=\frac{b_2s^2+b_1s+b_0}{a_2s^2+a_1s+a_0},\qquad a_2\ne0.
+\]
+先用辅助变量 $w(t)$ 实现分母对应的方程：
 \begin{equation}
   a_2w''(t)+a_1w'(t)+a_0w(t)=x(t),
+  \qquad a_2\ne0.
   \label{eq:laplace-denominator-state-equation}
 \end{equation}
-则
+解出最高阶导数：
 \[
-  w''(t)=\frac{1}{a_2}
-  \bigl[x(t)-a_1w'(t)-a_0w(t)\bigr].
+  w''(t)=\frac{1}{a_2}x(t)
+  -\frac{a_1}{a_2}w'(t)-\frac{a_0}{a_2}w(t).
 \]
-从 $w''$ 经过两次积分得到 $w'$ 和 $w$，再按分子组合输出：
+图中先把 $x$、$-a_1w'$ 和 $-a_0w$ 相加，\blue{相加后再乘} $1/a_2$，得到 $w''$。两次积分依次得到 $w'$ 和 $w$；再按分子系数组合输出：
 \[
   y(t)=b_2w''(t)+b_1w'(t)+b_0w(t).
 \]
-因此，一个二阶系统可以按下面的信号流理解；\red{最高阶导数作为积分链入口}：
-\[
-\begin{array}{c}
-x(t)\longrightarrow
-\displaystyle\frac{x(t)-a_1w'(t)-a_0w(t)}{a_2}
-\longrightarrow w''(t)
-\xrightarrow{\ \int\ }w'(t)
-\xrightarrow{\ \int\ }w(t),\\[0.6em]
-(w'',w',w)\longrightarrow
-b_2w''+b_1w'+b_0w=y(t).
-\end{array}
-\]
-反馈支路的系数是 $-a_1$ 和 $-a_0$，前向输出支路的系数是 $b_2,b_1,b_0$。初始静止对应积分器初值为零；这正好对应前面取系统函数比值时没有额外初始项。\red{零系数支路可以省略}
+完整结构如\cref{fig:laplace-block-second-order}。\red{分母系数进入反馈}，\red{分子系数进入输出组合}。两个积分器共同供给反馈和输出支路，无须为每一项另搭一条积分链；$w$ 与 $w'$ 是内部状态，最终输出由右侧的组合决定。
 
-\begin{example}[由方框图还原微分方程]
-\label{eg:laplace-integrator-block}
-  若积分器链满足
-  \[
-    w''=x-3w'-2w,\qquad y=2w'+w,
-  \]
-  则
-  \[
-    w''+3w'+2w=x,\qquad
-    y=2w'+w.
-  \]
-  消去中间变量 $w$，得到系统函数
-  \[
-    H(s)=\frac{2s+1}{s^2+3s+2},
-  \]
-  对应的输入输出方程为
-  \[
-    y''+3y'+2y=2x'+x.
-  \]
-  若只给出一阶反馈结构 $w'=x-w$ 且 $y=w$，则直接得到
-  \[
-    y'+y=x,\qquad H(s)=\frac{1}{s+1}.
-  \]
-\end{example}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\linewidth]{09-laplace-transform/block-second-order}
+  \caption{一般二阶系统的共享积分器链：反馈支路决定分母，输出支路决定分子。}
+  \label{fig:laplace-block-second-order}
+\end{figure}
+
+对初始松弛系统，积分器初值为零，故
+\[
+  W(s)=\frac{X(s)}{a_2s^2+a_1s+a_0},
+  \qquad
+  Y(s)=(b_2s^2+b_1s+b_0)W(s).
+\]
+于是
+\[
+  H(s)=\frac{Y(s)}{X(s)}
+  =\frac{b_2s^2+b_1s+b_0}{a_2s^2+a_1s+a_0}.
+\]
+若某个系数为零，相应支路直接删去；系数为 $1$ 时可以省略方框中的数字，但读图时仍要保留这条支路的作用。若分子、分母同阶，$b_2w''(t)$ 是直接通路，冲激输入下可能产生冲激输出，不能把它误删。
+
+\subsection{由方程画图，再由图读回方程}
+
+先看由微分方程画图的题型：
+\[
+  y''+4y'+3y=x'+2x.
+\]
+令 $w$ 满足分母结构
+\[
+  w''=x-4w'-3w,
+  \qquad y=w'+2w.
+\]
+因此反馈支路为 $-4,-3$，输出支路为 $1,2$，实际框图见\cref{fig:laplace-block-from-equation}。从图读回方程时，\hl{先写最高阶导数}，再把反馈项移到左侧，并按输出支路写出 $y$。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{09-laplace-transform/block-from-equation}
+  \caption{由 $y''+4y'+3y=x'+2x$ 构造积分器方框图。}
+  \label{fig:laplace-block-from-equation}
+\end{figure}
+
+由图可直接读得
+\[
+  w''+4w'+3w=x,
+  \qquad y=w'+2w.
+\]
+对两式作拉氏变换并消去 $W(s)$：
+\[
+  (s^2+4s+3)W=X,
+  \qquad Y=(s+2)W,
+\]
+所以
+\[
+  H(s)=\frac{s+2}{s^2+4s+3}.
+\]
+反馈箭头的方向和方框中的符号必须同时读取：图中已经写成 $-4,-3$ 时，加法器处按相加处理；若把反馈画成负号加法器，则方框中应使用正的幅值，不能把负号计算两次。
+
+已知系统函数时，过程倒过来进行。例如
+\[
+  H(s)=\frac{s+3}{s^2+5s+6}
+\]
+对应
+\[
+  w''=x-5w'-6w,
+  \qquad y=w'+3w,
+\]
+其图形见\cref{fig:laplace-block-from-system-function}。这里先按分母搭积分链，再按分子接输出支路。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{09-laplace-transform/block-from-system-function}
+  \caption{由 $H(s)=(s+3)/(s^2+5s+6)$ 画出的积分器方框图。}
+  \label{fig:laplace-block-from-system-function}
+\end{figure}
+
+\subsection{约分与读图题中的中间变量}
+
+若
+\[
+  H(s)=\frac{s^2+3s+2}{s^2+7s+6},
+\]
+完整二阶结构的反馈系数为 $-7,-6$，输出支路为 $1,3,2$。公因子约去后，
+\[
+  H(s)=\frac{(s+1)(s+2)}{(s+1)(s+6)}
+  =\frac{s+2}{s+6},
+\]
+可以改用一阶结构，反馈系数只剩 $-6$，输出支路为 $1,2$。两种结构见\cref{fig:laplace-block-cancellation} 的上下两图。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.94\linewidth]{09-laplace-transform/block-cancellation}
+  \caption{约分前后的两种实现：零状态传递关系相同，内部状态数不同。}
+  \label{fig:laplace-block-cancellation}
+\end{figure}
+
+\red{约分保持零状态传递关系}。非零初值则须按具体实现映射：本图在 $x=0$ 时有 $w=A\e^{-t}+B\e^{-6t}$，而 $y=w''+3w'+2w=20B\e^{-6t}$，所以内部的 $\e^{-t}$ 模态在输出组合中抵消。若只给原二阶输入输出方程及任意 $y(0^-),y'(0^-)$，它的齐次解却允许 $\e^{-t}$ 项。\blue{内部初值与输出初值须对应}，不能仅凭约分后的 $H(s)$ 任意删去题目的辅助条件。
+
+读图时还要区分“中间状态”和“输出”。例如
+\[
+  w''=x-3w'-2w,
+  \qquad y=2w'+w,
+\]
+对应\cref{fig:laplace-block-readback-weighted}，由图得到
+\[
+  w''+3w'+2w=x,
+  \qquad y=2w'+w.
+\]
+消去 $w$ 后，
+\[
+  (s^2+3s+2)W=X,
+  \qquad Y=(2s+1)W,
+\]
+从而
+\[
+  H(s)=\frac{2s+1}{s^2+3s+2},
+  \qquad
+  y''+3y'+2y=2x'+x.
+\]
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{09-laplace-transform/block-readback-weighted}
+  \caption{读图题：输出由 $2w'+w$ 组成。}
+  \label{fig:laplace-block-readback-weighted}
+\end{figure}
+
+若输出直接取最后一个积分器的状态，则 $y=w$，输出支路只保留 $w$：
+\[
+  w''=x-3w'-2w,
+  \qquad y=w,
+\]
+所以
+\[
+  y''+3y'+2y=x,
+  \qquad H(s)=\frac{1}{s^2+3s+2}.
+\]
+对应图形见\cref{fig:laplace-block-readback-lowpass}。两道读图题的反馈完全相同，输出取法不同，因此分母相同、分子不同。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{09-laplace-transform/block-readback-lowpass}
+  \caption{读图题：输出直接取最后一个积分器的状态 $w(t)$。}
+  \label{fig:laplace-block-readback-lowpass}
+\end{figure}
+
+读图后，把各支路关系代回输入输出方程，可以检查反馈符号和分子系数。带初值的题还要由 $y=b_2w''+b_1w'+b_0w$ 映射状态；例如 $y=w'+2w$ 时，$w(0^-)$ 与 $w'(0^-)$ 不能直接当作 $y(0^-)$ 与 $y'(0^-)$。
 
 \subsection{单边拉氏变换与初始条件}
 \label{subsec:laplace-unilateral}
 
-当题目给出 $y(0^-)$、$y'(0^-)$ 等非零初始状态时，使用单边拉氏变换：
+当题目给出 $y(0^-)$、$y'(0^-)$ 等初值时，使用\keyterm{单边拉普拉斯变换（unilateral Laplace transform）}：
 \begin{equation}
   \widetilde X(s)
   =\mathcal L_u\{x(t)\}
@@ -657,38 +920,45 @@ b_2w''+b_1w'+b_0w=y(t).
       -\sum_{k=0}^{n-1}s^{n-1-k}x^{(k)}(0^-).
   \label{eq:laplace-unilateral-derivative}
 \end{align}
-因此，初始状态以单独的代数项进入变换后的方程。\red{开关前状态必须保留}
+因此，初始状态以单独的代数项进入变换后的方程。\red{开关前状态必须保留}。单边反演只确定 $t\geq0$ 的响应；非零初始状态题不据此把输出在负时间延拓为零。
 
 对一个给定的输入输出方程，总响应按两部分相加：
 \begin{equation}
   y(t)=y_{\mathrm{zi}}(t)+y_{\mathrm{zs}}(t).
   \label{eq:laplace-total-response-split}
 \end{equation}
-$y_{\mathrm{zi}}(t)$ 是零输入响应：令 $x(t)=0$，保留题目给出的初始状态；$y_{\mathrm{zs}}(t)$ 是零状态响应：令所有初始状态为零，只保留输入。若输入和初始状态同时存在，\red{先分开变换，再相加}，可避免漏掉初始项。
+$y_{\mathrm{zi}}(t)$ 是\keyterm{零输入响应（zero-input response）}：令 $x(t)=0$，保留题目给出的初始状态；$y_{\mathrm{zs}}(t)$ 是\keyterm{零状态响应（zero-state response）}：令初始状态为零，只保留输入。分别求解后相加得到总响应，与前面一阶时域题的分解一致。
 
 \begin{example}[重复极点的零状态响应]
 \label{eg:laplace-repeated-pole-response}
-  因果 LTI 系统满足
+  对\cref{eg:ct-second-order-time-domain} 的同一题作拉氏变换。系统满足
   \[
     y''+3y'+2y=x,\qquad
     x(t)=\e^{-t}\stepfun(t).
   \]
-  初始静止时
+  初始松弛时
   \[
     H(s)=\frac{1}{(s+1)(s+2)},\qquad
     X(s)=\frac{1}{s+1},
   \]
   所以
   \[
-    Y(s)=\frac{1}{(s+1)^2(s+2)}
-    =\frac{1}{(s+1)^2}-\frac{1}{s+1}+\frac{1}{s+2}.
+    Y(s)=\frac{1}{(s+1)^2(s+2)}.
+  \]
+  设 $Y=A/(s+1)^2+B/(s+1)+C/(s+2)$，通分得
+  \[
+    1=A(s+2)+B(s+1)(s+2)+C(s+1)^2.
+  \]
+  代入 $s=-1,-2$ 得 $A=C=1$，比较 $s^2$ 系数得 $B=-1$，于是
+  \[
+    Y(s)=\frac{1}{(s+1)^2}-\frac{1}{s+1}+\frac{1}{s+2}.
   \]
   反变换得到
   \[
     \boxed{
     y(t)=\bigl[t\e^{-t}-\e^{-t}+\e^{-2t}\bigr]\stepfun(t)}.
   \]
-  输入指数 $-1$ 与系统极点 $-1$ 重合，因而部分分式中出现二重极点，时域中对应 $t\e^{-t}$；这与时域待定系数法中“特解与齐次项重合时乘 $t$”完全一致。
+  输入指数 $-1$ 与系统极点 $-1$ 重合，因而部分分式中出现二重极点，时域中对应 $t\e^{-t}$；这与时域待定系数法中“特解与齐次项重合时乘 $t$”一致。
 \end{example}
 
 \begin{example}[指数输入与部分分式]
@@ -714,7 +984,7 @@ $y_{\mathrm{zi}}(t)$ 是零输入响应：令 $x(t)=0$，保留题目给出的�
     \boxed{
     y(t)=\bigl(4\e^{-t/2}-5\e^{-t}+\e^{-3t}\bigr)\stepfun(t)}.
   \]
-  这类题的计算顺序固定为：先写 $H(s)$，再求 $X(s)$，相乘得到 $Y(s)$，最后做部分分式展开。
+  这类题\hl{先求系统函数和输入变换}，相乘得到 $Y(s)$，再做部分分式展开。
 \end{example}
 
 \begin{example}[输入发生阶跃变化时的响应]
@@ -770,7 +1040,7 @@ $y_{\mathrm{zi}}(t)$ 是零输入响应：令 $x(t)=0$，保留题目给出的�
   \]
   \[
     y_{\mathrm{zi}}(t)
-    =\bigl(-\e^{-t}+2\e^{-t/2}\bigr)\stepfun(t).
+    =-\e^{-t}+2\e^{-t/2},\qquad t\geq0.
   \]
 
   再求零状态响应。令
@@ -795,8 +1065,8 @@ $y_{\mathrm{zi}}(t)$ 是零输入响应：令 $x(t)=0$，保留题目给出的�
   \[
     \boxed{
     y(t)=
-    \left(-3\e^{-t}+\frac{26}{9}\e^{-t/2}
-      +\frac{10}{9}\e^{-2t}+\frac23t\e^{-2t}\right)\stepfun(t)}.
+    -3\e^{-t}+\frac{26}{9}\e^{-t/2}
+      +\frac{10}{9}\e^{-2t}+\frac23t\e^{-2t}},\qquad t\geq0.
   \]
   这里的 $t\e^{-2t}$ 来自输入变换中的二重极点；拆分后再合成，零输入和零状态的物理来源仍然清楚。
 \end{example}
@@ -804,11 +1074,11 @@ $y_{\mathrm{zi}}(t)$ 是零输入响应：令 $x(t)=0$，保留题目给出的�
 \subsection{系统函数、冲激响应与稳定性}
 \label{subsec:laplace-system-function-response}
 
-系统函数还可以直接反推出冲激响应。对因果有理系统，\red{极点均在左半平面}时冲激响应绝对可积，系统稳定；等价地，稳定性要求虚轴属于收敛域。以
+系统函数还可以直接反推出冲激响应。对因果系统，若约分后的 $H(s)$ 为真有理函数（分子次数低于分母），则 BIBO 稳定等价于\red{极点均在左半平面}，也等价于\blue{虚轴属于收敛域}。若分子分母同阶，还须保留直接通路对应的有限权重冲激；分子次数更高的理想微分器不能仅凭有限极点判断稳定。以
 \[
   y''+3y'+2y=x'+3x
 \]
-为例，初始静止时
+为例，初始松弛时
 \[
   H(s)=\frac{s+3}{s^2+3s+2}
   =\frac{s+3}{(s+1)(s+2)}
@@ -819,7 +1089,7 @@ $y_{\mathrm{zi}}(t)$ 是零输入响应：令 $x(t)=0$，保留题目给出的�
   h(t)=\bigl(2\e^{-t}-\e^{-2t}\bigr)\stepfun(t).
   \label{eq:laplace-ode-impulse-response}
 \end{equation}
-两个极点都在左半平面，$h(t)$ 绝对可积，系统稳定。\red{虚轴属于收敛域}
+两个极点都在左半平面，ROC 为 $\operatorname{Re}\{s\}>-1$，包含虚轴；$h(t)$ 绝对可积，系统稳定。
 
 \begin{example}[带初始状态的系统响应]
 \label{eg:laplace-nonzero-initial-state}
@@ -848,9 +1118,21 @@ $y_{\mathrm{zi}}(t)$ 是零输入响应：令 $x(t)=0$，保留题目给出的�
   \]
   最终响应为
   \[
-    \boxed{y(t)=\bigl(3\e^{-t}-2\e^{-2t}\bigr)\stepfun(t)}.
+    \boxed{y(t)=3\e^{-t}-2\e^{-2t}},\qquad t\geq0.
   \]
-  若只求零状态响应，则应先令 $y(0^-)=y'(0^-)=0$，结果会不同。系统函数比值描述零状态传递，单边变换还会计入初始状态。
+  分开计算也可得到
+  \[
+    \widetilde Y_{\mathrm{zi}}=\frac{s+3}{(s+1)(s+2)},\qquad
+    \widetilde Y_{\mathrm{zs}}=\frac{1}{(s+1)(s+2)},
+  \]
+  即 $y_{\mathrm{zi}}=2\e^{-t}-\e^{-2t}$、$y_{\mathrm{zs}}=\e^{-t}-\e^{-2t}$（$t\geq0$），相加与上式一致。
+
+  启动处还要检查导数跳变。本题输入在零时刻跳变，其广义导数满足
+  \[
+    x'=-3\e^{-3t}\stepfun(t)+\impulse(t),
+    \qquad x'+3x=\impulse(t).
+  \]
+  右端没有冲激导数，故 $y$ 连续，$y(0^+)=1$；跨越零时刻积分得 $y'(0^+)-y'(0^-)=1$，所以 $y'(0^+)=1$。求出的解确有 $y'(0^+)=-3+4=1$。\red{开关后导数发生跳变}，即使输入本身只有普通的阶跃变化，也不能把给定的 $0^-$ 初值直接套到 $0^+$。
 \end{example}
 
 \endgroup

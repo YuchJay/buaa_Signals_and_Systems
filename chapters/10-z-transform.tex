@@ -8,7 +8,7 @@
 
 \subsection{差分方程与递推形式}
 
-$N$ 阶线性常系数差分方程（linear constant-coefficient difference equation）的标准形式是
+$N$ 阶\keyterm{线性常系数差分方程（linear constant-coefficient difference equation）}的标准形式是
 \begin{equation}
   \sum_{k=0}^{N}a_ky[n-k]=\sum_{k=0}^{M}b_kx[n-k],
   \label{eq:dt-lccde}
@@ -20,14 +20,14 @@ $N$ 阶线性常系数差分方程（linear constant-coefficient difference equa
   y[n]=\frac1{a_0}\left[\sum_{k=0}^{M}b_kx[n-k]-\sum_{k=1}^{N}a_ky[n-k]\right].
   \label{eq:dt-recursive-form}
 \end{equation}
-右端只用到当前的输入、过去的输入和过去的输出。给出输入序列以及一组辅助条件
+右端只用到当前的输入、过去的输入和过去的输出。给出输入序列以及\blue{一组辅助条件}
 \[
   y[-N],\ y[-N+1],\ \ldots,\ y[-1],
 \]
-就能从起算点逐个算出 $y[n]$。这种逐项计算的写法称为递推（recursive），\cref{eq:dt-lccde} 也因此常被叫作递推方程。
+就能从起算点逐个算出 $y[n]$。这种逐项计算的写法称为\keyterm{递推（recursive）}，\cref{eq:dt-lccde} 也因此常被叫作递推方程。
 
 \begin{intuition}[递推为什么需要初始条件]
-  递推式每一步都要读上一次的输出。起步时右端要读 $y[-1]$，而 $y[-1]$ 不在输入序列里。还差多少个这样的值，取决于方程的最高延时阶数 $N$：一阶方程缺一个，二阶方程缺两个。这些缺失的值正是辅助条件。
+  递推式\blue{每一步都要读上一次的输出}。起步时右端要读 $y[-1]$，而 $y[-1]$ 不在输入序列里。还差多少个这样的值，取决于方程的最高延时阶数 $N$：一阶方程缺一个，二阶方程缺两个。这些缺失的值正是辅助条件。
 \end{intuition}
 
 \begin{example}[同一差分方程的两种初值]
@@ -42,11 +42,11 @@ $N$ 阶线性常系数差分方程（linear constant-coefficient difference equa
   \red{差分方程本身不构成一个确定的系统}，与连续时间的情形相同。
 \end{example}
 
-\subsection{初始静止：因果 LTI 对辅助条件的要求}
+\subsection{初始松弛：因果 LTI 对辅助条件的要求}
 
-要在众多解中选定一个，需要补上辅助条件。带独立初始储能时总响应应拆成零输入响应与零状态响应两项分别计算，此时系统整体不再是线性的。讨论由差分方程描述的因果 LTI 系统时采用初始静止（initial rest）条件：
+要在众多解中选定一个，需要补上辅助条件。带独立初始储能时总响应应拆成零输入响应与零状态响应两项分别计算，此时系统整体不再是线性的。讨论由差分方程描述的因果 LTI 系统时采用初始松弛（initial rest）条件：
 
-\begin{definition}[初始静止]
+\begin{definition}[初始松弛]
   \label{def:dt-initial-rest}
   若输入满足 $x[n]=0$（$n<n_0$），则输出也满足 $y[n]=0$（$n<n_0$）。
 \end{definition}
@@ -54,7 +54,7 @@ $N$ 阶线性常系数差分方程（linear constant-coefficient difference equa
 它\red{不等于让一阶初值取零}，而是把归零的起点跟着输入走：输入从 $n_0$ 起才非零，就以 $n_0$ 为起点，向前补齐 $N$ 个零。在这一条件下，\cref{eq:dt-lccde} 描述的系统是\red{因果且线性时不变}的。逆命题不成立：给定差分方程还可能有别的解，因果性、初始条件或稳定性用于选定所讨论的系统。
 
 \begin{pitfall}[输入含超前项时仍按零下标起步]
-  输入若形如 $x[n]=-2\impulse[n+1]+\stepfun[n]$，在 $n=-1$ 已经非零，此时可用的条件不是 $y[-1]=0$。\red{先按初始静止确定零区间}，即写出 $y[n]=0$（$n<-1$），再让递推从 $n=-1$ 起步，见\cref{ex:dt-recursive-difference}。
+  输入若形如 $x[n]=-2\impulse[n+1]+\stepfun[n]$，在 $n=-1$ 已经非零，此时可用的条件不是 $y[-1]=0$。\hl{先按初始松弛确定零区间}，即写出 $y[n]=0$（$n<-1$），再让递推从 $n=-1$ 起步，见\cref{ex:dt-recursive-difference}。
 \end{pitfall}
 
 \subsection{递推法求脉冲响应与响应形式}
@@ -63,7 +63,7 @@ $N$ 阶线性常系数差分方程（linear constant-coefficient difference equa
 
 \begin{example}[一阶递推的脉冲响应]
   \label{eg:dt-recursive-impulse}
-  系统 $y[n]=ay[n-1]+x[n]$，输入 $\impulse[n]$，初始静止。逐项计算：
+  系统 $y[n]=ay[n-1]+x[n]$，输入 $\impulse[n]$，初始松弛。逐项计算：
   \begin{align*}
     h[0]&=a\cdot h[-1]+\impulse[0]=1,\\
     h[1]&=a\cdot h[0]+\impulse[1]=a,\\
@@ -71,14 +71,14 @@ $N$ 阶线性常系数差分方程（linear constant-coefficient difference equa
     &\ \vdots\\
     h[n]&=a^n\stepfun[n].
   \end{align*}
-  归纳时看两点：输入 $\impulse[n]$ 只在 $n=0$ 提供一次数值 $1$，之后每一步都把上一步的结果乘 $a$；负下标处因初始静止而为零。由此得\red{递推每走一步乘一个 $a$}，步数就是 $n$。
+  归纳时看两点：输入 $\impulse[n]$ 只在 $n=0$ 提供一次数值 $1$，之后每一步都把上一步的结果乘 $a$；负下标处因初始松弛而为零。由此得\red{递推每走一步}乘一个 $a$，步数就是 $n$。
 \end{example}
 
 递推法直观，也便于编程实现，但复杂情形不容易直接看出闭式。归纳规律时可借助齐次解：把右端取零后方程
 \[
   \sum_{k=0}^{N}a_ky[n-k]=0
 \]
-的通解称为系统的自然响应，其形式由特征方程
+的通解称为系统的\keyterm{自然响应}，其形式由特征方程
 \begin{equation}
   \sum_{k=0}^{N}a_k\lambda^{N-k}=0
   \label{eq:dt-characteristic-equation}
@@ -89,10 +89,10 @@ $N$ 阶线性常系数差分方程（linear constant-coefficient difference equa
 \[
   y[n]=\sum_{k=0}^{M}\frac{b_k}{a_0}x[n-k],
 \]
-右端不含过去的输出，逐步计算时不需要任何辅助条件。这是\red{非递推（nonrecursive）}情形，等价于与一个有限长序列作卷积，所得脉冲响应只在 $0\leq n\leq M$ 上非零，称为有限长脉冲响应（finite impulse response，FIR）系统。反过来，$N\geq1$ 的递推方程对应的脉冲响应通常无限长，称为无限长脉冲响应（infinite impulse response，IIR）系统。
+右端不含过去的输出，逐步计算时\blue{不需要任何辅助条件}。这是\red{非递推（nonrecursive）}情形，等价于与一个有限长序列作卷积，所得脉冲响应只在 $0\leq n\leq M$ 上非零，称为\keyterm{有限长脉冲响应（finite impulse response，FIR）}系统。反过来，$N\geq1$ 的递推方程对应的脉冲响应通常无限长，称为\keyterm{无限长脉冲响应（infinite impulse response，IIR）}系统。
 
 \begin{remark}[与时域卷积的关系]
-  初始静止下解得的响应是零状态响应，按第四章的结论它又等于 $x[n]\conv h[n]$。由差分方程解出的 $h[n]$ 就是该系统的单位脉冲响应；只要能解出 $h[n]$，任意输入都可由卷积和得到。第七章进一步说明，把\cref{eq:dt-lccde} 逐项变换可直接读出频率响应
+  初始松弛下解得的响应是零状态响应，按第四章的结论它又等于 $x[n]\conv h[n]$。由差分方程解出的 $h[n]$ 就是该系统的单位脉冲响应；只要能解出 $h[n]$，任意输入都可由卷积和得到。第七章进一步说明，把\cref{eq:dt-lccde} 逐项变换可直接读出频率响应
   \[
     H(\e^{\iu\omega})
     =\frac{\sum_{k=0}^{M}b_k\e^{-\iu\omega k}}{\sum_{k=0}^{N}a_k\e^{-\iu\omega k}},
@@ -100,12 +100,12 @@ $N$ 阶线性常系数差分方程（linear constant-coefficient difference equa
   当单位圆位于 $H(z)$ 的 ROC 内时，它正是 $h[n]$ 的 DTFT。
 \end{remark}
 
-\subsection{初始静止与输入超前项}
+\subsection{初始松弛与输入超前项}
 \label{sec:dt-initial-rest-example}
 
 \begin{workedexample}[输入含超前冲激时的递推]
   \label{ex:dt-recursive-difference}
-  因果、初始静止的离散 LTI 系统满足
+  因果、初始松弛的离散 LTI 系统满足
   \[
     y[n]-\frac12y[n-1]=x[n],
   \]
@@ -123,7 +123,7 @@ $N$ 阶线性常系数差分方程（linear constant-coefficient difference equa
 \end{workedexample}
 
 \begin{solution}
-  输入在 $n=-1$ 处已经非零，按初始静止只能写出 $y[n]=0$（$n<-1$），不能直接取 $y[-1]=0$。递推式仍为
+  输入在 $n=-1$ 处已经非零，按初始松弛只能写出 $y[n]=0$（$n<-1$），不能直接取 $y[-1]=0$。递推式仍为
   \[
     y[n]=x[n]+\frac12y[n-1],
   \]
@@ -161,7 +161,7 @@ $N$ 阶线性常系数差分方程（linear constant-coefficient difference equa
 \end{solution}
 
 \begin{technique}
-  输入含 $\impulse[n+n_0]$ 时，先按初始静止把零区间确定下来，再从最早的非零下标开始递推。逐项算到输入转为常值后，可用稳态值移位：把递推式两边减去稳态值，使余量成为等比数列，一次求出闭式。首项必须与逐项计算的最早几个值对上，否则差值公式用错了起点。
+  输入含 $\impulse[n+n_0]$ 时，先按初始松弛把零区间确定下来，再从最早的非零下标开始递推。逐项算到输入转为常值后，可用稳态值移位：\hl{把递推式两边减去稳态值}，\red{使余量成为等比数列}，一次求出闭式。首项必须\blue{与逐项计算的最早几个值对上}，否则\red{差值公式用错了起点}。
 \end{technique}
 
 \section{Z 变换的定义与收敛域}
@@ -170,13 +170,13 @@ $N$ 阶线性常系数差分方程（linear constant-coefficient difference equa
 前面用差分方程描述离散时间系统，已经看到了延时项
 $x[n-k]$、$y[n-k]$ 如何逐步累积成系统的记忆。把同一个方程移到复频域后，
 延时可以化成关于 $z$ 的乘法，递推关系也就变成代数关系。本节先建立
-Z 变换（Z-transform）的定义，再用收敛域区分同一个代数式所对应的不同序列。
+\keyterm{Z 变换（Z-transform）}的定义，再用收敛域区分同一个代数式所对应的不同序列。
 
 \subsection{定义及其与 DTFT、拉氏变换的关系}
 \label{subsec:z-transform-definition}
 
 \begin{definition}[双边 Z 变换]
-  对离散时间序列 $x[n]$，其双边 Z 变换定义为
+  对离散时间序列 $x[n]$，其\keyterm{双边 Z 变换}定义为
   \begin{equation}
     X(z)=\ZT\{x[n]\}
     =\sum_{n=-\infty}^{+\infty}x[n]z^{-n},
@@ -221,7 +221,7 @@ $r^{-n}$，再沿圆周改变角度 $\omega$；\red{半径改变会改变加权�
   =\sum_{n=-\infty}^{+\infty}x[n]\e^{-\iu\omega n},
   \label{eq:z-transform-unit-circle}
 \end{equation}
-当 $r=1$ 时，该式就是 DTFT。拉氏变换与 Z 变换的对应关系可以并排记忆：
+当 $r=1$ 时，\red{该式就是 DTFT}。拉氏变换与 Z 变换的对应关系可以并排记忆：
 
 \begin{center}
   \begin{tabular}{p{0.24\textwidth}p{0.31\textwidth}p{0.31\textwidth}}
@@ -258,7 +258,7 @@ $X(r\e^{\iu\omega})$ 是 $x[n]r^{-n}$ 的 DTFT。由 DTFT 反变换式，
   \dd\omega=\frac{1}{\iu z}\dd z.
 \end{equation}
 当 $\omega$ 从 $-\pi$ 变化到 $\pi$ 时，$z$ 沿圆周绕行一周，于是得到
-Z 反变换公式
+\keyterm{Z 反变换}公式
 \begin{equation}
   x[n]
   =\frac{1}{2\pi\iu}\oint_{|z|=r}
@@ -268,7 +268,7 @@ Z 反变换公式
   \label{eq:z-transform-inverse}
 \end{equation}
 积分路径必须是一条\red{位于 ROC 内的闭合圆周}，并按\red{逆时针方向绕行}。
-因此，写出有理式 $X(z)$ 时，不能只写分式本身；还要同时说明 ROC。
+因此，写出有理式 $X(z)$ 时，不能只写分式本身；\blue{还要同时说明 ROC}。
 
 \subsection{两个常见的 Z 变换}
 \label{subsec:z-transform-basic-pairs}
@@ -302,7 +302,7 @@ Z 反变换公式
   X(z)=\frac{1}{1-az^{-1}}.
 \]
 
-第二个常见变换对是左边序列：
+第二个常见变换对是\keyterm{左边序列}：
 \begin{equation}
   -a^n\stepfun[-n-1]
   \zpair
@@ -332,8 +332,7 @@ Z 反变换公式
 \]
 
 \begin{remark}[同一个代数式不能单独确定序列]
-  两个变换对的代数式完全相同，极点都在 $z=a$；右边序列对应极点外侧的
-	  收敛域，左边序列对应极点内侧的收敛域：\red{外侧取右边，内侧取左边}。
+  两个变换对的代数式完全相同，极点都在 $z=a$；\keyterm{右边序列}对应极点外侧的收敛域，左边序列对应极点内侧的收敛域：\hl{外侧取右边，内侧取左边}。
 	  因而必须把 ROC 和代数式一起写出：
 	  \red{代数式相同不代表序列相同}。
 \end{remark}
@@ -354,7 +353,7 @@ Z 反变换公式
 
 \begin{example}[双边指数序列]
 \label{eg:z-two-sided-exponential}
-  设 $b\neq0$。对双边序列 $x[n]=b^{|n|}$，按正、负下标拆成
+  设 $b\neq0$。对\keyterm{双边序列} $x[n]=b^{|n|}$，按正、负下标拆成
   \[
     x[n]=b^n\stepfun[n]+b^{-n}\stepfun[-n-1].
   \]
@@ -369,8 +368,8 @@ Z 反变换公式
   \[
     |b|<|z|<|b|^{-1}.
   \]
-  只有 $0<|b|<1$ 时这个环带才非空，序列才有 Z 变换；$|b|\geq1$ 时没有
-  共同 ROC。双边序列的变换必须\red{先检查两侧 ROC 是否相交}。
+  只有 $0<|b|<1$ 时\red{这个环带才非空}，序列才有 Z 变换；$|b|\geq1$ 时没有
+  共同 ROC。双边序列的变换必须\blue{先检查两侧 ROC 是否相交}。
 \end{example}
 
 \begin{example}[左右两边收敛域相交的序列]
@@ -512,7 +511,7 @@ Z 反变换公式
   \item \red{右边序列向圆外延伸}，收敛域在某个圆之外。
   \item \red{左边序列向圆内延伸}，收敛域在某个圆之内。
   \item 双边序列的收敛域是两个圆之间的环带。
-  \item 因果序列是右边序列，所以收敛域向外延伸，包含 $z=\infty$ 的方向。
+  \item \keyterm{因果序列}是右边序列，所以收敛域向外延伸，包含 $z=\infty$ 的方向。
   \item 稳定序列的收敛域\red{包含单位圆}。
 \end{enumerate}
 
@@ -551,7 +550,7 @@ $z=\infty$ 外，所有有限非零 $z$ 都收敛。右边、左边和双边序�
    =\sum_{n=-\infty}^{+\infty}|h[n]|<+\infty.
   \label{eq:z-transform-unit-circle-roc}
 \end{align}
-因此单位圆包含在 ROC 内，稳定性可以从 ROC 是否包含单位圆来判断。
+因此单位圆包含在 ROC 内，稳定性可以从 \blue{ROC 是否包含单位圆}来判断。
 
 \subsection{拉氏变换与 Z 变换的收敛域对比}
 \label{subsec:laplace-z-roc-comparison}
@@ -593,7 +592,7 @@ $z=\infty$ 外，所有有限非零 $z$ 都收敛。右边、左边和双边序�
   对应的位置是单位圆。可以把 $\iu\omega$ 轴沿图示的频率方向
   \red{卷曲、闭合成一个圆}：左、右两侧的区域随之对应到圆内、圆外，
   竖直带状区域对应到环带。
-  这句话只用来帮助记住收敛域的形状，真正判断时仍要回到级数是否绝对收敛。
+  这句话只用来帮助记住收敛域的形状，真正判断时仍要\blue{回到级数是否绝对收敛}。
 \end{intuition}
 判断一个有理式对应哪一个序列，必须\red{把极点和 ROC 一起看}。
 
@@ -608,7 +607,7 @@ $z=\infty$ 外，所有有限非零 $z$ 都收敛。右边、左边和双边序�
     \label{eq:z-inverse-three-rocs-given}
   \end{equation}
 	  求 $x[n]$。先把 $X(z)$ 除以 $z$ 做部分分式，再乘回 $z$：
-	  \red{先除后乘的顺序}。
+	  \hl{先除后乘的顺序}。
   \begin{align}
     \frac{X(z)}{z}
     &=\frac{1}{\left(z-\frac12\right)(z-2)}
@@ -620,7 +619,7 @@ $z=\infty$ 外，所有有限非零 $z$ 都收敛。右边、左边和双边序�
       +\frac23\frac{1}{1-2z^{-1}}.
     \label{eq:z-inverse-three-rocs-pfd}
   \end{align}
-  现在逐个考察 ROC。两个极点为 $z=\frac12$ 和 $z=2$，所以有三种可能：
+  现在逐个考察 ROC。两个极点为 $z=\frac12$ 和 $z=2$，所以\red{有三种可能}：
   \begin{enumerate}[label=\arabic*., leftmargin=2.4em]
     \item 若 $\lvert z\rvert>2$，两项都取右边序列，
       \[
@@ -642,7 +641,7 @@ $z=\infty$ 外，所有有限非零 $z$ 都收敛。右边、左边和双边序�
           -\frac23\,2^n\stepfun[-n-1].
       \]
   \end{enumerate}
-  同一个有理式可以对应三个不同的序列；\red{给定 ROC 后才能确定序列}，
+  同一个有理式可以\red{对应三个不同的序列}；\blue{给定 ROC 后才能确定序列}，
   再据此为每个部分分式选取右边或左边的标准变换对。
   三种 ROC 与三种序列的对应关系见\cref{fig:z-inverse-three-rocs}。
 \begin{figure}[H]
@@ -668,7 +667,7 @@ $z=\infty$ 外，所有有限非零 $z$ 都收敛。右边、左边和双边序�
 
 以下使用双边 Z 变换。记 $x[n]\zpair X(z)$ 的收敛域为 $R$；
 涉及两个序列时，分别记为 $R_1$、$R_2$。变换式和收敛域需要一同使用，
-尤其要留意相加、相乘后出现的极零相消。
+尤其要留意相加、相乘后出现的\keyterm{极零相消}。
 
 \subsection{线性}
 
@@ -678,7 +677,7 @@ $z=\infty$ 外，所有有限非零 $z$ 都收敛。右边、左边和双边序�
   \qquad \text{ROC 至少包含 }R_1\cap R_2.
   \label{eq:z-linearity}
 \end{equation}
-在两个级数都绝对收敛的区域，可以把求和拆开：
+在\blue{两个级数都绝对收敛}的区域，可以把求和拆开：
 \[
   \sum_n\bigl(\alpha x[n]+\beta y[n]\bigr)z^{-n}
   =\alpha\sum_nx[n]z^{-n}+\beta\sum_ny[n]z^{-n}.
@@ -705,7 +704,7 @@ $z=\infty$ 外，所有有限非零 $z$ 都收敛。右边、左边和双边序�
     =z^{-n_0}X(z).
 \end{align*}
 \red{延时乘负幂}；超前 $n_0$ 个样本则乘 $z^{n_0}$。
-对有限非零的 $z$，收敛域不变；\red{原点和无穷远另查}，因为乘上
+对有限非零的 $z$，\red{收敛域不变}；\blue{原点和无穷远另查}，因为乘上
 $z^{-n_0}$ 可能改变这两个特殊点处的收敛情况。
 例如 $\impulse[n]\zpair1$，而 $\impulse[n-1]\zpair z^{-1}$，
 后一式排除 $z=0$。
@@ -732,7 +731,7 @@ $z^{-n_0}$ 可能改变这两个特殊点处的收敛情况。
   \label{eq:z-differentiation}
 \end{equation}
 \red{乘下标对应 Z 域微分}，微分前后的开收敛环域相同。
-边界是否收敛仍需逐点检查。对应的 DTFT 性质是
+\blue{边界是否收敛仍需逐点检查}。对应的 DTFT 性质是
 \[
   nx[n]\fourierpair
   \iu\frac{\dd X(\e^{\iu\omega})}{\dd\omega}.
@@ -829,7 +828,7 @@ $\e^{\iu\omega_0n}x[n]\fourierpair X(\e^{\iu(\omega-\omega_0)})$，
 
 \subsection{时域扩展}
 
-离散下标只取整数。扩展 $k$ 倍（$k$ 为正整数）时，定义插零序列
+\blue{离散下标只取整数}。扩展 $k$ 倍（$k$ 为正整数）时，定义\keyterm{插零序列}
 \begin{equation}
   x_{(k)}[n]=
   \begin{cases}
@@ -861,7 +860,7 @@ ROC 的半径开 $k$ 次方，\red{插零不产生比例系数}。
 
 \subsection{卷积性质}
 
-若 $x[n]\zpair X(z)$、$h[n]\zpair H(z)$，且两个 ROC 有公共区域，则
+若 $x[n]\zpair X(z)$、$h[n]\zpair H(z)$，且\blue{两个 ROC 有公共区域}，则
 \begin{equation}
   x[n]\conv h[n]\zpair X(z)H(z),
   \qquad \text{ROC 至少包含 }R_1\cap R_2.
@@ -929,7 +928,7 @@ $s[n]=\sum_{k=-\infty}^{n}x[k]=x[n]\conv\stepfun[n]$，
 若分子恰好消去 $z=1$ 的极点，收敛域还可能扩大。
 这与拉氏变换中时域积分对应除以 $s$ 的关系相似。
 阶跃的 Z 变换 ROC 不包含单位圆，因而\red{单位圆不能直接代入}：
-累加序列的 DTFT 是否存在及是否含直流冲激，需按第七章的累加性质另行判断。
+累加序列的 DTFT 是否存在及是否含直流冲激，\blue{需按第七章的累加性质另行判断}。
 
 \begin{example}[两种部分分式写法]
 \label{eg:z-inverse-two-methods}
@@ -971,7 +970,7 @@ $s[n]=\sum_{k=-\infty}^{n}x[k]=x[n]\conv\stepfun[n]$，
   \[
     X(z)=\frac{2z+4}{(z-1)(z-2)^2},\qquad |z|>2,
   \]
-  求 $x[n]$。仍按\red{除后分解，再乘回}的顺序：
+  求 $x[n]$。仍按\hl{除后分解，再乘回}的顺序：
   \[
     \frac{X(z)}z
       =\frac{2z+4}{z(z-1)(z-2)^2}
@@ -1003,7 +1002,7 @@ $s[n]=\sum_{k=-\infty}^{n}x[k]=x[n]\conv\stepfun[n]$，
 
 \subsection{初值定理}
 
-若 $x[n]$ 为因果序列，并且 Z 变换的 ROC 向无穷远延伸，则
+若 $x[n]$ 为因果序列，并且 \blue{Z 变换的 ROC 向无穷远延伸}，则
 \begin{equation}
   x[0]=\lim_{z\to\infty}X(z).
   \label{eq:z-initial-value}
@@ -1026,17 +1025,17 @@ $X(z)=x[0]+x[1]z^{-1}+x[2]z^{-2}+\cdots$，
 $\lim_{z\to1}(1-z^{-1})X(z)$ 与上式相同，因为
 $z-1=z(1-z^{-1})$，而 $z\to1$。
 
-对因果有理变换，使用终值定理前应\red{先检查极点条件}。令
+对因果有理变换，使用终值定理前应\blue{先检查极点条件}。令
 \[
   D(z)=(1-z^{-1})X(z).
 \]
-约去公共因子后，$D(z)$ 的全部极点都必须严格位于单位圆内。
+约去公共因子后，$D(z)$ 的\blue{全部极点都必须严格位于单位圆内}。
 等价地，$X(z)$ 除了允许在 $z=1$ 有一个简单极点外，其他极点都在单位圆内。
 这个条件使一阶差分
 \[
   d[n]=x[n]-x[n-1]
 \]
-的因果响应绝对可和。由 $x[n]=\sum_{k=0}^{n}d[k]$，原序列便有有限终值。
+的因果响应绝对可和。由 $x[n]=\sum_{k=0}^{n}d[k]$，\red{原序列便有有限终值}。
 
 例如 $x[n]=\stepfun[n]$ 时，
 $X(z)=1/(1-z^{-1})$，终值为
@@ -1048,7 +1047,7 @@ $x[n]=(-1)^n\stepfun[n]$ 对应 $X(z)=1/(1+z^{-1})$，
 \section{利用 Z 变换解差分方程}
 \label{sec:z-solve-difference-equation}
 
-\cref{sec:dt-difference-equation}已经给出差分方程、初始静止和逐项递推的关系。
+\cref{sec:dt-difference-equation}已经给出差分方程、初始松弛和逐项递推的关系。
 利用移位性质，每次延时都变成乘 $z^{-1}$，同一个系统就有三种表示：
 \red{差分方程、系统函数、方框图}。例如
 \[
@@ -1057,19 +1056,19 @@ $x[n]=(-1)^n\stepfun[n]$ 对应 $X(z)=1/(1+z^{-1})$，
 直接写出样值之间的关系；变换后得到 $H(z)$，便于反演求响应；
 单位延时器方框图则把递推过程画成可以实现的信号流。
 三种表示之间可以互相转换。求解时还须\red{先确定辅助条件}：
-因果、初始静止选定零状态系统，稳定性可以选定另一种 ROC，
+因果、初始松弛选定零状态系统，稳定性可以选定另一种 ROC，
 非零初始状态则要保留单边变换的初值项。
 
 \subsection{差分方程与系统函数互相转换}
 \label{subsec:z-system-function}
 
-在零状态条件下，对\cref{eq:dt-lccde}作双边 Z 变换，得到
+\blue{在零状态条件下}，对\cref{eq:dt-lccde}作双边 Z 变换，得到
 \[
   A(z)Y(z)=B(z)X(z),\qquad
   A(z)=\sum_{k=0}^{N}a_kz^{-k},\quad
   B(z)=\sum_{k=0}^{M}b_kz^{-k}.
 \]
-系统函数（system function）是单位脉冲响应的 Z 变换，
+\keyterm{系统函数（system function）}是单位脉冲响应的 Z 变换，
 \begin{equation}
   H(z)=\ZT\{h[n]\}=\frac{B(z)}{A(z)},\qquad
   Y(z)=H(z)X(z).
@@ -1081,7 +1080,7 @@ $x[n]=(-1)^n\stepfun[n]$ 对应 $X(z)=1/(1+z^{-1})$，
 
 \begin{example}[由方程求系统函数，再由系统函数还原方程]
 \label{eg:z-equation-system-function}
-  对因果、初始静止系统
+  对因果、初始松弛系统
   \[
     y[n]+y[n-1]-6y[n-2]=x[n-1],
   \]
@@ -1112,10 +1111,10 @@ $x[n]=(-1)^n\stepfun[n]$ 对应 $X(z)=1/(1+z^{-1})$，
 \subsection{由单位延时器构成方框图}
 \label{sec:dt-block-diagram}
 
-方框图使用加法器、数乘器和单位延时器。单位延时器的系统函数是 $z^{-1}$：
+\keyterm{方框图}使用加法器、数乘器和单位延时器。\keyterm{单位延时器}的系统函数是 $z^{-1}$：
 输入 $w[n]$，输出 $w[n-1]$；再接一个延时器，就得到 $w[n-2]$。
 它存的是上一个样值，与连续时间积分器存储累积面积的作用相对应。
-\red{初始静止对应延时器初值为零}。
+\blue{初始松弛对应延时器初值为零}。
 
 对二阶方程
 \[
@@ -1137,7 +1136,7 @@ $x[n]=(-1)^n\stepfun[n]$ 对应 $X(z)=1/(1+z^{-1})$，
 $b_0,b_1,b_2$ 后相加，就得到原输入输出方程。因此，在零状态下，
 这条延时链实现的系统函数正是 $B(z)/A(z)$。
 
-画图时先解出当前样值：
+画图时\hl{先解出当前样值}：
 \[
   w[n]=\frac1{a_0}\bigl(x[n]-a_1w[n-1]-a_2w[n-2]\bigr).
 \]
@@ -1179,7 +1178,7 @@ $b_0,b_1,b_2$ 加权后汇入输出。\cref{fig:z-delay-chain}画出了这两部
     y[n]=w[n]-3w[n-2].
   \]
   两图见\cref{fig:z-delay-equation-examples}。
-  \red{先统一当前样值的下标}，再读取反馈与前向系数，可避免把超前项画成延时项。
+  \hl{先统一当前样值的下标}，再读取反馈与前向系数，可避免把超前项画成延时项。
 \end{example}
 
 \begin{figure}[H]
@@ -1247,10 +1246,10 @@ $b_0,b_1,b_2$ 加权后汇入输出。\cref{fig:z-delay-chain}画出了这两部
   \label{fig:z-delay-cascade}
 \end{figure}
 
-\subsection{题型一：初始静止下求单位脉冲响应与零状态响应}
+\subsection{题型一：初始松弛下求单位脉冲响应与零状态响应}
 \label{subsec:z-zero-state}
 
-初始静止时，先由方程求 $H(z)$，再按输入求 $X(z)$，
+初始松弛时，先由方程求 $H(z)$，再按输入求 $X(z)$，
 最后对 $Y(z)=H(z)X(z)$ 作部分分式反演。求单位脉冲响应只需令
 $x[n]=\impulse[n]$，此时 $X(z)=1$，故 $Y(z)=H(z)$。
 \red{因果条件选定右边反演}；阶跃因子必须随反演项一起写出。
@@ -1258,7 +1257,7 @@ $x[n]=\impulse[n]$，此时 $X(z)=1$，故 $Y(z)=H(z)$。
 \begin{example}[输入延时一拍的单位脉冲响应]
 \label{eg:z-delayed-impulse-response}
   求\cref{eg:z-equation-system-function}第一个因果系统的单位脉冲响应。
-  初始静止下，
+  初始松弛下，
   \begin{align*}
     H(z)&=\frac{z^{-1}}{(1+3z^{-1})(1-2z^{-1})}\\
       &=-\frac{1/5}{1+3z^{-1}}+\frac{1/5}{1-2z^{-1}},
@@ -1269,7 +1268,7 @@ $x[n]=\impulse[n]$，此时 $X(z)=1$，故 $Y(z)=H(z)$。
     \boxed{h[n]=-\frac15(-3)^n\stepfun[n]
                        +\frac15\,2^n\stepfun[n]}.
   \]
-  用时域递推检查开头几项：
+  \blue{用时域递推检查开头几项}：
   \begin{align*}
     h[0]&=-h[-1]+6h[-2]+\impulse[-1]=0,\\
     h[1]&=-h[0]+6h[-1]+\impulse[0]=1,\\
@@ -1282,7 +1281,7 @@ $x[n]=\impulse[n]$，此时 $X(z)=1$，故 $Y(z)=H(z)$。
 
 \begin{example}[输入与系统的极点重合]
 \label{eg:z-repeated-pole-response}
-  因果、初始静止系统满足
+  因果、初始松弛系统满足
   \[
     y[n]-3y[n-1]+2y[n-2]=x[n]-x[n-1],
     \qquad x[n]=2^n\stepfun[n].
@@ -1317,7 +1316,7 @@ $x[n]=\impulse[n]$，此时 $X(z)=1$，故 $Y(z)=H(z)$。
 
 稳定 LTI 系统满足 $\sum_n|h[n]|<\infty$，其系统函数的 ROC 包含单位圆。
 对有理 $H(z)$，可以用这个条件选定每个极点对应的左右边序列。
-\red{稳定系统可以非因果}；仅当同时给出因果条件时，才可用
+\red{稳定系统可以非因果}；仅当\blue{同时给出因果条件}时，才可用
 “全部极点严格在单位圆内”判断稳定性。
 
 \begin{example}[稳定的双边系统与分段阶跃输入]
@@ -1358,8 +1357,8 @@ $x[n]=\impulse[n]$，此时 $X(z)=1$，故 $Y(z)=H(z)$。
   \[
     x[n]=3-\stepfun[n].
   \]
-  \red{先拆成常数与阶跃}，可以避开两侧输入变换的 ROC 不相交问题。
-  全时间轴上的指数 $a^n$ 是 LTI 系统的特征函数：
+  \hl{先拆成常数与阶跃}，可以避开两侧输入变换的 ROC 不相交问题。
+  全时间轴上的指数 $a^n$ 是 LTI 系统的\keyterm{特征函数}：
   当 $a\ne0$ 且 $a$ 位于 $H(z)$ 的 ROC 内时，
   \begin{align*}
     y[n]&=\sum_{k=-\infty}^{\infty}h[k]a^{n-k}\\
@@ -1443,8 +1442,8 @@ $x[n]=\impulse[n]$，此时 $X(z)=1$，故 $Y(z)=H(z)$。
 \subsection{题型三：单边 Z 变换与非零初始状态}
 \label{subsec:z-unilateral-initial-state}
 
-题目给出 $y[-1],y[-2]$ 等初始状态时，用单边 Z 变换
-（unilateral Z-transform）保留递推起步时读到的旧样值：
+题目给出 $y[-1],y[-2]$ 等初始状态时，用\keyterm{单边 Z 变换
+（unilateral Z-transform）}保留递推起步时读到的旧样值：
 \begin{equation}
   \widehat X(z)=\mathcal Z_{\mathrm u}\{x[n]\}
     =\sum_{n=0}^{\infty}x[n]z^{-n}.
@@ -1452,7 +1451,7 @@ $x[n]=\impulse[n]$，此时 $X(z)=1$，故 $Y(z)=H(z)$。
 \end{equation}
 它只对非负下标求和，等于 $x[n]\stepfun[n]$ 的双边 Z 变换。
 \red{因果序列的单双边变换相同}；
-一般序列的单边变换只记录 $n\geq0$ 的样值，反演不能恢复负下标部分。
+一般序列的单边变换只记录 $n\geq0$ 的样值，\blue{反演不能恢复负下标部分}。
 其 ROC 向无穷远延伸，反演时各有理项取右边序列。
 
 单边变换的移位性质会留下边界项。例如

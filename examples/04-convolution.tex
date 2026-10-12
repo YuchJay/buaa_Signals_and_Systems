@@ -85,7 +85,7 @@
   \[
     y[0]=x[-1]h[1]+x[0]h[0]+x[1]h[-1].
   \]
-  这里两个因子的下标每对都相加为 $0$。一般计算 $y[n]$ 时，每对下标都应相加为 $n$，可用来检查配对。
+  这里两个因子的下标每对都相加为 $0$。一般计算 $y[n]$ 时，\red{每对下标都应相加}为 $n$，\blue{可用来检查配对}。
 
   继续向右平移，重叠点逐渐减少，见\cref{fig:ex-lti-sliding-leaving}：
 
@@ -117,7 +117,7 @@
 \end{solution}
 
 \begin{technique}
-  先用首尾下标相加确定 $n$ 的范围。列表法把各行缩放移位的响应按\red{相同输出下标对齐}；公式法固定 $x[k]$，翻转 $h[k]$ 后每次右移一格，逐个写出当前重叠点的乘积及其和。负样值用括号保留符号，检查每对因子的下标之和是否等于当前 $n$。
+  先\hl{用首尾下标相加}确定 $n$ 的范围。列表法把各行缩放移位的响应按\hl{相同输出下标对齐}；公式法固定 $x[k]$，翻转 $h[k]$ 后每次右移一格，逐个写出当前重叠点的乘积及其和。负样值用括号保留符号，检查每对因子的下标之和是否等于当前 $n$。
 \end{technique}
 
 % 来源：materials/chapter2.pdf，第 4--5 页；补全每个 n 的求积过程。
@@ -166,7 +166,7 @@
   \]
   翻转后零值仍各占一个位置，平移时整行移动。
 
-  逐个列出同一下标处的乘积，按 $k$ 从小到大求和：
+  \hl{逐个列出同一下标处的乘积}，按 $k$ 从小到大求和：
   \[
     \begin{array}{c|c|l}
       n&\text{共同区间内的 }k&\text{乘积之和 }y[n]\\ \hline
@@ -194,7 +194,7 @@
 \end{solution}
 
 \begin{technique}
-  先按整数下标写齐序列，\red{内部零值必须占位}。删掉 $h[2],h[3]$ 会把后面的 $-1,1$ 错移两格。算完每个 $n$ 的乘积再求和；有重叠时仍可能得到零输出，不能把首尾范围内的零值跳过。
+  先按整数下标写齐序列，\hl{内部零值必须占位}。删掉 $h[2],h[3]$ 会把后面的 $-1,1$ 错移两格。算完每个 $n$ 的乘积再求和；有重叠时仍可能得到零输出，不能把首尾范围内的零值跳过。
 \end{technique}
 
 \begin{workedexample}[右边指数序列与单位阶跃的卷积]
@@ -225,7 +225,7 @@
     y[2]&=1\times1+a\times1+a^2\times1=1+a+a^2,\\
     y[3]&=1\times1+a\times1+a^2\times1+a^3\times1=1+a+a^2+a^3.
   \end{align*}
-  每右移一格，原有乘积保留，并新增 $x[n]\times1=a^n$。\Cref{fig:ex-geometric-step-sliding} 给出了前四次对齐。
+  每右移一格，\hl{原有乘积保留}，并新增 $x[n]\times1=a^n$。\Cref{fig:ex-geometric-step-sliding} 给出了前四次对齐。
 
   \begin{figure}[H]
     \centering
@@ -263,7 +263,7 @@
 \end{solution}
 
 \begin{technique}
-  先算 $n=0,1,2,3$，观察每次平移新增的乘积；再由 $k\geq0$ 与 $k\leq n$ 写出一般求和范围 $0\leq k\leq n$。\red{零下标也算一项}，因此最后一项是 $a^n$，项数是 $n+1$。有限等比和只需单独处理 $a=1$，不要求 $|a|<1$。
+  先算 $n=0,1,2,3$，观察每次平移新增的乘积；再由 $k\geq0$ 与 $k\leq n$ 写出一般求和范围 $0\leq k\leq n$。\red{零下标也算一项}，因此最后一项是 $a^n$，项数是 $n+1$。\blue{有限等比和只需单独处理} $a=1$，不要求 $|a|<1$。
 \end{technique}
 
 \par
@@ -320,7 +320,7 @@
 \end{solution}
 
 \begin{technique}
-  连续卷积中出现阶跃时，先把每个阶跃翻译成对积分变量的限制，再取交集。本题的有效区间是 $0\leq\tau\leq t$；它既给出积分上下限，也直接说明输出是右边信号。参数恰好相等时应回到积分本身，不能把 $a=b$ 直接代入含 $b-a$ 的结果。
+  连续卷积中出现阶跃时，先把每个阶跃\hl{翻译成对积分变量的限制}，再取交集。本题的有效区间是 $0\leq\tau\leq t$；它既给出积分上下限，也直接说明输出是右边信号。\red{参数恰好相等时应回到积分本身}，不能把 $a=b$ 直接代入含 $b-a$ 的结果。
 \end{technique}
 
 \begin{workedexample}[矩形脉冲与有限斜坡的卷积]
@@ -387,7 +387,7 @@
 \end{solution}
 
 \begin{technique}
-  图解法的分段点来自支撑端点刚好接触或越过彼此的位置。本题只需检查 $t=0,1,2$。每个区间内先写出两个支撑条件的交集，再积分；最后用分段连接处的函数值检查是否漏项或写错上下限。
+  图解法的分段点来自\red{支撑端点刚好接触或越过彼此}的位置。本题只需检查 $t=0,1,2$。每个区间内\hl{先写出两个支撑条件的交集}，再积分；最后\blue{用分段连接处的函数值检查}是否漏项或写错上下限。
 \end{technique}
 
 \begin{workedexample}[两个等宽矩形脉冲的卷积]
@@ -443,7 +443,7 @@
       0, & |t|>2T_0.
     \end{cases}
   \]
-  输出是以原点为中心的三角脉冲，底边支撑为 $[-2T_0,2T_0]$，峰值为 $2T_0E_1E_2$。单位参数下的结果见\cref{fig:ex-equal-width-rectangle-answer}。
+  \red{输出是以原点为中心的三角脉冲}，底边支撑为 $[-2T_0,2T_0]$，峰值为 $2T_0E_1E_2$。单位参数下的结果见\cref{fig:ex-equal-width-rectangle-answer}。
 
   \begin{figure}[htbp]
     \centering
@@ -454,7 +454,7 @@
 \end{solution}
 
 \begin{technique}
-  先画固定区间和滑动区间，再分别写出进入、离开时的积分上下限。常值矩形每段都可用“高度乘积 $\times$ 重叠长度”计算，长度等于右端减左端。等宽情形在 $t=0$ 完全重合，峰值等于脉冲宽度乘以两个高度。
+  \hl{先画固定区间和滑动区间}，再分别写出进入、离开时的积分上下限。常值矩形每段都可用“高度乘积 $\times$ 重叠长度”计算，长度等于右端减左端。等宽情形在 $t=0$ 完全重合，峰值等于脉冲宽度乘以两个高度。
 \end{technique}
 
 \begin{workedexample}[两个不等宽矩形脉冲的卷积]
@@ -476,7 +476,7 @@
 \end{workedexample}
 
 \begin{solution}
-  翻转后 $h$ 不变；$h(t-\tau)$ 的支撑区间为 $[t-b,t+b]$，固定的 $x(\tau)$ 支撑在 $[-a,a]$。四个接触时刻由滑动端点等于固定端点求得：
+  翻转后 $h$ 不变；$h(t-\tau)$ 的支撑区间为 $[t-b,t+b]$，固定的 $x(\tau)$ 支撑在 $[-a,a]$。四个接触时刻由\hl{滑动端点等于固定端点}求得：
   \[
     t+b=-a,\quad t-b=-a,\quad t+b=a,\quad t-b=a,
   \]
@@ -515,7 +515,7 @@
   \[
     y(t)=E_1E_2L(t).
   \]
-  当较窄矩形完全落入较宽矩形时，重叠长度保持为 $2b$，因而输出中间出现平台；两侧进入和离开时，重叠长度线性变化。结果是支撑区间 $[-a-b,a+b]$、平台区间 $[-a+b,a-b]$、峰值 $2bE_1E_2$ 的梯形。示例参数下见\cref{fig:ex-unequal-width-rectangle-answer}。
+  当较窄矩形完全落入较宽矩形时，重叠长度保持为 $2b$，\red{因而输出中间出现平台}；两侧进入和离开时，重叠长度线性变化。结果是支撑区间 $[-a-b,a+b]$、平台区间 $[-a+b,a-b]$、峰值 $2bE_1E_2$ 的梯形。示例参数下见\cref{fig:ex-unequal-width-rectangle-answer}。
   \begin{figure}[H]
     \centering
     \includegraphics[width=0.94\textwidth]{04-convolution/examples/rectangle-sliding.pdf}
@@ -532,7 +532,7 @@
 \end{solution}
 
 \begin{technique}
-  对不等宽矩形，先比较半宽 $a$ 与 $b$。较窄矩形完全进入较宽矩形的范围是 $|t|\leq a-b$，对应平台；开始或结束接触发生在 $|t|=a+b$。若 $a=b$，平台宽度退化为零，梯形自然退化为三角形。
+  对不等宽矩形，\blue{先比较半宽} $a$ 与 $b$。较窄矩形完全进入较宽矩形的范围是 $|t|\leq a-b$，对应平台；开始或结束接触发生在 $|t|=a+b$。若 $a=b$，平台宽度退化为零，\red{梯形自然退化为三角形}。
 \end{technique}
 
 \begin{workedexample}[带正负幅度的分段常值信号卷积]
@@ -573,7 +573,7 @@
       0,&\text{其他}.
     \end{cases}
   \]
-  分段边界的相对次序在 $t=-2,-1,0,1,2$ 处改变。\Cref{fig:ex-continuous-signed-sliding} 给出四种重叠状态；每块都要保留两个幅度的符号。
+  分段边界的相对次序在 $t=-2,-1,0,1,2$ 处改变。\Cref{fig:ex-continuous-signed-sliding} 给出四种重叠状态；\hl{每块都要保留两个幅度的符号}。
   \begin{figure}[H]
     \centering
     \includegraphics[width=0.88\textwidth]{04-convolution/examples/signed-sliding.pdf}
@@ -627,7 +627,7 @@
 \end{solution}
 
 \begin{technique}
-  信号含正负幅度时，“重叠面积”必须理解为带符号面积。先列出所有端点相遇产生的分段时刻，再在每个区间内把重叠区域进一步按幅度切块；每块用长度乘以两个幅度，最后作代数求和。
+  信号含正负幅度时，“重叠面积”\red{必须理解为带符号面积}。先列出所有端点相遇产生的分段时刻，再在每个区间内\hl{把重叠区域进一步按幅度切块}；每块用长度乘以两个幅度，最后作代数求和。
 \end{technique}
 
 \begin{workedexample}[周期方波与三角脉冲的卷积]
@@ -714,7 +714,7 @@
 \end{solution}
 
 \begin{technique}
-  周期信号与有限长信号卷积后仍具有输入的周期。先取一个完整周期，再排列方波跳变点和滑动脉冲折点；每段都标出方波的正负号后积分。半周期反对称性可核对相邻两段，也可在熟悉切块方法后减少计算。
+  周期信号与有限长信号\red{卷积后仍具有输入的周期}。\hl{先取一个完整周期}，再排列方波跳变点和滑动脉冲折点；每段都标出方波的正负号后积分。\blue{半周期反对称性可核对相邻两段}，也可在熟悉切块方法后减少计算。
 \end{technique}
 
 \begin{workedexample}[由含冲激的时变换信号反求原信号]
@@ -768,5 +768,5 @@
 \end{solution}
 
 \begin{technique}
-  反求复合自变量信号时，先解出原自变量再整体代回。普通函数只改变横坐标；冲激还须用 $\impulse(at)=\impulse(t)/|a|$ 修正幅度，不能漏掉绝对值因子。
+  反求复合自变量信号时，\hl{先解出原自变量再整体代回}。\red{普通函数只改变横坐标}；冲激还须用 $\impulse(at)=\impulse(t)/|a|$ 修正幅度，\red{不能漏掉绝对值因子}。
 \end{technique}

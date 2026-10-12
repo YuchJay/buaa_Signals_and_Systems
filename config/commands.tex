@@ -24,9 +24,38 @@
 \newcommand{\HT}{\mathcal{H}}
 \newcommand{\pv}{\operatorname{p.v.}}
 
-% 红色重点标记：\red{...} 用于关键结论、易错点与必记结果。
-% 用法约定：只标文字短语，不标公式；少量点缀，避免整句整段标红。
+% ── 重点标注 ────────────────────────────────────────────────
+% 四类标注的分工、密度与写法约定见 docs/style-guide.md「重点标注」。
+% 共同约定：只标文字短语，不标公式，标记内不出现 $...$ 或数学命令；
+% 标记之间不嵌套、不重叠，同一短语只归一类。
+
+% 红：结论与判据。读完后应当记住的知识要点。
 \newcommand{\red}[1]{\textcolor{red}{#1}}
+
+% 蓝：前提与检查项。结论成立的条件、适用范围，以及使用前应做的核对。
+\definecolor{annotblue}{RGB}{10,80,170}
+\newcommand{\blue}[1]{\textcolor{annotblue}{#1}}
+
+% 加粗：术语与名称。正式名词、被定义对象、变换与性质的名称，只在首次出现处。
+\newcommand{\keyterm}[1]{\textbf{#1}}
+
+% 黄底：做题步骤与口诀。手上照做的计算顺序与速判口令。
+% 逐字成盒，字间留出断行点，色块可随正文自然断行，不会顶出行宽。
+\ExplSyntaxOn
+\newcommand{\hl}[1]{%
+  \penalty0
+  \group_begin:
+    \setlength{\fboxsep}{0pt}
+    \colorbox{yellow!55}{\vphantom{国}\hspace*{1.2pt}}
+    \penalty0
+    \tl_map_inline:nn {#1} {
+      \colorbox{yellow!55}{\vphantom{国}##1}
+      \penalty0
+    }
+    \colorbox{yellow!55}{\vphantom{国}\hspace*{1.2pt}}
+  \group_end:
+  \penalty0}
+\ExplSyntaxOff
 
 % 成对关系，便于统一全文排版。
 \newcommand{\fourierpair}{\mathrel{\xleftrightarrow{\,\FT\,}}}

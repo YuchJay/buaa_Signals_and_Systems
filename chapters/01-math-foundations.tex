@@ -4,7 +4,7 @@
 \section{复数、复指数与欧拉公式}
 \label{sec:complex-numbers}
 
-复数把正弦信号的振幅和相位合在一次运算中，后面的频域分析会频繁使用这种表示。下面约定虚数单位为 $\iu$，即
+复数把正弦信号的振幅和相位合在一次运算中，后面的频域分析会频繁使用这种表示。下面约定\keyterm{虚数单位}为 $\iu$，即
 \[
   \iu^2=-1.
 \]
@@ -13,7 +13,7 @@
 \subsection{代数形式与复平面}
 
 \begin{definition}[复数的代数形式]
-  复数 $z$ 写成
+  \keyterm{复数} $z$ 写成
   \[
     z=x+\iu y, \qquad x,y\in\R,
   \]
@@ -23,7 +23,7 @@
 复数 $z=x+\iu y$ 可以看作复平面上的点 $(x,y)$，横轴是实轴，纵轴是虚轴。这个几何视角把一个复数拆成两个量：它离原点有多远，以及它指向哪个方向。
 
 \begin{definition}[模与幅角]
-  复数 $z=x+\iu y$ 的模（magnitude）为
+  复数 $z=x+\iu y$ 的\keyterm{模（magnitude）}为
   \begin{equation}
     |z|=\sqrt{x^2+y^2}.
     \label{eq:complex-magnitude}
@@ -32,7 +32,7 @@
   \[
     x=|z|\cos\theta,\qquad y=|z|\sin\theta
   \]
-  的角 $\theta$ 称为 $z$ 的幅角（argument）。若 $\theta$ 是一个幅角，则 $\theta+2k\pi$（$k\in\Z$）也是幅角。因此
+  的角 $\theta$ 称为 $z$ 的\keyterm{幅角（argument）}。若 $\theta$ 是一个幅角，则 $\theta+2k\pi$（$k\in\Z$）也是幅角。因此
   \[
     \arg z=\theta+2k\pi,\qquad k\in\Z.
   \]
@@ -44,13 +44,13 @@
 程序中通常使用双参数函数 $\operatorname{atan2}(y,x)$；它比单独计算 $\arctan(y/x)$ 更可靠。
 
 \begin{pitfall}[只用反正切求幅角]
-  $\arctan(y/x)$ 不能区分相差 $\pi$ 的两个方向，并且在 $x=0$ 时无定义。例如 $1+\iu$ 与 $-1-\iu$ 的虚实部之比相同，主幅角却分别是 $\pi/4$ 和 $-3\pi/4$。\red{应当先判断象限}，程序中则直接使用 $\operatorname{atan2}(y,x)$。
+  $\arctan(y/x)$ 不能区分相差 $\pi$ 的两个方向，并且在 $x=0$ 时无定义。例如 $1+\iu$ 与 $-1-\iu$ 的虚实部之比相同，主幅角却分别是 $\pi/4$ 和 $-3\pi/4$。\hl{应当先判断象限}，程序中则直接使用 $\operatorname{atan2}(y,x)$。
 \end{pitfall}
 
 \subsection{共轭与基本运算}
 
 \begin{definition}[复共轭]
-  $z=x+\iu y$ 的复共轭（complex conjugate）为
+  $z=x+\iu y$ 的\keyterm{复共轭（complex conjugate）}为
   \[
     z^*=x-\iu y.
   \]
@@ -72,7 +72,7 @@
 
 \subsection{欧拉公式与极坐标形式}
 
-欧拉公式（Euler's formula）把复指数和三角函数联系起来：
+\keyterm{欧拉公式（Euler's formula）}把复指数和三角函数联系起来：
 \begin{equation}
   \e^{\iu\theta}=\cos\theta+\iu\sin\theta.
   \label{eq:euler-formula}
@@ -84,7 +84,7 @@
   \qquad \theta\in\arg z.
   \label{eq:complex-polar-form}
 \end{equation}
-这称为复数的极坐标形式或指数形式。$r$ 是长度，$\e^{\iu\theta}$ 是单位圆上方向为 $\theta$ 的点。
+这称为复数的\keyterm{极坐标形式}或指数形式。$r$ 是长度，$\e^{\iu\theta}$ 是单位圆上方向为 $\theta$ 的点。
 
 \begin{intuition}
   乘上 $\e^{\iu\theta}$ 可以理解为在复平面上逆时针旋转 $\theta$，长度不变；再乘上正实数 $r$，则把长度放大为原来的 $r$ 倍。复数乘法于是变成了\red{“缩放再旋转”}。
@@ -103,7 +103,7 @@
 \end{align*}
 复数相乘时\red{模相乘、幅角相加}；相除时\red{模相除、幅角相减}。由于幅角只在模 $2\pi$ 的意义下确定，上面的角度关系也应按模 $2\pi$ 理解。
 
-对整数 $n$，棣莫弗公式给出
+对整数 $n$，\keyterm{棣莫弗公式}给出
 \[
   \bigl(r\e^{\iu\theta}\bigr)^n
   =r^n\e^{\iu n\theta}
@@ -146,18 +146,18 @@
   =\e^{\sigma t}\bigl(\cos\omega t+\iu\sin\omega t\bigr).
   \label{eq:complex-exponential-signal}
 \end{equation}
-其中 $\e^{\sigma t}$ 决定幅度包络，$\omega t$ 决定相位：$\sigma<0$ 时幅度衰减，$\sigma>0$ 时幅度增长，$\sigma=0$ 时信号以恒定模在复平面上旋转。若 $\omega\ne0$，纯复指数 $\e^{\iu\omega t}$ 的基本周期为
+其中 $\e^{\sigma t}$ 决定幅度包络，$\omega t$ 决定相位：$\sigma<0$ 时\red{幅度衰减}，$\sigma>0$ 时\red{幅度增长}，$\sigma=0$ 时信号以恒定模在复平面上旋转。若 $\omega\ne0$，纯复指数 $\e^{\iu\omega t}$ 的基本周期为
 \[
   T_0=\frac{2\pi}{|\omega|}.
 \]
 
-带有初相位的实正弦信号也能写成复指数的实部。对 $A\geq0$，有
+带有\keyterm{初相位}的实正弦信号也能写成复指数的实部。对 $A\geq0$，有
 \begin{equation}
   A\cos(\omega t+\varphi)
   =\operatorname{Re}\!\left\{A\e^{\iu\varphi}\e^{\iu\omega t}\right\}.
   \label{eq:sinusoid-complex-form}
 \end{equation}
-复数 $A\e^{\iu\varphi}$ 同时保存振幅 $A$ 和初相位 $\varphi$。后续处理正弦稳态响应时，经常\red{先计算右侧的复指数，再取实部}。
+复数 $A\e^{\iu\varphi}$ 同时保存振幅 $A$ 和初相位 $\varphi$。后续处理正弦稳态响应时，经常\hl{先计算右侧的复指数，再取实部}。
 
 离散时间复指数写作
 \[
@@ -170,11 +170,11 @@ $r$ 控制序列随 $n$ 的增长或衰减，$\omega$ 控制每前进一步所�
 也就是 $\omega/(2\pi)$ 为有理数。满足条件的最小正整数 $N$ 是基本周期。
 
 \begin{pitfall}[照搬连续时间的周期公式]
-  连续时间复指数在 $\omega\ne0$ 时总有周期。离散时间情形还要求 $\omega/(2\pi)$ 为有理数；例如 $\e^{\iu n}$ 不满足这一条件，所以没有整数基本周期。
+  连续时间复指数在 $\omega\ne0$ 时总有周期。离散时间情形还要求 $\omega/(2\pi)$ 为有理数；例如 $\e^{\iu n}$ 不满足这一条件，所以\red{没有整数基本周期}。
 \end{pitfall}
 
 \begin{remark}[相位只在模 $2\pi$ 下有意义]
-  $\varphi$ 与 $\varphi+2k\pi$ 描述同一个方向，也给出同一个正弦信号。比较两个相位时，需要先说明采用的主值区间；相位在 $\pi$ 与 $-\pi$ 附近发生数值跳变，\red{并不表示信号突然改变}。
+  $\varphi$ 与 $\varphi+2k\pi$ 描述同一个方向，也给出同一个正弦信号。比较两个相位时，\blue{需要先说明采用的主值区间}；相位在 $\pi$ 与 $-\pi$ 附近发生数值跳变，\red{并不表示信号突然改变}。
 \end{remark}
 
 \begin{pitfall}[混淆相位与时间平移]
@@ -188,39 +188,39 @@ $r$ 控制序列随 $n$ 的增长或衰减，$\omega$ 控制每前进一步所�
 \section{函数相等、几乎处处相等与广义函数}
 \label{sec:function-equality-and-distributions}
 
-在信号分析中，“两个函数相等”可能指不同层次的概念。若不先说明采用哪一种相等，单位阶跃在跳变点的取值、单位冲激的乘法等问题很容易混在一起。
+在信号分析中，“两个函数相等”可能指\red{不同层次的概念}。若不先说明采用哪一种相等，单位阶跃在跳变点的取值、单位冲激的乘法等问题很容易混在一起。
 
 \subsection{逐点相等与几乎处处相等}
 
 \begin{definition}[逐点相等]
-  若对定义域内每个 $t$ 都有 $f_1(t)=f_2(t)$，则称 $f_1$ 与 $f_2$ 逐点相等（pointwise equal）。只要存在一个点取值不同，它们就不是逐点相等的函数。
+  若对定义域内每个 $t$ 都有 $f_1(t)=f_2(t)$，则称 $f_1$ 与 $f_2$ \keyterm{逐点相等（pointwise equal）}。只要\red{存在一个点取值不同}，它们就不是逐点相等的函数。
 \end{definition}
 
 \begin{definition}[几乎处处相等]
-  若 $f_1$ 与 $f_2$ 只在一个零测集上取值不同，则称二者几乎处处相等（equal almost everywhere），记作
+  若 $f_1$ 与 $f_2$ 只在一个零测集上取值不同，则称二者\keyterm{几乎处处相等（equal almost everywhere）}，记作
   \[
     f_1=f_2\quad\text{a.e.}
   \]
   有限集和可数集都是零测集，因此\red{有限个点的取值差异不影响几乎处处相等}。
 \end{definition}
 
-若一个无限集合能与自然数集 $\N$ 建立一一对应，就称它为可数无限集；否则称为不可数集。整数集、有限个或可数个冲激位置都可以逐项编号，而实数集 $\R$ 不可数。后文把冲激按其零点位置写成求和时，依赖的正是这种\red{可以逐项编号}的结构。
+若一个无限集合能与自然数集 $\N$ 建立一一对应，就称它为\keyterm{可数无限集}；否则称为不可数集。整数集、有限个或可数个冲激位置都可以逐项编号，而实数集 $\R$ 不可数。后文把冲激按其零点位置写成求和时，依赖的正是这种\red{可以逐项编号}的结构。
 
-当两个函数可积且几乎处处相等时，它们的勒贝格积分相同。工程计算中最常见的例子是单位阶跃 $\stepfun(t)$：不同资料可能把 $\stepfun(0)$ 定义为 $0$、$1/2$ 或 $1$，这些版本并不逐点相等，但在普通区间积分中给出相同结果。因而只涉及普通积分时，\red{单个端点值通常可以忽略}。
+当两个函数可积且几乎处处相等时，它们的勒贝格积分相同。工程计算中最常见的例子是单位阶跃 $\stepfun(t)$：不同资料可能把 $\stepfun(0)$ 定义为 $0$、$1/2$ 或 $1$，这些版本并不逐点相等，但在普通区间积分中给出相同结果。因而\blue{只涉及普通积分时}，\red{单个端点值通常可以忽略}。
 
 \begin{pitfall}[把“几乎处处相等”理解成“处处相等”]
-  几乎处处相等只保证积分意义下通常无法察觉零测集上的差异，并不允许在指定点随意代入。例如点值算子会直接读取 $f(0)$；单位冲激也会抽取冲激所在点的函数值。遇到这类问题，先看当前运算是否\red{对单点敏感}。
+  几乎处处相等只保证积分意义下通常无法察觉零测集上的差异，并不允许在指定点随意代入。例如点值算子会直接读取 $f(0)$；单位冲激也会抽取冲激所在点的函数值。遇到这类问题，先看当前运算是否\blue{对单点敏感}。
 \end{pitfall}
 
 \subsection{广义函数按积分作用相等}
 
-单位冲激 $\impulse(t)$ 属于广义函数（generalized function），更严格地说是分布（distribution）。本课程只需掌握它的判等方式：若两个广义函数 $F_1$ 与 $F_2$ 对每个足够光滑且支撑有界的测试函数 $\varphi$ 都满足
+单位冲激 $\impulse(t)$ 属于\keyterm{广义函数（generalized function）}，更严格地说是分布（distribution）。本课程只需掌握它的判等方式：若两个广义函数 $F_1$ 与 $F_2$ 对每个\blue{足够光滑且支撑有界}的测试函数 $\varphi$ 都满足
 \begin{equation}
   \int_{-\infty}^{\infty}\varphi(t)F_1(t)\dd t
   =\int_{-\infty}^{\infty}\varphi(t)F_2(t)\dd t,
   \label{eq:distribution-equality}
 \end{equation}
-则认为 $F_1=F_2$。广义函数没有可供逐点比较的普通函数值，判等依据是它们对所有测试函数的\red{积分作用是否相同}。
+则认为 $F_1=F_2$。广义函数\red{没有可供逐点比较的普通函数值}，判等依据是它们对所有测试函数的\red{积分作用是否相同}。
 
 \begin{remark}[这里需要多少勒贝格积分]
   本书只使用“零测集不改变积分”和“几乎处处相等”这两个结论，不展开测度构造与一般勒贝格积分理论。单位冲激的严格基础是分布理论；\cref{eq:distribution-equality} 提供后文验证冲激恒等式所需的最小工具。
@@ -231,7 +231,7 @@ $r$ 控制序列随 $n$ 的增长或衰减，$\omega$ 控制每前进一步所�
 
 内积和正交投影会在傅里叶级数、傅里叶变换及数据展开中反复出现，先在这里统一约定。
 
-在复信号空间中，区间 $[a,b]$ 上的内积定义为
+在复信号空间中，区间 $[a,b]$ 上的\keyterm{内积}定义为
 \begin{equation}
   \langle x,y\rangle
   =\int_a^b x(t)\overline{y(t)}\dd t,
@@ -243,16 +243,16 @@ $r$ 控制序列随 $n$ 的增长或衰减，$\omega$ 控制每前进一步所�
   =\sum_{k=m}^{n}x[k]\overline{y[k]}.
   \label{eq:discrete-signal-inner-product}
 \end{equation}
-共轭放在第二个因子上，因而内积满足共轭对称性、对第一个因子的线性与可加性，以及正定性：
+\red{共轭放在第二个因子上}，因而内积满足共轭对称性、对第一个因子的线性与可加性，以及正定性：
 \begin{align*}
   \langle x,y\rangle&=\overline{\langle y,x\rangle},&
   \langle \lambda x,y\rangle&=\lambda\langle x,y\rangle,\\
   \langle x+z,y\rangle&=\langle x,y\rangle+\langle z,y\rangle,&
   \langle x,x\rangle&=\int_a^b|x(t)|^2\dd t\geq0.
 \end{align*}
-若 $\langle x,y\rangle=0$，称 $x,y$ 正交。复信号计算中必须保留共轭，否则 $\langle x,x\rangle$ 可能不是非负实数。
+若 $\langle x,y\rangle=0$，称 $x,y$ 正交。复信号计算中\red{必须保留共轭}，否则 $\langle x,x\rangle$ 可能不是非负实数。
 
-设函数族 $\{e_k(t)\}$ 两两正交，并且能够表示所考虑空间中的信号，则称其为正交基。展开
+设函数族 $\{e_k(t)\}$ 两两正交，并且能够表示所考虑空间中的信号，则称其为\keyterm{正交基}。展开
 \begin{equation}
   x(t)=\sum_k a_k e_k(t)
   \label{eq:orthogonal-expansion}
@@ -268,9 +268,9 @@ $r$ 控制序列随 $n$ 的增长或衰减，$\omega$ 控制每前进一步所�
   \boxed{a_r=\frac{\langle x,e_r\rangle}{\langle e_r,e_r\rangle}}.
   \label{eq:orthogonal-projection-coefficient}
 \end{equation}
-正交归一基满足 $\langle e_r,e_r\rangle=1$，此时 $a_r=\langle x,e_r\rangle$。展开系数就是信号沿各基方向的投影。
+正交归一基满足 $\langle e_r,e_r\rangle=1$，此时 $a_r=\langle x,e_r\rangle$。展开系数就是\red{信号沿各基方向的投影}。
 
-给定线性无关但不正交的函数 $\{\alpha_k\}$，Gram--Schmidt 方法先逐个减去已有方向上的投影：
+给定线性无关但不正交的函数 $\{\alpha_k\}$，\keyterm{Gram--Schmidt 方法}\hl{先逐个减去已有方向上的投影}：
 \begin{align*}
   \beta_1&=\alpha_1,\\
   \beta_2&=\alpha_2-
@@ -279,7 +279,7 @@ $r$ 控制序列随 $n$ 的增长或衰减，$\omega$ 控制每前进一步所�
     \frac{\langle\alpha_3,\beta_1\rangle}{\langle\beta_1,\beta_1\rangle}\beta_1-
     \frac{\langle\alpha_3,\beta_2\rangle}{\langle\beta_2,\beta_2\rangle}\beta_2.
 \end{align*}
-计算 $\beta_3$ 时，第二个投影方向须用已算出的 $\beta_2$。一般递推式为
+计算 $\beta_3$ 时，\hl{第二个投影方向须用已算出的} $\beta_2$。一般递推式为
 \begin{align}
   \beta_1&=\alpha_1,\\
   \beta_k&=\alpha_k-
@@ -289,7 +289,7 @@ $r$ 控制序列随 $n$ 的增长或衰减，$\omega$ 控制每前进一步所�
   \qquad k\geq2.
   \label{eq:gram-schmidt}
 \end{align}
-再令 $e_k=\beta_k/\sqrt{\langle\beta_k,\beta_k\rangle}$，即可得到正交归一基。后续章节只需把具体的傅里叶函数代入这套通用投影框架。
+再令 $e_k=\beta_k/\sqrt{\langle\beta_k,\beta_k\rangle}$，即可得到正交归一基。后续章节只需把具体的傅里叶函数\red{代入这套通用投影框架}。
 
 % 后续按资料进度补充“线性代数与正交展开视角”以及
 % “微分方程、差分方程与收敛基础”；未成文前不生成空节标题。

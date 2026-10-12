@@ -8,12 +8,12 @@
 \section{冲激串采样与三组关系}
 \label{sec:sampling-impulse}
 
-设采样周期（sampling period）$T>0$。样本序列定义为
+设\keyterm{采样周期（sampling period）}$T>0$。样本序列定义为
 \begin{equation}
   x[n]=x(nT),\qquad n\in\Z.
   \label{eq:sampling-sequence}
 \end{equation}
-采样角频率（sampling angular frequency）为
+\keyterm{采样角频率（sampling angular frequency）}为
 \begin{equation}
   \Omega_s=\frac{2\pi}{T}.
   \label{eq:sampling-frequency}
@@ -24,7 +24,7 @@ $x[n]$ 的下标没有时间量纲。只拿到序列、不知道 $T$，就不能
 \[
   p(t)=\sum_{n=-\infty}^{\infty}\impulse(t-nT)
 \]
-称为采样冲激串。若 $x$ 在各采样点连续，则
+称为\keyterm{采样冲激串}。若 $x$ \blue{在各采样点连续}，则
 \begin{equation}
   x_p(t)=x(t)p(t)
   =\sum_{n=-\infty}^{\infty}x(nT)\impulse(t-nT).
@@ -32,10 +32,10 @@ $x[n]$ 的下标没有时间量纲。只拿到序列、不知道 $T$，就不能
 \end{equation}
 第二步用的是 $x(t)\impulse(t-t_0)=x(t_0)\impulse(t-t_0)$。\red{冲激权重等于样本值}，冲激位置是 $nT$。$x_p$ 仍是连续时间信号，只是它的全部信息都集中在这些冲激上。
 
-同一组样本有三种写法：原来的连续信号、冲激串采样信号、样本序列。\red{三个公式配三张图}。这三组要能自己写出来。设 $x(t)\fourierpair X(\iu\Omega)$，且 $x[n]\fourierpair X(\e^{\iu\omega})$。
+同一组样本有三种写法：原来的连续信号、冲激串采样信号、样本序列。\hl{三个公式配三张图}。这三组要能自己写出来。设 $x(t)\fourierpair X(\iu\Omega)$，且 $x[n]\fourierpair X(\e^{\iu\omega})$。
 
 \begin{enumerate}
-  \item 连续信号 $x(t)$ 的频谱是 $X(\iu\Omega)$。若 $|\Omega|>\Omega_M$ 时 $X(\iu\Omega)=0$，称 $x$ 带限于 $\Omega_M$。$\Omega_M$ 是最高频率的一个上界，频谱不必占满 $[-\Omega_M,\Omega_M]$。\cref{fig:sampling-bandlimited-or} 的右图把能量分成远离零频的两段，\red{截止取频谱外缘}，不取单段宽度。
+  \item 连续信号 $x(t)$ 的频谱是 $X(\iu\Omega)$。若 $|\Omega|>\Omega_M$ 时 $X(\iu\Omega)=0$，称 $x$ 带限于 $\Omega_M$。$\Omega_M$ 是最高频率的一个上界，\blue{频谱不必占满} $[-\Omega_M,\Omega_M]$。\cref{fig:sampling-bandlimited-or} 的右图把能量分成远离零频的两段，\red{截止取频谱外缘}，不取单段宽度。
 
   \begin{figure}[H]
     \centering
@@ -92,7 +92,7 @@ $x[n]$ 的下标没有时间量纲。只拿到序列、不知道 $T$，就不能
 \]
 再对每一项使用 $\e^{\iu\Omega_0 t}\fourierpair 2\pi\impulse(\Omega-\Omega_0)$，就得到\cref{eq:sampling-impulse-train-spectrum}。各条谱线权重都相同，都是 $2\pi/T$。
 
-$x_p(t)=x(t)p(t)$ 是冲激串调制，频域仍用\cref{eq:ctft-frequency-convolution}。余弦调制只把频谱平移到 $\pm\Omega_0$，套到冲激串上会漏掉其余副本。
+$x_p(t)=x(t)p(t)$ 是冲激串调制，频域仍用\cref{eq:ctft-frequency-convolution}。余弦调制只把频谱平移到 $\pm\Omega_0$，\blue{套到冲激串上会漏掉其余副本}。
 \[
   X_p(\iu\Omega)
   =\frac1{2\pi}\bigl(X(\iu\,\cdot\,)\conv P(\iu\,\cdot\,)\bigr)(\Omega).
@@ -175,25 +175,25 @@ $P$ 是冲激串，与 $\impulse(\Omega-k\Omega_s)$ 卷积只把 $X$ 平移到 $
   设 $x(t)$ 带限于 $\Omega_M$，即 $|\Omega|>\Omega_M$ 时 $X(\iu\Omega)=0$。若采样角频率满足 $\Omega_s>2\Omega_M$，其中 $\Omega_s=2\pi/T$，则 $x(t)$ 由其样本 $x[n]=x(nT)$，$n\in\Z$，唯一确定。
 \end{theorem}
 
-\red{采样频率必须严格更大}。把恢复过程反过来，就得到唯一性。样本确定 $x_p$，\cref{eq:impulse-sampled-spectrum} 确定全部副本；低通取出基带后，$X$ 被确定，因而 $x$ 被确定。若两个带限信号的样本相同，它们的差在每个 $nT$ 处为零，对应的冲激串为零，基带频谱也为零，这个差就是零信号。
+\blue{采样频率必须严格更大}。把恢复过程反过来，就得到唯一性。样本确定 $x_p$，\cref{eq:impulse-sampled-spectrum} 确定全部副本；低通取出基带后，$X$ 被确定，因而 $x$ 被确定。若两个带限信号的样本相同，它们的差在每个 $nT$ 处为零，对应的冲激串为零，基带频谱也为零，这个差就是零信号。
 
 \begin{definition}[奈奎斯特采样频率]
   \label{def:nyquist-rate}
-  带限信号最高频率上界 $\Omega_M$ 的两倍 $2\Omega_M$ 称为该信号的奈奎斯特采样频率（Nyquist rate）。采样定理要求实际采样角频率严格大于这个值。
+  带限信号最高频率上界 $\Omega_M$ 的两倍 $2\Omega_M$ 称为该信号的\keyterm{奈奎斯特采样频率（Nyquist rate）}。\keyterm{采样定理}要求实际采样角频率严格大于这个值。
 \end{definition}
 
 \red{二倍带限上界}。它是采样角频率要超过的那条界，不是采样频率的一半，也不是信号里某条谱线的间隔。换成赫兹时，先把角频率除以 $2\pi$：最高频率 $f_M=\Omega_M/(2\pi)$ 时，每秒样数要大于 $2f_M$。
 
 $\Omega_s$ 比 $2\Omega_M$ 高出越多，\cref{eq:sampling-cutoff-gap} 的空隙越宽，低通的过渡带就可以越宽。\red{间隔越大过渡越宽}。提高采样频率不改变 $x$ 是否带限，只是把副本推开。
 
-等号 $\Omega_s=2\Omega_M$ 不包含在\cref{thm:sampling}里。此时相邻副本在 $\pm\Omega_M$ 相接。若频谱在这两个端点处为零，截止恰好取 $\Omega_s/2$ 仍能把基带分开；若端点处有非零值或冲激，相接处的权重会加在一起，基带不再是原来的一份。\red{等号时检查端点}。
+等号 $\Omega_s=2\Omega_M$ 不包含在\cref{thm:sampling}里。此时相邻副本在 $\pm\Omega_M$ 相接。若频谱在这两个端点处为零，截止恰好取 $\Omega_s/2$ 仍能把基带分开；若端点处有非零值或冲激，相接处的权重会加在一起，基带不再是原来的一份。\blue{等号时检查端点}。
 
 \subsection{混叠}
 \label{subsec:sampling-aliasing}
 
-$\Omega_s<2\Omega_M$ 时，若频谱确实延伸到 $\pm\Omega_M$，相邻副本就会进入对方的支撑，基带里的值变成若干份 $X$ 之和。这种现象称为混叠（aliasing）。加在一起的副本\red{重叠之后无法拆开}，采样定理的恢复步骤失效。
+$\Omega_s<2\Omega_M$ 时，若频谱确实延伸到 $\pm\Omega_M$，相邻副本就会进入对方的支撑，基带里的值变成若干份 $X$ 之和。这种现象称为\keyterm{混叠（aliasing）}。加在一起的副本\red{重叠之后无法拆开}，采样定理的恢复步骤失效。
 
-$\Omega_s>2\Omega_M$ 只保证按这个 $\Omega_M$ 画出的整段支撑不会重叠。它是充分条件。若实际非零频率低于所写的 $\Omega_M$，或者非零频带之间有空隙、副本正好落进空隙，频谱仍然可以分开。\cref{fig:sampling-aliasing} 的三行依次是：间隔足够时副本分开；支撑填满到 $\Omega_M$ 且间隔不足时重叠区相加；名义上 $\Omega_s<2\Omega_M$，但实际支撑更窄，副本仍然分开。
+$\Omega_s>2\Omega_M$ 只保证按这个 $\Omega_M$ 画出的整段支撑不会重叠。\red{它是充分条件}。若实际非零频率低于所写的 $\Omega_M$，或者非零频带之间有空隙、副本正好落进空隙，频谱仍然可以分开。\cref{fig:sampling-aliasing} 的三行依次是：间隔足够时副本分开；支撑填满到 $\Omega_M$ 且间隔不足时重叠区相加；名义上 $\Omega_s<2\Omega_M$，但实际支撑更窄，副本仍然分开。
 
 \begin{figure}[H]
   \centering
@@ -203,10 +203,10 @@ $\Omega_s>2\Omega_M$ 只保证按这个 $\Omega_M$ 画出的整段支撑不会�
 \end{figure}
 
 \begin{pitfall}[采样偏慢就一定混叠]
-  只比较 $\Omega_s$ 和一个偏大的上界，不能推出副本已经相交。$\Omega_M$ 若只是“不超过这个频率”，实际支撑可能更窄，空隙里也可能容纳下一份副本。检查时先画 $X$ 的真实非零区间，再平移 $\Omega_s$，看交集是否为空。\red{先核对实际支撑}。$\Omega_s>2\Omega_M$ 足够保证不混叠；反过来的不等式不是混叠的判据。
+  只比较 $\Omega_s$ 和一个偏大的上界，不能推出副本已经相交。$\Omega_M$ 若只是“不超过这个频率”，实际支撑可能更窄，空隙里也可能容纳下一份副本。检查时先画 $X$ 的真实非零区间，再平移 $\Omega_s$，看交集是否为空。\blue{先核对实际支撑}。$\Omega_s>2\Omega_M$ 足够保证不混叠；反过来的不等式不是混叠的判据。
 \end{pitfall}
 
-读取 $\Omega_M$ 时按频谱的实际支撑，不按波形看起来“变化有多快”估计。线谱取最高一条非零谱线的频率；连续频谱取支撑的外缘。平方之前的截止不能直接当作平方之后的截止，因为时域相乘会在频域把支撑加宽。两个例子分别处理线谱和加宽后的连续谱，见\cref{ex:sampling-nyquist-lines,ex:sampling-sinc-square}。
+读取 $\Omega_M$ 时按频谱的实际支撑，不按波形看起来“变化有多快”估计。\hl{线谱取最高一条非零谱线}的频率；连续频谱取支撑的外缘。平方之前的截止不能直接当作平方之后的截止，因为时域相乘会在频域把支撑加宽。两个例子分别处理线谱和加宽后的连续谱，见\cref{ex:sampling-nyquist-lines,ex:sampling-sinc-square}。
 
 \section{带限内插}
 \label{sec:sampling-interpolation}
@@ -231,9 +231,9 @@ $\Omega_s>2\Omega_M$ 只保证按这个 $\Omega_M$ 画出的整段支撑不会�
     x[n]\frac{\sin\bigl(\Omega_0(t-nT)\bigr)}{t-nT}.
   \label{eq:sampling-interpolation}
 \end{equation}
-这是低通内插（bandlimited interpolation）。\red{内插先做冲激串}，再与 $\sin(\Omega_0 t)/(\pi t)$ 的 $T$ 倍卷积。两个写法相同：$T/\pi$ 乘 $\sin/(t-nT)$，就是 $T$ 乘 $\sin/[\pi(t-nT)]$。
+这是\keyterm{低通内插（bandlimited interpolation）}。\hl{内插先做冲激串}，再与 $\sin(\Omega_0 t)/(\pi t)$ 的 $T$ 倍卷积。两个写法相同：$T/\pi$ 乘 $\sin/(t-nT)$，就是 $T$ 乘 $\sin/[\pi(t-nT)]$。
 
-若取 $\Omega_0=\pi/T=\Omega_s/2$，则 $\Omega_0$ 正好处在采样定理允许的区间中点。此时
+若取 $\Omega_0=\pi/T=\Omega_s/2$，则 $\Omega_0$ \red{正好处在采样定理允许的区间中点}。此时
 \[
   T\frac{\sin\bigl(\pi(t-nT)/T\bigr)}{\pi(t-nT)}
   =\sinc\Bigl(\frac{t-nT}{T}\Bigr),
@@ -253,7 +253,7 @@ $\Omega_s>2\Omega_M$ 只保证按这个 $\Omega_M$ 画出的整段支撑不会�
   \label{fig:sampling-interpolation}
 \end{figure}
 
-$\Omega_0\neq\pi/T$ 时，\cref{eq:sampling-interpolation} 在带限且满足采样定理的信号上仍然等于 $x(t)$，但 $h(kT)$ 一般不再是 $\impulse[k]$。$h(0)=T\Omega_0/\pi$，只有 $\Omega_0=\pi/T$ 时才是 $1$；非零整数 $k$ 处，$\sin(\Omega_0 kT)$ 也不一定为零。任意序列代进这个和式，曲线未必穿过全部样本。带限条件把样本约束住以后，邻项的贡献才正好补成 $x(t)$。\red{半采样频率才穿过样本}。用 $t=nT$ 代入来检查公式时，先看 $\Omega_0$ 是不是 $\pi/T$。
+$\Omega_0\neq\pi/T$ 时，\cref{eq:sampling-interpolation} \blue{在带限且满足采样定理的信号上}仍然等于 $x(t)$，但 $h(kT)$ 一般不再是 $\impulse[k]$。$h(0)=T\Omega_0/\pi$，只有 $\Omega_0=\pi/T$ 时才是 $1$；非零整数 $k$ 处，$\sin(\Omega_0 kT)$ 也不一定为零。任意序列代进这个和式，曲线未必穿过全部样本。带限条件把样本约束住以后，邻项的贡献才正好补成 $x(t)$。\red{半采样频率才穿过样本}。用 $t=nT$ 代入来检查公式时，先看 $\Omega_0$ 是不是 $\pi/T$。
 
 \subsection{带通内插}
 \label{subsec:sampling-bandpass-interpolation}
@@ -286,7 +286,7 @@ $\cos(\Omega_s t)$ 把低通频谱各分一半，移到 $\pm\Omega_s$。因此 $
 \end{figure}
 
 \begin{pitfall}[带通公式的左端仍写成原信号]
-  \cref{eq:sampling-bandpass-interpolation} 的左端是 $x(t)\cos(\Omega_s t)$。若把左端写成 $x(t)$，等于要求带通窗口同时完成解调。少写 $\cos$ 会回到低通内插；在 $\cos$ 之外再乘 $2$，输出会变成 $2x(t)\cos(\Omega_s t)$。对照图像时看留下的是零频副本还是 $\pm\Omega_s$ 副本，以及窗口高度是 $T$ 还是 $T/2$。
+  \cref{eq:sampling-bandpass-interpolation} 的左端是 $x(t)\cos(\Omega_s t)$。若把左端写成 $x(t)$，等于要求带通窗口同时完成解调。少写 $\cos$ 会回到低通内插；在 $\cos$ 之外再乘 $2$，输出会变成 $2x(t)\cos(\Omega_s t)$。对照图像时\blue{看留下的是零频副本还是} $\pm\Omega_s$ 副本，以及窗口高度是 $T$ 还是 $T/2$。
 \end{pitfall}
 
 \section{四组理想滤波器}
@@ -339,7 +339,7 @@ $\cos(\Omega_s t)$ 把低通频谱各分一半，移到 $\pm\Omega_s$。因此 $
   \label{fig:sampling-ideal-filters}
 \end{figure}
 
-这四组的通带高度都是 $1$。\red{对照表增益为一}。采样恢复不能直接套这张表。基带恢复要把低通增益改成 $T$，脉冲响应相应乘 $T$，用来抵消\cref{eq:impulse-sampled-spectrum}里的 $1/T$。取出 $\pm\Omega_s$ 两份副本时，窗口高度是 $T/2$，脉冲响应写成 $T\sin(\Omega_0 t)\cos(\Omega_s t)/(\pi t)$，余弦前面没有\cref{eq:sampling-ideal-bandpass}里的 $2$。增益为 $1$ 的带通则要把 $\sin(\Omega_0 t)\cos(\Omega_s t)/(\pi t)$ 乘 $2$，正负两段合起来才回到高度 $1$。先核对通带高度，再选系数。
+这四组的通带高度都是 $1$。\hl{对照表增益为一}。采样恢复不能直接套这张表。基带恢复要把低通增益改成 $T$，脉冲响应相应乘 $T$，用来抵消\cref{eq:impulse-sampled-spectrum}里的 $1/T$。取出 $\pm\Omega_s$ 两份副本时，窗口高度是 $T/2$，脉冲响应写成 $T\sin(\Omega_0 t)\cos(\Omega_s t)/(\pi t)$，余弦前面没有\cref{eq:sampling-ideal-bandpass}里的 $2$。增益为 $1$ 的带通则要把 $\sin(\Omega_0 t)\cos(\Omega_s t)/(\pi t)$ 乘 $2$，正负两段合起来才回到高度 $1$。先核对通带高度，再选系数。
 
 \begin{pitfall}[恢复低通和增益为一的低通用同一个脉冲响应]
   $\sin(\Omega_0 t)/(\pi t)$ 的通带高度是 $1$。采样恢复还要乘 $T$，否则基带只剩下原来的 $1/T$。带通也有两套系数：增益为 $1$ 的带通在 $\cos$ 前乘 $2$；从 $X_p$ 取出 $\pm\Omega_s$ 副本时，窗口高度是 $T/2$，$\cos$ 前不再乘 $2$。两套式子差一个因子时，先核对通带高度。
@@ -354,16 +354,16 @@ $\cos(\Omega_s t)$ 把低通频谱各分一半，移到 $\pm\Omega_s$。因此 $
   =\sum_{n=-\infty}^{\infty}x[n]h_0(t-nT).
   \label{eq:sampling-zoh}
 \end{equation}
-每个冲激在 $nT$ 处产生一个高度为 $x[n]$、宽度为 $\tau$ 的矩形。这里\red{脉冲宽度另用记号}：$T$ 决定样本间隔，$\tau$ 决定电平持续多久。$\tau<T$ 时脉冲之间有空隙；$\tau=T$ 时恰好首尾相接；$\tau>T$ 时相邻脉冲重叠，电平需要相加。
+每个冲激在 $nT$ 处产生一个高度为 $x[n]$、宽度为 $\tau$ 的矩形。这里\red{脉冲宽度另用记号}：$T$ 决定样本间隔，$\tau$ 决定电平持续多久。$\tau<T$ 时脉冲之间有空隙；$\tau=T$ 时恰好首尾相接；$\tau>T$ 时\blue{相邻脉冲重叠，电平需要相加}。
 
 \begin{definition}[零阶保持]
-  零阶保持（zero-order hold，ZOH）在 $t=nT$ 读取 $x[n]$，并在 $nT\le t<(n+1)T$ 上保持该值不变。它对应\cref{eq:sampling-zoh} 中的 $\tau=T$：
+  \keyterm{零阶保持（zero-order hold，ZOH）}在 $t=nT$ 读取 $x[n]$，并在 $nT\le t<(n+1)T$ 上保持该值不变。它对应\cref{eq:sampling-zoh} 中的 $\tau=T$：
   \[
     x_0(t)=x[n],\qquad nT\le t<(n+1)T.
   \]
 \end{definition}
 
-\red{保持到下一采样时刻}。一个区间内使用左端的样本值，样本值变了，电平才跳到下一层。矩形的端点采用上述半开区间约定，不影响频谱。\cref{fig:sampling-hold-shapes} 对照了窄矩形、完整零阶保持和下一节的线性内插。
+\red{保持到下一采样时刻}。一个区间内\hl{使用左端的样本值}，样本值变了，电平才跳到下一层。矩形的端点采用上述半开区间约定，不影响频谱。\cref{fig:sampling-hold-shapes} 对照了窄矩形、完整零阶保持和下一节的线性内插。
 
 \begin{figure}[H]
   \centering
@@ -392,7 +392,7 @@ $\cos(\Omega_s t)$ 把低通频谱各分一半，移到 $\pm\Omega_s$。因此 $
   X_0(\iu\Omega)=X_p(\iu\Omega)H_0(\iu\Omega).
   \label{eq:sampling-zoh-spectrum}
 \end{equation}
-$\Omega=0$ 处按极限取 $H_0(0)=\tau$。零点在 $\Omega=2k\pi/\tau$，$k\ne0$。幅度为 $\tau|\Sa(\Omega\tau/2)|$；在第一对零点之间，$\Sa$ 为正，相位是 $-\Omega\tau/2$。\red{矩形中心带来延时}，对应延时量 $\tau/2$。过了零点后，$\Sa$ 的符号还会使相位增加或减少 $\pi$，不能把整个实轴上的相位都画成同一条直线；零点处相位未定义。
+$\Omega=0$ 处按极限取 $H_0(0)=\tau$。零点在 $\Omega=2k\pi/\tau$，$k\ne0$。幅度为 $\tau|\Sa(\Omega\tau/2)|$；在第一对零点之间，$\Sa$ 为正，相位是 $-\Omega\tau/2$。\red{矩形中心带来延时}，对应延时量 $\tau/2$。过了零点后，$\Sa$ 的符号还会使相位增加或减少 $\pi$，不能把整个实轴上的相位都画成同一条直线；\blue{零点处相位未定义}。
 
 取 $\tau=T$。在没有混叠的基带内，$X_p=X/T$，于是
 \[
@@ -420,7 +420,7 @@ $\Omega=0$ 处按极限取 $H_0(0)=\tau$。零点在 $\Omega=2k\pi/\tau$，$k\ne
   |C_0(\iu\Omega)|=\frac1{\Sa(\Omega T/2)},\qquad
   \arg C_0(\iu\Omega)=\frac{\Omega T}{2}.
 \]
-高频衰减更大，补偿幅度也更大；正的相位斜率用来抵消保持脉冲的延时。\red{通带不能包含保持零点}，否则所需补偿增益无界。这是理想恢复模型，精确的频带截断和时间超前不能直接由一个因果滤波器实现。\cref{fig:sampling-hold-spectra} 将保持与补偿的幅相放在一起。
+高频衰减更大，补偿幅度也更大；正的相位斜率用来抵消保持脉冲的延时。\blue{通带不能包含保持零点}，\red{否则所需补偿增益无界}。这是理想恢复模型，精确的频带截断和时间超前不能直接由一个因果滤波器实现。\cref{fig:sampling-hold-spectra} 将保持与补偿的幅相放在一起。
 
 \begin{pitfall}[保持后只接增益为一的理想低通]
   增益为一的低通能去掉频谱副本，但保留下来的基带仍乘着 $\Sa(\Omega T/2)\e^{-\iu\Omega T/2}$。要精确恢复，须按\cref{eq:sampling-zoh-compensation} 补回幅度与相位。脉冲宽度不等于 $T$ 时，零频补偿增益还要改为 $T/\tau$。
@@ -429,7 +429,7 @@ $\Omega=0$ 处按极限取 $H_0(0)=\tau$。零点在 $\Omega=2k\pi/\tau$，$k\ne
 \section{一阶保持与线性内插}
 \label{sec:sampling-first-order-hold}
 
-零阶保持每段是常数。若希望曲线连续，可用直线连接相邻样本，这称为线性内插（linear interpolation），这里也称一阶保持（first-order hold，FOH）。相应的内插核是顶点高度为 $1$ 的对称三角脉冲：
+零阶保持每段是常数。若希望曲线连续，可用直线连接相邻样本，这称为线性内插（linear interpolation），这里也称\keyterm{一阶保持（first-order hold，FOH）}。相应的内插核是顶点高度为 $1$ 的对称三角脉冲：
 \begin{equation}
   h_1(t)=
   \begin{cases}
@@ -459,7 +459,7 @@ $\Omega=0$ 处按极限取 $H_0(0)=\tau$。零点在 $\Omega=2k\pi/\tau$，$k\ne
 \end{equation}
 \red{三角脉冲对应平方}。$H_1$ 实且非负，非零处的相位为 $0$，零点处相位未定义；第一对零点仍在 $\pm2\pi/T$。第一对零点之间，$\Sa^2$ 比 $\Sa$ 更小，一阶保持的基带幅度也有衰减。
 
-输入满足采样定理时，$X_1=X\Sa^2(\Omega T/2)$ 在基带成立。精确恢复需要
+\blue{输入满足采样定理时}，$X_1=X\Sa^2(\Omega T/2)$ 在基带成立。精确恢复需要
 \begin{equation}
   C_1(\iu\Omega)=
   \begin{cases}
@@ -489,7 +489,7 @@ $\Omega=0$ 处按极限取 $H_0(0)=\tau$。零点在 $\Omega=2k\pi/\tau$，$k\ne
   y(t)=x(t)\conv h(t),\qquad
   Y(\iu\Omega)=X(\iu\Omega)H(\iu\Omega).
 \]
-一条实现路线是先采样，再作离散卷积，最后恢复连续输出：
+一条实现路线是\hl{先采样，再作离散卷积}，最后恢复连续输出：
 \[
   x(t)\longrightarrow\boxed{\text{采样}}
   \longrightarrow x[n]\longrightarrow\boxed{h_d[n]}
@@ -537,7 +537,7 @@ $\Omega=0$ 处按极限取 $H_0(0)=\tau$。零点在 $\Omega=2k\pi/\tau$，$k\ne
   \label{fig:sampling-system-spectra}
 \end{figure}
 
-采样器本身不满足连续时间的时不变性：一个窄脉冲平移后可能落到采样点之间，从而完全漏采。上面的等效 LTI 关系依赖输入带限，\red{带限条件保证系统等效}。对任意输入，不能把整条采样处理路线直接当作同一个连续 LTI 系统。
+采样器本身不满足连续时间的时不变性：一个窄脉冲平移后可能落到采样点之间，从而完全漏采。上面的等效 LTI 关系依赖输入带限，\blue{带限条件保证系统等效}。对任意输入，不能把整条采样处理路线直接当作同一个连续 LTI 系统。
 
 \subsection{离散脉冲响应为什么多一个周期}
 \label{subsec:sampling-impulse-response-link}
@@ -567,7 +567,7 @@ $\Omega=0$ 处按极限取 $H_0(0)=\tau$。零点在 $\Omega=2k\pi/\tau$，$k\ne
 这里先用带限内插，再作精确卷积，不能把它理解成对任意函数都成立的数值积分近似。
 
 \begin{pitfall}[直接采样任意脉冲响应]
-  任意 $h$ 的采样会使 $H$ 的副本相加，$T h(nT)$ 一般不满足\cref{eq:sampling-system-frequency-link}。\red{先检查系统是否带限}。若 $H$ 不带限，可先截取主频带：
+  任意 $h$ 的采样会使 $H$ 的副本相加，$T h(nT)$ 一般不满足\cref{eq:sampling-system-frequency-link}。\blue{先检查系统是否带限}。若 $H$ 不带限，可先截取主频带：
   \[
     H_b(\iu\Omega)=
     \begin{cases}
@@ -575,13 +575,13 @@ $\Omega=0$ 处按极限取 $H_0(0)=\tau$。零点在 $\Omega=2k\pi/\tau$，$k\ne
       0,&|\Omega|>\pi/T.
     \end{cases}
   \]
-  令 $h_b$ 为其逆变换，再取 $h_d[n]=T h_b(nT)$。在满足采样定理的输入上，截掉输入本来没有的频率不会改变连续输出。
+  令 $h_b$ 为其逆变换，再取 $h_d[n]=T h_b(nT)$。在满足采样定理的输入上，截掉输入本来没有的频率\red{不会改变连续输出}。
 \end{pitfall}
 
 \section{连续信号与样本序列的能量}
 \label{sec:sampling-energy}
 
-满足采样定理时，样本能确定整条波形。连续能量对时间积分，离散能量对样值求和，两者还相差一个时间因子。设
+满足采样定理时，样本能确定整条波形。连续能量对时间积分，离散能量对样值求和，\red{两者还相差一个时间因子}。设
 \[
   E_c=\int_{-\infty}^{\infty}|x(t)|^2\dd t<\infty,
   \qquad
@@ -607,7 +607,7 @@ $\Omega=0$ 处按极限取 $H_0(0)=\tau$。零点在 $\Omega=2k\pi/\tau$，$k\ne
   =T\sum_{n=-\infty}^{\infty}|x(nT)|^2.
   \label{eq:sampling-energy}
 \end{equation}
-\red{能量求和还要乘周期}。采样越密，参与求和的样值越多；乘上每一格的时间宽度 $T$，才得到连续能量。这是在上述条件下的精确等式。
+\blue{能量求和还要乘周期}。采样越密，参与求和的样值越多；乘上每一格的时间宽度 $T$，才得到连续能量。\red{这是在上述条件下的精确等式}。
 
 例如 $x(t)=\sin(\pi t)/(\pi t)=\sinc(t)$，$X(\iu\Omega)$ 是高度 $1$、宽度 $2\pi$ 的矩形，故 $E_c=1$。取 $T=1/2$ 和 $T=1/4$，采样频率均严格超过 $2\pi$，样本序列能量分别为 $2$ 和 $4$，乘上对应 $T$ 后都为 $1$。\cref{fig:sampling-energy} 对照两组样本及能量。
 
@@ -626,7 +626,7 @@ $\Omega=0$ 处按极限取 $H_0(0)=\tau$。零点在 $\Omega=2k\pi/\tau$，$k\ne
     0,&\text{其余},
   \end{cases}
 \]
-全部 $q(nT)=0$，样本能量为 $0$，连续能量却为 $T/2$。\red{非带限信号不能照套}。它与零信号有完全相同的样本，说明这些样本既不足以恢复波形，也不足以确定连续能量。周期信号通常总能量无穷大，也不属于这里的有限能量条件；它们的平均功率要另外计算。
+全部 $q(nT)=0$，样本能量为 $0$，连续能量却为 $T/2$。\blue{非带限信号不能照套}。它与零信号有完全相同的样本，说明这些样本既不足以恢复波形，也不足以确定连续能量。周期信号通常总能量无穷大，\blue{也不属于这里的有限能量条件}；它们的平均功率要另外计算。
 \section{希尔伯特变换}
 \label{sec:sampling-hilbert}
 
@@ -668,7 +668,7 @@ $1/(\pi t)$ 的主值变换为 $-\iu\operatorname{sgn}(\Omega)$。这里把它�
   \end{aligned}
   \label{eq:sampling-causal-real-imag}
 \end{equation}
-\red{因果性约束频谱实虚部}，它们不能任意独立指定。这里的变换沿频率变量 $\Omega$ 进行；分母在 $\lambda=\Omega$ 处为零，积分必须按主值理解。这些关系可按均方意义使用，点态表达适用于主值存在的频率。
+\red{因果性约束频谱实虚部}，它们不能任意独立指定。这里的变换沿频率变量 $\Omega$ 进行；分母在 $\lambda=\Omega$ 处为零，积分必须按主值理解。\blue{这些关系可按均方意义使用}，点态表达适用于主值存在的频率。
 
 例如 $x(t)=\e^{-t}\stepfun(t)$，
 \[
@@ -693,7 +693,7 @@ $x_{\mathrm e}(t)=\e^{-|t|}/2$；因果性要求 $t<0$ 的整段为零，故 $t>
 \label{subsec:sampling-hilbert-definition}
 
 \begin{definition}[希尔伯特变换]
-  希尔伯特变换（Hilbert transform）记为
+  \keyterm{希尔伯特变换（Hilbert transform）}记为
   \begin{equation}
     \widehat{x}(t)=\HT\{x\}(t)
       =x(t)\conv\pv\frac1{\pi t}
@@ -709,7 +709,7 @@ $x_{\mathrm e}(t)=\e^{-|t|}/2$；因果性要求 $t<0$ 的整段为零，故 $t>
            +\int_{t+\varepsilon}^{\infty}
               \frac{x(\tau)}{t-\tau}\dd\tau\right].
   \]
-  无穷远处也须有适当收敛。对有限能量信号，可等价地按下面的频域乘子定义，再以均方意义反演。
+  \blue{无穷远处也须有适当收敛}。对有限能量信号，可等价地按下面的频域乘子定义，再以均方意义反演。
 \end{definition}
 
 \red{奇点两侧对称取主值}，两边的奇异贡献要一起取极限，不能各自当作普通反常积分计算。它的系统关系为
@@ -759,7 +759,7 @@ $x_{\mathrm e}(t)=\e^{-|t|}/2$；因果性要求 $t<0$ 的整段为零，故 $t>
           \frac{\widehat{x}(\tau)}{t-\tau}\dd\tau.
   \label{eq:sampling-inverse-hilbert}
 \end{equation}
-\red{变换两次得到负号}。若信号含常数直流项，按 $G_{\mathrm H}(0)=0$ 的约定该项会被去掉，不能再靠反变换恢复；“两次变换等于负原信号”不能直接套到含直流的周期信号上。
+\red{变换两次得到负号}。\blue{若信号含常数直流项}，按 $G_{\mathrm H}(0)=0$ 的约定该项会被去掉，不能再靠反变换恢复；“两次变换等于负原信号”不能直接套到含直流的周期信号上。
 
 由 $|G_{\mathrm H}|=1$ 几乎处处及帕塞瓦尔关系，
 \[
@@ -799,7 +799,7 @@ $x_{\mathrm e}(t)=\e^{-|t|}/2$；因果性要求 $t<0$ 的整段为零，故 $t>
   \HT[\sin(\Omega_0t)]=-\cos(\Omega_0t).
   \label{eq:sampling-hilbert-sinusoid}
 \end{equation}
-\red{余弦变正弦}，对正频率而言 $\sin(\Omega_0t)=\cos(\Omega_0t-\pi/2)$，恰好是负九十度移相。第二个结果也可逐条谱线计算：
+\red{余弦变正弦}，对正频率而言 $\sin(\Omega_0t)=\cos(\Omega_0t-\pi/2)$，恰好是负九十度移相。第二个结果也可\hl{逐条谱线计算}：
 \[
   (-\iu)\frac{\pi}{\iu}=-\pi,\qquad
   (\iu)\left(-\frac{\pi}{\iu}\right)=-\pi.
@@ -815,18 +815,18 @@ $x_{\mathrm e}(t)=\e^{-|t|}/2$；因果性要求 $t<0$ 的整段为零，故 $t>
 
 常相位 $\theta_0$ 可以沿线性性质展开，得到
 $\HT[\cos(\Omega_0t+\theta_0)]=\sin(\Omega_0t+\theta_0)$。
-若相位或幅度随时间变化，则需要检查下一节的频带条件。
+若相位或幅度随时间变化，\blue{则需要检查下一节的频带条件}。
 
 \section{窄带信号与瞬时参数}
 \label{sec:sampling-instantaneous}
 
-实振荡信号的样值会过零，直接取 $|x(t)|$ 得到的是快速起伏。将 $x$ 与它的希尔伯特变换合成复信号，可以同时描述振荡的幅度和相位。以下输入均为实信号。
+实振荡信号的样值会过零，直接取 $|x(t)|$ \red{得到的是快速起伏}。将 $x$ 与它的希尔伯特变换合成复信号，\red{可以同时描述振荡的幅度和相位}。\blue{以下输入均为实信号}。
 
 \subsection{解析信号与单侧频谱}
 \label{subsec:sampling-analytic}
 
 \begin{definition}[解析信号]
-  与 $x(t)$ 对应的解析信号（analytic signal）为
+  与 $x(t)$ 对应的\keyterm{解析信号（analytic signal）}为
   \begin{equation}
     z(t)=x(t)+\iu\widehat{x}(t).
     \label{eq:sampling-analytic}
@@ -841,7 +841,7 @@ $\HT[\cos(\Omega_0t+\theta_0)]=\sin(\Omega_0t+\theta_0)$。
      \end{cases}
   \label{eq:sampling-analytic-spectrum}
 \end{equation}
-\red{负频率消去}，\red{正频率加倍}。若有独立的直流谱线，其权重保持原值。实信号的负频率与正频率共轭，保留一侧即可编码整条实波形；取 $z$ 的实部仍为 $x$。对纯余弦，$z(t)=\cos(\Omega_0t)+\iu\sin(\Omega_0t)=\e^{\iu\Omega_0t}$。
+\red{负频率消去}，\red{正频率加倍}。\blue{若有独立的直流谱线}，其权重保持原值。实信号的负频率与正频率共轭，保留一侧即可编码整条实波形；取 $z$ 的实部仍为 $x$。对纯余弦，$z(t)=\cos(\Omega_0t)+\iu\sin(\Omega_0t)=\e^{\iu\Omega_0t}$。
 
 \cref{fig:sampling-analytic-spectrum} 画出窄带实信号的两侧频带与解析信号的单侧频带。它与前面的“因果信号实虚部关系”作用于不同变量：因果性让 $R(\Omega),I(\Omega)$ 构成频率变量上的希尔伯特对；解析信号的 $x(t),\widehat{x}(t)$ 则构成时间变量上的希尔伯特对。解析信号未必因果。
 
@@ -855,7 +855,7 @@ $\HT[\cos(\Omega_0t+\theta_0)]=\sin(\Omega_0t+\theta_0)$。
 \subsection{慢变包络与载波的频带条件}
 \label{subsec:sampling-narrowband}
 
-窄带信号（narrowband signal）可写成
+\keyterm{窄带信号（narrowband signal）}可写成
 \[
   x(t)=a(t)\cos[\Omega_0t+\theta(t)],\qquad \Omega_0>0.
 \]
@@ -864,7 +864,7 @@ $a(t)$ 描述幅度变化，$\theta(t)$ 描述相对于载波的相位变化。�
   \widehat{x}(t)\approx a(t)\sin[\Omega_0t+\theta(t)],
   \label{eq:sampling-narrowband-approx}
 \end{equation}
-其前提是 $a,\theta$ 相对于载波变化缓慢，调制后的频带集中在 $\pm\Omega_0$ 附近，且远离零频。\red{慢变条件先检查}。不能把一般乘积中的 $a(t)$ 随意移出主值积分。
+其前提是 $a,\theta$ 相对于载波变化缓慢，调制后的频带集中在 $\pm\Omega_0$ 附近，且远离零频。\blue{慢变条件先检查}。不能把一般乘积中的 $a(t)$ 随意移出主值积分。
 
 把余弦的和角公式展开：
 \[
@@ -886,7 +886,7 @@ $[B_b(\iu(\Omega-\Omega_0))+B_b(\iu(\Omega+\Omega_0))]/2$，
     &=b(t)\sin(\Omega_0t)+c(t)\cos(\Omega_0t)\\
     &=a(t)\sin[\Omega_0t+\theta(t)].
 \end{align*}
-\red{频带分离时可取等号}。仅知道 $a(t)$ 和 $\theta(t)$ 各自带宽小于 $\Omega_0$，未必能保证 $a\cos\theta$ 和 $a\sin\theta$ 也如此；非线性的 $\cos\theta,\sin\theta$ 可能产生更多频率。一般慢变调制仍按\cref{eq:sampling-narrowband-approx} 的近似处理。常相位、低通包络调幅是容易满足精确条件的情形，见\cref{ex:sampling-envelope}。
+\red{频带分离时可取等号}。仅知道 $a(t)$ 和 $\theta(t)$ 各自带宽小于 $\Omega_0$，未必能保证 $a\cos\theta$ 和 $a\sin\theta$ 也如此；非线性的 $\cos\theta,\sin\theta$ \red{可能产生更多频率}。一般慢变调制仍按\cref{eq:sampling-narrowband-approx} 的近似处理。常相位、低通包络调幅是容易满足精确条件的情形，见\cref{ex:sampling-envelope}。
 
 \subsection{瞬时包络、相位与频率}
 \label{subsec:sampling-instantaneous-parameters}
@@ -901,9 +901,9 @@ $z(t)=A(t)\e^{\iu\varphi(t)}$。定义
   \end{aligned}
   \label{eq:sampling-instantaneous-parameters}
 \end{equation}
-分别称为瞬时包络（instantaneous envelope）、瞬时相位（instantaneous phase）和瞬时角频率（instantaneous angular frequency）。相位求导前须选连续分支；若写成赫兹，则 $f_{\mathrm{inst}}=\Omega_{\mathrm{inst}}/(2\pi)$。
+分别称为瞬时包络（instantaneous envelope）、瞬时相位（instantaneous phase）和\keyterm{瞬时角频率（instantaneous angular frequency）}。\blue{相位求导前须选连续分支}；若写成赫兹，则 $f_{\mathrm{inst}}=\Omega_{\mathrm{inst}}/(2\pi)$。
 
-\red{相位要保留象限}。$\arctan(\widehat{x}/x)$ 只给斜率，不能区别第一、第三象限；先用 $\operatorname{atan2}(\widehat{x},x)$ 确定主值相位，再把相位的 $2\pi$ 跳变展开为连续曲线。\red{求导前展开相位}，否则分支切换会造成虚假的频率尖峰。$A=0$ 处相位未定义，不能强行求导；$x=0$ 而 $\widehat{x}\ne0$ 的普通过零点则没有这个问题。
+\red{相位要保留象限}。$\arctan(\widehat{x}/x)$ 只给斜率，不能区别第一、第三象限；先用 $\operatorname{atan2}(\widehat{x},x)$ \hl{确定主值相位}，再把相位的 $2\pi$ 跳变展开为连续曲线。\red{求导前展开相位}，否则分支切换会造成虚假的频率尖峰。$A=0$ 处\blue{相位未定义，不能强行求导}；$x=0$ 而 $\widehat{x}\ne0$ 的普通过零点则没有这个问题。
 
 若 $x,\widehat{x}$ 可微且 $A>0$，也可直接计算
 \begin{equation}

@@ -45,7 +45,7 @@ def impulse_response():
     ax.annotate(r"$t=\ln\frac{3}{2}$", xy=(tmax, 0.148), xytext=(1.55, 0.34),
                 color=BLUE, fontsize=9,
                 arrowprops=dict(arrowstyle="->", color=BLUE, lw=0.8))
-    style(ax, (0, 3.2), (-0.35, 0.95), r"$t$", r"$y(t)$")
+    style(ax, (0, 3.2), (-1.08, 1.08), r"$t$", r"$y(t)$")
     ax.legend(frameon=False, fontsize=9, loc="lower right")
     save(fig, OUT / "first-order-answer.pdf")
 
@@ -63,6 +63,27 @@ def second_order_response():
                 arrowprops=dict(arrowstyle="->", color=BLUE, lw=0.8))
     style(ax, (0, 6.0), (-0.06, 0.62), r"$t$", r"$y(t)$")
     save(fig, OUT / "second-order-answer.pdf")
+
+
+def repeated_pole_response():
+    """Exponential input e^-t for y''+3y'+2y=x, with zero initial state."""
+    fig, ax = plt.subplots(figsize=(5.6, 3.0))
+    t = np.linspace(0, 7.0, 900)
+    particular = t * np.exp(-t)
+    homogeneous = -np.exp(-t) + np.exp(-2 * t)
+    ax.plot(t, particular + homogeneous, color=BLUE, lw=1.8,
+            label=r"$y(t)=t\mathrm{e}^{-t}-\mathrm{e}^{-t}+\mathrm{e}^{-2t}$")
+    ax.plot(t, particular, color=GRAY, lw=1.1, ls="--",
+            label=r"$y_{\mathrm{p}}(t)=t\mathrm{e}^{-t}$")
+    ax.plot(t, homogeneous, color=RED, lw=1.1, ls=":",
+            label=r"$y_{\mathrm{h}}(t)=-\mathrm{e}^{-t}+\mathrm{e}^{-2t}$")
+    ax.plot([0], [0], "o", color=BLUE, ms=4)
+    ax.annotate(r"$y(0^+)=y'(0^+)=0$", xy=(0.07, 0.002),
+                xytext=(2.6, -0.17), color=BLUE, fontsize=9,
+                arrowprops=dict(arrowstyle="->", color=BLUE, lw=0.8))
+    style(ax, (0, 7.0), (-0.30, 0.48), r"$t$", r"$y(t)$")
+    ax.legend(frameon=False, fontsize=8.5, loc="upper right")
+    save(fig, OUT.parent / "repeated-pole-response.pdf")
 
 
 def impulse_input_rc():
@@ -85,4 +106,5 @@ def impulse_input_rc():
 if __name__ == "__main__":
     impulse_response()
     second_order_response()
+    repeated_pole_response()
     impulse_input_rc()
