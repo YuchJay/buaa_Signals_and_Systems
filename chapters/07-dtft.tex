@@ -846,7 +846,7 @@ $H(\e^{-\iu\omega_0})=H^*(\e^{\iu\omega_0})$。两项才能合成实余弦：
 
 \subsection{时域相乘与一个周期内的卷积}
 
-设 $x[n]\fourierpair X(\e^{\iu\omega})$、$y[n]\fourierpair Y(\e^{\iu\omega})$，时域乘积为 $z[n]=x[n]y[n]$。两个频谱均以 $2\pi$ 为周期，定义其\keyterm{周期卷积（periodic convolution）}
+设 $x[n]\fourierpair X(\e^{\iu\omega})$、$y[n]\fourierpair Y(\e^{\iu\omega})$，时域乘积为 $z[n]=x[n]y[n]$。两个频谱均以 $2\pi$ 为周期，定义其周期卷积
 \[
   (X*_{2\pi}Y)(\omega)
     =\int_{\alpha}^{\alpha+2\pi}
@@ -961,7 +961,7 @@ $H(\e^{-\iu\omega_0})=H^*(\e^{\iu\omega_0})$。两项才能合成实余弦：
 \subsection{一个周期内的能量积分}
 \label{sec:dtft-parseval}
 
-对有限能量序列，\keyterm{帕塞瓦尔定理（Parseval's relation）}给出
+对有限能量序列，帕塞瓦尔关系给出
 \begin{equation}
   \boxed{\sum_{n=-\infty}^{\infty}|x[n]|^2
     =\frac1{2\pi}\int_{\alpha}^{\alpha+2\pi}
@@ -1060,13 +1060,13 @@ $H(\e^{-\iu\omega_0})=H^*(\e^{\iu\omega_0})$。两项才能合成实余弦：
 \section{离散傅里叶级数与有限点 DFT}
 \label{sec:dtft-dft}
 
-\subsection{四种傅里叶表示}
+\subsection{傅里叶表示的对象}
 \label{sec:fourier-representations}
 
 前面已经分别讨论了连续时间和离散时间的傅里叶表示。按时域对象与频域对象的连续性、离散性，可以作如下区分：
 \begin{table}[H]
   \centering
-  \caption{四种傅里叶表示的对象和频域形式}
+  \caption{常用傅里叶表示的对象和频域形式}
   \label{tab:fourier-representations}
   \begin{tabular}{c c c c}
     \toprule
@@ -1075,19 +1075,101 @@ $H(\e^{-\iu\omega_0})=H^*(\e^{\iu\omega_0})$。两项才能合成实余弦：
     CTFS & 连续时间周期信号 & 离散频率系数 & 离散谱线 \\
     CTFT & 连续时间非周期信号 & 连续频率函数 & 连续频谱 \\
     DTFT & 离散时间序列 & 连续频率函数 & $2\pi$ 周期频谱 \\
+    DTFS & 离散时间周期序列 & 离散频率系数 & 周期系数，$N$ 个独立值 \\
     DFT & $N$ 个离散样值 & $N$ 个离散频率样值 & 有限数组 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-表中的 DFT（离散傅里叶变换，discrete Fourier transform）与\keyterm{离散傅里叶级数（discrete-time Fourier series, DTFS）}\red{使用同一组有限维复指数}。若 $x[n]$ 是 $N$ 周期序列，记一个周期内的级数系数为 $a_k$；若只给出 $N$ 个样值并把它们作为有限序列，通常把对应的频域样值记作 $X[k]$。本章采用
+表中的 CTFT 和 DTFT 也可在广义函数意义下表示周期信号，频谱表现为冲激线谱。DTFS 则直接记录离散周期序列的谐波系数；下面先写出其分析、重构关系，再与有限点 DFT 对照。
+
+\subsection{离散傅里叶级数的分析与重构}
+\label{subsec:dtfs-analysis-synthesis}
+
+设 $x[n+N]=x[n]$，取 $\omega_0=2\pi/N$。\keyterm{离散傅里叶级数（discrete-time Fourier series, DTFS）}写成
+\begin{equation}
+  x[n]=\sum_{k=0}^{N-1}a_k\e^{\iu2\pi kn/N},\qquad
+  a_k=\frac1N\sum_{n=0}^{N-1}x[n]\e^{-\iu2\pi kn/N}.
+  \label{eq:dtfs-analysis-synthesis}
+\end{equation}
+第一式由系数重构序列，第二式由一个周期的样值求系数。两个求和区间都可改取任意连续 $N$ 个整数；\blue{重构时只取一组独立谐波}。
+
+这里只需 $N$ 项，因为
+\[
+  \e^{\iu2\pi(k+N)n/N}=\e^{\iu2\pi kn/N}.
+\]
+频率下标增加 $N$ 后，得到同一个离散复指数，系数相应满足 $a_{k+N}=a_k$。这与连续时间级数的无限组不同谐波有区别：离散周期序列可用\red{有限项精确重构}，不需要令部分和的项数趋于无穷。分析公式中的 $1/N$ 来自一个周期上的复指数正交性，推导见\cref{sec:dft-inverse}。
+
+\begin{example}[四周期序列的系数与逐点重构]
+  \label{eg:dtfs-four-point}
+  设 $x[n+4]=x[n]$，一个周期为
+  \[
+    x[0]=1,\quad x[1]=1,\quad x[2]=0,\quad x[3]=0.
+  \]
+  四个系数逐项计算为
+  \begin{align*}
+    a_0&=\frac14(1+1+0+0)=\frac12,\\
+    a_1&=\frac14\bigl(1+1\cdot(-\iu)+0\cdot(-1)+0\cdot\iu\bigr)
+       =\frac{1-\iu}{4},\\
+    a_2&=\frac14\bigl(1+1\cdot(-1)+0\cdot1+0\cdot(-1)\bigr)=0,\\
+    a_3&=\frac14\bigl(1+1\cdot\iu+0\cdot(-1)+0\cdot(-\iu)\bigr)
+       =\frac{1+\iu}{4}.
+  \end{align*}
+  零样值仍占据 $n=2,3$ 的位置，指数因子的下标不随样值是否为零而改变。将系数代回重构式：
+  \[
+    x[n]=\frac12+\frac{1-\iu}{4}\e^{\iu\pi n/2}
+         +0\cdot\e^{\iu\pi n}
+         +\frac{1+\iu}{4}\e^{\iu3\pi n/2}.
+  \]
+  对整数 $n$，最后一项的指数也等于 $\e^{-\iu\pi n/2}$。将正负频率配对，得到
+  \[
+    x[n]=\frac12+\frac12\cos\frac{\pi n}{2}
+                  +\frac12\sin\frac{\pi n}{2}.
+  \]
+  再逐点代入检查一个完整周期：
+  \begin{align*}
+    x[0]&=\frac12+\frac12\cdot1+\frac12\cdot0=1,\\
+    x[1]&=\frac12+\frac12\cdot0+\frac12\cdot1=1,\\
+    x[2]&=\frac12+\frac12\cdot(-1)+\frac12\cdot0=0,\\
+    x[3]&=\frac12+\frac12\cdot0+\frac12\cdot(-1)=0.
+  \end{align*}
+  各谐波都以 $4$ 为周期，因而这四个样值也确定了全部整数下标上的重构。\cref{fig:dtfs-four-point} 同时画出序列与系数的周期性；$a_2=0$ 的位置保留，$a_3=a_{-1}=a_1^*$ 与实序列的共轭对称性一致。
+\end{example}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.98\linewidth]{07-dtft/dtfs-four-point}
+  \caption{四周期序列及其 DTFS 系数的实部、虚部。灰色区域标出一个周期；频域竖线表示离散系数值，不表示 DTFT 冲激的权重。}
+  \label{fig:dtfs-four-point}
+\end{figure}
+
+离散周期序列也有平均功率关系：
+\begin{equation}
+  \frac1N\sum_{n=0}^{N-1}|x[n]|^2
+  =\sum_{k=0}^{N-1}|a_k|^2.
+  \label{eq:dtfs-parseval}
+\end{equation}
+将有限重构式代入模平方求和，交叉项由正交性消去，即得上式。右端\red{只对一个周期的系数求和}；若把周期重复的 $a_k$ 全部累加，就会重复计数。上例的平均功率为 $(1+1+0+0)/4=1/2$，系数平方和为 $1/4+1/8+0+1/8=1/2$，两种算法一致。
+
+\subsection{DTFS 与有限点 DFT 的关系}
+\label{subsec:dtfs-dft-relation}
+
+若只给出 $N$ 个样值，DFT（离散傅里叶变换，discrete Fourier transform）把它们映射为 $N$ 个频域样值。本章采用
 \begin{equation}
   X[k]=\sum_{n=0}^{N-1}x[n]\e^{-\iu2\pi kn/N},\qquad
   x[n]=\frac1N\sum_{k=0}^{N-1}X[k]\e^{\iu2\pi kn/N}.
   \label{eq:dft-pair}
 \end{equation}
-若采用级数的归一化约定
-$a_k=N^{-1}\sum_nx[n]\e^{-\iu2\pi kn/N}$，则 $X[k]=Na_k$。这\red{只是归一化位置不同}，复指数基和可恢复的信息相同。
+把这 $N$ 个样值周期延拓后，由\cref{eq:dtfs-analysis-synthesis,eq:dft-pair} 可知
+\begin{equation}
+  X[k]=Na_k,\qquad k=0,1,\ldots,N-1.
+  \label{eq:dtfs-dft-normalization}
+\end{equation}
+两式\red{使用同一组有限维复指数}，归一化位置不同：DTFS 的 $1/N$ 在分析式中，DFT 的 $1/N$ 在逆变换中。\cref{eg:dtfs-four-point} 中一个周期的四点 DFT 因此为
+\[
+  X[0]=2,\quad X[1]=1-\iu,\quad X[2]=0,\quad X[3]=1+\iu.
+\]
+DTFS 描述全时间轴的周期序列，DFT 的逆变换先恢复给定的有限向量；超出这 $N$ 个位置如何延拓，须按问题说明。
 
 \subsection{从 DTFT 到 DFT}
 \label{sec:dtft-to-dft}
