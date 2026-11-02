@@ -10,7 +10,7 @@ import numpy as np
 
 
 ROOT = Path(__file__).resolve().parents[3]
-OUT = ROOT / "figures" / "07-dtft" / "dtfs-four-point.pdf"
+OUT = ROOT / "figures" / "05-fourier-series" / "dtfs-four-point.pdf"
 BLUE, RED = "#25669b", "#b23a2b"
 
 

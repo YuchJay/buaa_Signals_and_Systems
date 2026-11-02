@@ -1057,7 +1057,7 @@ $H(\e^{-\iu\omega_0})=H^*(\e^{\iu\omega_0})$。两项才能合成实余弦：
 若另知 $x[n]=0$（$n>0$），则对 $n<0$ 有 $x[-n]=0$，所以 $x[n]=2x_{\mathrm o}[n]$。奇分量的零点恒为零，\blue{不能由虚部确定} $x[0]$；再用能量与零点符号条件可求该样值。频域指数拆分、奇分量作图和能量核对的具体计算见\cref{ex:dtft-imaginary-energy-recovery}。
 
 
-\section{离散傅里叶级数与有限点 DFT}
+\section{有限点 DFT 与快速计算}
 \label{sec:dtft-dft}
 
 \subsection{傅里叶表示的对象}
@@ -1081,75 +1081,7 @@ $H(\e^{-\iu\omega_0})=H^*(\e^{\iu\omega_0})$。两项才能合成实余弦：
   \end{tabular}
 \end{table}
 
-表中的 CTFT 和 DTFT 也可在广义函数意义下表示周期信号，频谱表现为冲激线谱。DTFS 则直接记录离散周期序列的谐波系数；下面先写出其分析、重构关系，再与有限点 DFT 对照。
-
-\subsection{离散傅里叶级数的分析与重构}
-\label{subsec:dtfs-analysis-synthesis}
-
-设 $x[n+N]=x[n]$，取 $\omega_0=2\pi/N$。\keyterm{离散傅里叶级数（discrete-time Fourier series, DTFS）}写成
-\begin{equation}
-  x[n]=\sum_{k=0}^{N-1}a_k\e^{\iu2\pi kn/N},\qquad
-  a_k=\frac1N\sum_{n=0}^{N-1}x[n]\e^{-\iu2\pi kn/N}.
-  \label{eq:dtfs-analysis-synthesis}
-\end{equation}
-第一式由系数重构序列，第二式由一个周期的样值求系数。两个求和区间都可改取任意连续 $N$ 个整数；\blue{重构时只取一组独立谐波}。
-
-这里只需 $N$ 项，因为
-\[
-  \e^{\iu2\pi(k+N)n/N}=\e^{\iu2\pi kn/N}.
-\]
-频率下标增加 $N$ 后，得到同一个离散复指数，系数相应满足 $a_{k+N}=a_k$。这与连续时间级数的无限组不同谐波有区别：离散周期序列可用\red{有限项精确重构}，不需要令部分和的项数趋于无穷。分析公式中的 $1/N$ 来自一个周期上的复指数正交性，推导见\cref{sec:dft-inverse}。
-
-\begin{example}[四周期序列的系数与逐点重构]
-  \label{eg:dtfs-four-point}
-  设 $x[n+4]=x[n]$，一个周期为
-  \[
-    x[0]=1,\quad x[1]=1,\quad x[2]=0,\quad x[3]=0.
-  \]
-  四个系数逐项计算为
-  \begin{align*}
-    a_0&=\frac14(1+1+0+0)=\frac12,\\
-    a_1&=\frac14\bigl(1+1\cdot(-\iu)+0\cdot(-1)+0\cdot\iu\bigr)
-       =\frac{1-\iu}{4},\\
-    a_2&=\frac14\bigl(1+1\cdot(-1)+0\cdot1+0\cdot(-1)\bigr)=0,\\
-    a_3&=\frac14\bigl(1+1\cdot\iu+0\cdot(-1)+0\cdot(-\iu)\bigr)
-       =\frac{1+\iu}{4}.
-  \end{align*}
-  零样值仍占据 $n=2,3$ 的位置，指数因子的下标不随样值是否为零而改变。将系数代回重构式：
-  \[
-    x[n]=\frac12+\frac{1-\iu}{4}\e^{\iu\pi n/2}
-         +0\cdot\e^{\iu\pi n}
-         +\frac{1+\iu}{4}\e^{\iu3\pi n/2}.
-  \]
-  对整数 $n$，最后一项的指数也等于 $\e^{-\iu\pi n/2}$。将正负频率配对，得到
-  \[
-    x[n]=\frac12+\frac12\cos\frac{\pi n}{2}
-                  +\frac12\sin\frac{\pi n}{2}.
-  \]
-  再逐点代入检查一个完整周期：
-  \begin{align*}
-    x[0]&=\frac12+\frac12\cdot1+\frac12\cdot0=1,\\
-    x[1]&=\frac12+\frac12\cdot0+\frac12\cdot1=1,\\
-    x[2]&=\frac12+\frac12\cdot(-1)+\frac12\cdot0=0,\\
-    x[3]&=\frac12+\frac12\cdot0+\frac12\cdot(-1)=0.
-  \end{align*}
-  各谐波都以 $4$ 为周期，因而这四个样值也确定了全部整数下标上的重构。\cref{fig:dtfs-four-point} 同时画出序列与系数的周期性；$a_2=0$ 的位置保留，$a_3=a_{-1}=a_1^*$ 与实序列的共轭对称性一致。
-\end{example}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.98\linewidth]{07-dtft/dtfs-four-point}
-  \caption{四周期序列及其 DTFS 系数的实部、虚部。灰色区域标出一个周期；频域竖线表示离散系数值，不表示 DTFT 冲激的权重。}
-  \label{fig:dtfs-four-point}
-\end{figure}
-
-离散周期序列也有平均功率关系：
-\begin{equation}
-  \frac1N\sum_{n=0}^{N-1}|x[n]|^2
-  =\sum_{k=0}^{N-1}|a_k|^2.
-  \label{eq:dtfs-parseval}
-\end{equation}
-将有限重构式代入模平方求和，交叉项由正交性消去，即得上式。右端\red{只对一个周期的系数求和}；若把周期重复的 $a_k$ 全部累加，就会重复计数。上例的平均功率为 $(1+1+0+0)/4=1/2$，系数平方和为 $1/4+1/8+0+1/8=1/2$，两种算法一致。
+表中的 CTFT 和 DTFT 也可在广义函数意义下表示周期信号，频谱表现为冲激线谱。第五章\cref{sec:discrete-fourier-series,sec:dtfs-properties} 已讨论 DTFS 的分析、重构和性质；本节转向有限数组的 DFT，说明它与周期级数、DTFT 采样的关系。
 
 \subsection{DTFS 与有限点 DFT 的关系}
 \label{subsec:dtfs-dft-relation}
@@ -1206,11 +1138,7 @@ DTFS 描述全时间轴的周期序列，DFT 的逆变换先恢复给定的有�
   \qquad \widetilde{x}[n+N]=\widetilde{x}[n].
   \label{eq:dft-periodic-extension}
 \end{equation}
-对周期延拓序列作离散傅里叶级数，系数为
-\[
-  a_k=\frac1N\sum_{n=0}^{N-1}x[n]\e^{-\iu2\pi kn/N}
-      =\frac{X[k]}{N}.
-\]
+其 DTFS 系数由\cref{eq:dtfs-dft-normalization} 给出，为 $a_k=X[k]/N$。
 有限向量、周期延拓和有限序列的 DTFT 是三个不同对象：前者只有 $N$ 个给定分量，第二个在时域按 $N$ 周期重复，第三个在频率上是连续的 $2\pi$ 周期函数。\red{周期延拓不能无说明地代替有限序列}。
 
 \begin{figure}[H]
@@ -1230,7 +1158,7 @@ DTFS 描述全时间轴的周期序列，DFT 的逆变换先恢复给定的有�
 \subsection{正交性与逆变换}
 \label{sec:dft-inverse}
 
-\red{DFT 可逆}的原因是 $N$ 个\red{复指数向量彼此正交}。对 $n,m\in\{0,1,\ldots,N-1\}$，有
+\red{DFT 可逆}的原因仍是 $N$ 个\red{复指数向量彼此正交}。将\cref{eq:dtfs-orthogonality} 中的求和变量换为 $k$，对 $n,m\in\{0,1,\ldots,N-1\}$，有
 \begin{equation}
   \sum_{k=0}^{N-1}\e^{\iu2\pi k(n-m)/N}
   =\begin{cases}
@@ -1239,11 +1167,7 @@ DTFS 描述全时间轴的周期序列，DFT 的逆变换先恢复给定的有�
   \end{cases}
   \label{eq:dft-orthogonality}
 \end{equation}
-证明时令 $r=\e^{\iu2\pi(n-m)/N}$。当 $n=m$ 时，每一项都是 $1$，和为 $N$。当 $n\ne m$ 时，$r^N=1$ 且 $r\ne1$，故有限等比和为
-\[
-  \sum_{k=0}^{N-1}r^k=\frac{1-r^N}{1-r}=0.
-\]
-这里 $|n-m|\le N-1$，所以\blue{分母确实不为零}。
+这里 $|n-m|\le N-1$，故同余条件简化为 $n=m$。
 
 将正变换代入逆变换，得到
 \begin{align}
