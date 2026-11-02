@@ -109,7 +109,7 @@
   \[
     2x(t)\longrightarrow4x^2(t)\ne2x^2(t),
   \]
-  齐次性不成立，系统仍非线性。这也说明\red{零输入检验只能用于否定}，不能单独用于证明。
+  齐次性不成立，系统仍非线性。这也说明\red{零输入检验只能用于否定}，不可单独用于证明。
 \end{example}
 
 \begin{pitfall}[把“可加”误当成“线性”]
@@ -265,7 +265,7 @@
   \end{equation}
 \end{definition}
 
-可逆系统必须\red{保留区分输入所需的信息}。若能从一般的 $y$ 唯一解出 $x$，恢复公式就是逆系统；若两个不同输入产生同一输出，系统不可逆。
+可逆系统必须\red{保留区分输入所需的信息}。若能从一般的 $y$ 唯一解出 $x$，恢复公式就是逆系统；若\red{两个不同输入产生同一输出}，系统不可逆，这也通常是举反例的一种方式。
 
 \begin{example}[延迟与平方]
   对 $y(t)=x(t-1)$，把输出超前 $1$ 即得
@@ -296,7 +296,7 @@
 
 \begin{definition}[BIBO 稳定系统]
   \label{def:bibo-stable-system}
-  若\blue{每一个有界输入}都产生有界输出，则称系统为\keyterm{有界输入有界输出稳定系统（bounded-input bounded-output stable system）}，简称 BIBO 稳定系统。连续时间的判据可写成
+  若\red{每一个有界输入}都产生有界输出，则称系统为\keyterm{有界输入有界输出稳定系统（bounded-input bounded-output stable system）}，简称 BIBO 稳定系统。连续时间的判据可写成
   \[
     |x(t)|\le M_x<\infty,\ \forall t
     \quad\Longrightarrow\quad
@@ -305,7 +305,7 @@
   其中 $M_y$ 可以依赖输入及其界 $M_x$，但不能随 $t$ 增长。离散时间情形只需把 $t$ 换成 $n$。
 \end{definition}
 
-证明稳定性，需要从任意输入界 $M_x$ 推出一个与时间无关的有限输出界；否定稳定性，只需找到一个使输出无界的有界输入。可概括为\red{证明要一般、否定用反例}。
+证明稳定性，需要从任意输入界 $M_x$ 推出一个与时间无关的有限输出界；否定稳定性，只需找到一个使输出无界的有界输入。可概括为\blue{证明要一般、否定用反例}。
 
 \begin{example}[指数与多项式逐点系统]
   对实输入系统 $y(t)=\e^{x(t)}$，若 $|x(t)|\le M_x$，则

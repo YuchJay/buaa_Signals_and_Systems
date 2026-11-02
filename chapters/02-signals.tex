@@ -290,7 +290,7 @@
 \end{example}
 
 \begin{pitfall}[能量信号和功率信号不是一对互补标签]
-  有些信号既没有有限非零能量，也没有有限非零平均功率。例如 $x(t)=t$ 的能量和平均功率都发散。判断时应回到\cref{eq:signal-energy,eq:average-signal-power}计算，不能因为它“不是能量信号”就\red{直接断定它是功率信号}。
+  有些信号既没有有限非零能量，也没有有限非零平均功率。例如 $x(t)=t$ 的能量和平均功率都发散。判断时应回到\cref{eq:signal-energy,eq:average-signal-power}计算，“不是能量信号”\red{不代表它是功率信号}。
 \end{pitfall}
 
 \section{基本信号与信号分解}
@@ -319,7 +319,7 @@ $\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之�
   \[
     \stepfun(t)+\stepfun(-t)=1
   \]
-  并且与后续傅里叶分析中的对称处理一致。使用其他资料时，\blue{应先检查它在原点采用的约定}。
+  并且与后续傅里叶分析中的对称处理一致。使用其他资料时，应先检查它在原点采用的约定。
 \end{remark}
 
 两个移位阶跃之差可以\red{截取一个时间区间}。若 $t_1<t_2$，则
@@ -338,7 +338,7 @@ $\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之�
 \end{example}
 
 \begin{pitfall}[只看阶跃函数前的正负号]
-  判断阶跃发生在哪里，应\hl{令括号内的自变量等于零}。例如 $\stepfun(2t-4)$ 在 $t=2$ 跳变，而不是在 $t=4$。若还要判断跳变方向，再检查括号内自变量在跳变点两侧的正负。
+  判断阶跃发生在哪里，应\hl{令括号内的自变量等于零}。例如 $\stepfun(2t-4)$ 在 $t=2$ 跳变。若还要判断跳变方向，再检查括号内自变量在跳变点两侧的正负。
 \end{pitfall}
 
 \subsection{连续时间单位冲激信号}
@@ -391,7 +391,7 @@ $\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之�
   \end{equation}
 \end{theorem}
 
-\cref{fig:continuous-step-impulse}给出了单位阶跃和单位冲激的常用画法。冲激箭头的高度不表示普通函数值，读图时应看它旁边标注的面积或权重。
+\cref{fig:continuous-step-impulse}给出了单位阶跃和单位冲激的常用画法。冲激箭头的高度\red{不表示普通函数值}，读图时应看它旁边标注的面积或权重。
 
 \begin{figure}[htbp]
   \centering
@@ -572,7 +572,7 @@ $\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之�
   \sinc(t)=\Sa(\pi t).
   \label{eq:normalized-sinc}
 \end{equation}
-$\sinc(t)$ 的非零零点位于整数处，而 $\Sa(t)$ 的非零零点位于 $k\pi$。看到 `sinc` 时，\blue{必须先确认作者的约定}：$\pi$ 是否放进了函数定义。
+$\sinc(t)$ 的非零零点位于整数处，而 $\Sa(t)$ 的非零零点位于 $k\pi$。看到 `sinc` 时，必须先确认作者的约定：$\pi$ 是否放进了函数定义。
 
 \begin{theorem}[抽样函数的常用性质]
   抽样函数满足
