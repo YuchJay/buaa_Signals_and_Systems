@@ -421,27 +421,142 @@ $8\Sa(4\omega)-4\Sa(2\omega)$ 相同。这提供了两种拆分方法之间的�
 \end{example}
 
 \subsection{频移与调制性质}
+\label{sec:ctft-frequency-shift-modulation}
 
-若 $x(t)\fourierpair X(\iu\omega)$，则
+\noindent\textbf{时域相乘与频域卷积}\quad
+设 $x_1(t)\fourierpair X_1(\iu\omega)$、
+$x_2(t)\fourierpair X_2(\iu\omega)$。两信号逐点相乘时，
+\begin{equation}
+  \boxed{x_1(t)x_2(t)
+  \fourierpair
+  \frac{1}{2\pi}
+  \int_{-\infty}^{\infty}
+    X_1(\iu\nu)X_2\bigl(\iu(\omega-\nu)\bigr)\dd\nu}.
+  \label{eq:ctft-frequency-convolution}
+\end{equation}
+这是\keyterm{相乘性质（multiplication property）}。右端是两个频谱关于频率变量的卷积，也可简写成
+$[X_1\conv X_2](\iu\omega)/(2\pi)$。
+时域中用一个信号逐点改变另一个信号的幅度，是\keyterm{调制（modulation）}的基本操作，因此该式也称调制性质。
+\red{时域相乘对应频域卷积}，并且\red{卷积结果还须乘上系数} $1/(2\pi)$。
+这里 $\nu$ 是积分变量，$\omega$ 是观察频率；它们都属于频域。
+
+证明可从右端作逆变换。记
+\[
+  R(\iu\omega)=\frac{1}{2\pi}
+    \int_{-\infty}^{\infty}
+    X_1(\iu\nu)X_2\bigl(\iu(\omega-\nu)\bigr)\dd\nu.
+\]
+代入逆变换并交换积分次序，得到
+\begin{align*}
+  r(t)
+  &=\frac{1}{2\pi}\int_{-\infty}^{\infty}
+    R(\iu\omega)\e^{\iu\omega t}\dd\omega\\
+  &=\frac{1}{(2\pi)^2}\int_{-\infty}^{\infty}X_1(\iu\nu)
+    \left[\int_{-\infty}^{\infty}
+      X_2\bigl(\iu(\omega-\nu)\bigr)\e^{\iu\omega t}\dd\omega\right]\dd\nu\\
+  &=\left[\frac{1}{2\pi}\int_{-\infty}^{\infty}
+      X_1(\iu\nu)\e^{\iu\nu t}\dd\nu\right]
+    \left[\frac{1}{2\pi}\int_{-\infty}^{\infty}
+      X_2(\iu\mu)\e^{\iu\mu t}\dd\mu\right]\\
+  &=x_1(t)x_2(t).
+\end{align*}
+第三行在内层积分中令 $\mu=\omega-\nu$，把
+$\e^{\iu\omega t}$ 拆成 $\e^{\iu\nu t}\e^{\iu\mu t}$，两个括号便分别是逆变换。
+以上推导\blue{要求能够交换积分次序}；例如两信号及其频谱均绝对可积时成立。
+两信号能量有限时，也可由均方变换推广到同一公式。
+下文复指数和余弦的频谱含冲激，按冲激的抽样与卷积性质计算。
+
+\noindent\textbf{频移是相乘性质的特例}\quad
+若 $x(t)\fourierpair X(\iu\omega)$，取
+$x_2(t)=\e^{\iu\omega_0t}$，则
+$X_2(\iu\omega)=2\pi\impulse(\omega-\omega_0)$。
+代入\cref{eq:ctft-frequency-convolution}，
+\[
+  \FT\{x(t)\e^{\iu\omega_0t}\}
+  =\frac{1}{2\pi}\int_{-\infty}^{\infty}
+    X(\iu\nu)\,2\pi\impulse(\omega-\nu-\omega_0)\dd\nu
+  =X\bigl(\iu(\omega-\omega_0)\bigr).
+\]
+因此频移性质为
 \begin{equation}
   \boxed{x(t)\e^{\iu\omega_0t}
   \fourierpair
   X\bigl(\iu(\omega-\omega_0)\bigr)}.
   \label{eq:ctft-frequency-shift}
 \end{equation}
-时域乘以复指数，会把整个频谱向右平移 $\omega_0$。利用余弦的复指数展开，还可得到
+时域乘以复指数，会把整个频谱向右平移 $\omega_0$。频谱与一个冲激卷积，只产生一次平移。
+
+\noindent\textbf{余弦调制}\quad
+余弦的频谱为
+$\pi[\impulse(\omega-\omega_0)+\impulse(\omega+\omega_0)]$。
+再由\cref{eq:ctft-frequency-convolution}，得到
 \begin{equation}
-  x(t)\cos(\omega_0t)
+  \boxed{x(t)\cos(\omega_0t)
   \fourierpair
   \frac12X\bigl(\iu(\omega-\omega_0)\bigr)
-  +\frac12X\bigl(\iu(\omega+\omega_0)\bigr).
+  +\frac12X\bigl(\iu(\omega+\omega_0)\bigr)}.
   \label{eq:ctft-cosine-modulation}
 \end{equation}
-余弦调制产生位于 $\pm\omega_0$ 的两份频谱副本，每份幅度减半。画图时\hl{应先平移横坐标，再乘系数} $1/2$。
+每条冲激的权重 $\pi$ 乘上 $1/(2\pi)$，便得到每份副本前的 $1/2$。
+利用余弦的复指数展开，再分别应用频移性质，也会得到相同结果。
+余弦调制产生位于 $\pm\omega_0$ 的两份频谱副本，每份幅度减半；副本重叠处应相加。
+画图时\hl{应先平移横坐标，再乘系数} $1/2$。
 
 从 $1\fourierpair2\pi\impulse(\omega)$ 出发应用频移，也可得到
 \cref{eq:ctft-complex-exponential-pair}。结合线性性质和欧拉公式，便得到
 \cref{eq:ctft-cosine-pair,eq:ctft-sine-pair} 中的正弦、余弦频谱。
+
+\begin{example}[由相乘性质求 sinc 平方的频谱]
+  \label{eg:ctft-sinc-square-frequency-convolution}
+  求 $y(t)=[\sin(2t)/t]^2$ 的傅里叶变换，$t=0$ 处按极限取 $y(0)=4$。
+  先取其中一个因子
+  \[
+    x_1(t)=x_2(t)=\frac{\sin(2t)}{t}
+    \fourierpair \pi\,\mathbf 1_{|\omega|<2}.
+  \]
+  两个矩形频谱的高度均为 $\pi$、宽度均为 $4$。由\cref{eq:ctft-frequency-convolution}，
+  \[
+    Y(\iu\omega)=\frac{\pi^2}{2\pi}
+      \int_{-\infty}^{\infty}
+      \mathbf 1_{|\nu|<2}\mathbf 1_{|\omega-\nu|<2}\dd\nu.
+  \]
+  两个因子同时非零时，
+  \[
+    -2<\nu<2,\qquad \omega-2<\nu<\omega+2.
+  \]
+  积分区间是 $(-2,2)$ 与 $(\omega-2,\omega+2)$ 的交集。
+  $-4<\omega<0$ 时为 $(-2,\omega+2)$，长度为 $4+\omega$；
+  $0\leq\omega<4$ 时为 $(\omega-2,2)$，长度为 $4-\omega$；
+  $|\omega|\geq4$ 时重叠长度为零。故
+  \begin{equation}
+    \boxed{\left[\frac{\sin(2t)}{t}\right]^2
+    \fourierpair
+    \begin{cases}
+      \dfrac{\pi}{2}(4-|\omega|),&|\omega|\leq4,\\
+      0,&|\omega|>4.
+    \end{cases}}
+    \label{eq:ctft-sinc-square-pair}
+  \end{equation}
+  频谱是支撑在 $[-4,4]$、峰值为 $2\pi$ 的三角形，见\cref{fig:ctft-sinc-square-frequency-convolution}。
+  两个因子的频谱虽各限于 $[-2,2]$，相乘后频谱的支撑已扩展到 $[-4,4]$。
+  取 $\omega=0$，还可得到
+  \[
+    \int_{-\infty}^{\infty}\left[\frac{\sin(2t)}{t}\right]^2\dd t
+    =Y(0)=2\pi.
+  \]
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.96\textwidth]{06-ctft/basic/sinc-square-frequency-convolution.pdf}
+    \caption{sinc 平方的波形、单个因子的矩形频谱，以及相乘后的三角频谱。矩形卷积在零频处为 $4\pi^2$，除以 $2\pi$ 后峰值为 $2\pi$。}
+    \label{fig:ctft-sinc-square-frequency-convolution}
+  \end{figure}
+\end{example}
+
+\begin{pitfall}[把调制一律当成频谱平移]
+  将任意 $x_1(t)x_2(t)$ 的频谱写成一份或两份平移副本，会忽略 $x_2$ 的实际频谱。
+  \red{一般乘积须计算频域卷积}；乘上复指数或余弦时，频谱中的冲激才把卷积化为一份或两份平移副本。
+  用公式前先核对第二个因子，并保留 $1/(2\pi)$。
+\end{pitfall}
 
 \begin{example}[时移与调制同时出现时的幅相谱]
   \label{eg:ctft-shift-modulation-phase}
@@ -511,9 +626,9 @@ $8\Sa(4\omega)-4\Sa(2\omega)$ 相同。这提供了两种拆分方法之间的�
 \]
 于是
 \begin{equation}
-  t x(t)
+  \boxed{t x(t)
   \fourierpair
-  \iu\frac{\dd X(\iu\omega)}{\dd\omega}.
+  \iu\frac{\dd X(\iu\omega)}{\dd\omega}}.
   \label{eq:ctft-frequency-differentiation}
 \end{equation}
 \red{乘时间对应频域求导}。由 $\e^{-at}\stepfun(t)\fourierpair1/(a+\iu\omega)$（$a>0$），立刻得到
@@ -660,7 +775,7 @@ $r_2\conv(r_1/2)$：支撑 $[-3,3]$，平台 $[-1,1]$、高度 $1$，变换为 $
 \end{align*}
 理想延迟器的幅度响应恒为 $1$，相位为 $-\omega t_0$。它只移动波形，不改变各频率分量的幅度。
 
-\section{积分性质与频域卷积}
+\section{积分性质与综合应用}
 \label{sec:ctft-integration-and-frequency-convolution}
 
 \subsection{积分性质}
@@ -699,68 +814,6 @@ $X(\iu\omega)\impulse(\omega)=X(0)\impulse(\omega)$。积分结果可能具有�
   只把频谱除以 $\iu\omega$，\red{可能漏掉积分结果的直流部分}。遇到从 $-\infty$ 起算的积分，\blue{先检查信号总面积}，再写出 $\pi X(0)\impulse(\omega)$。
 \end{pitfall}
 
-\subsection{时域乘积与频域卷积}
-
-若
-$x_1(t)\fourierpair X_1(\iu\omega)$、
-$x_2(t)\fourierpair X_2(\iu\omega)$，则
-\begin{equation}
-  \boxed{x_1(t)x_2(t)
-  \fourierpair
-  \frac{1}{2\pi}
-  \int_{-\infty}^{\infty}
-    X_1(\iu\nu)X_2\bigl(\iu(\omega-\nu)\bigr)\dd\nu}.
-  \label{eq:ctft-frequency-convolution}
-\end{equation}
-右端是频率变量上的卷积。推导从逆变换代入乘积开始：
-\begin{align*}
-  x_1(t)x_2(t)
-  &=
-  \frac{1}{(2\pi)^2}
-  \iint X_1(\iu\nu)X_2(\iu\mu)
-  \e^{\iu(\nu+\mu)t}\dd\nu\dd\mu\\
-  &=
-  \frac{1}{2\pi}
-  \int_{-\infty}^{\infty}
-  \left[
-    \frac{1}{2\pi}
-    \int_{-\infty}^{\infty}
-      X_1(\iu\nu)X_2\bigl(\iu(\omega-\nu)\bigr)\dd\nu
-  \right]
-  \e^{\iu\omega t}\dd\omega.
-\end{align*}
-上述换元与交换积分次序\blue{要求相应积分成立}。计算时记住：\red{时域相乘对应频域卷积}，并且\red{不要漏掉卷积系数} $1/(2\pi)$。为避免混淆，频域卷积的积分变量用 $\nu$，时域卷积的积分变量用 $\tau$。
-
-\begin{example}[两个 sinc 因子的平方]
-  由
-  \[
-    \frac{\sin(2t)}{\pi t}
-    \fourierpair
-    \mathbf 1_{|\omega|<2}
-  \]
-  可得
-  \[
-    \left[\frac{\sin(2t)}{t}\right]^2
-    \fourierpair
-    \frac{\pi}{2}
-    \bigl(\mathbf 1_{|\omega|<2}\conv\mathbf 1_{|\omega|<2}\bigr)(\omega).
-  \]
-  两个宽度为 $4$ 的矩形频谱卷积成三角形，所以
-  \begin{equation}
-    \left[\frac{\sin(2t)}{t}\right]^2
-    \fourierpair
-    \begin{cases}
-      \dfrac{\pi}{2}(4-|\omega|),&|\omega|\leq4,\\
-      0,&|\omega|>4.
-    \end{cases}
-  \label{eq:ctft-sinc-square-pair}
-  \end{equation}
-  取 $\omega=0$ 还可立即得到
-  \[
-    \int_{-\infty}^{\infty}\left[\frac{\sin(2t)}{t}\right]^2\dd t=2\pi.
-  \]
-\end{example}
-
 \subsection{时移、频移与部分分式的配合}
 
 组合使用变换性质时，先写出基本信号，再处理缩放、平移或调制。对于有理频谱，\hl{先分解再逐项逆变换}；出现重根时，\red{保留高次分母项}，例如 $(a+\iu\omega)^{-2}$ 对应 $t\e^{-at}\stepfun(t)$。
@@ -798,162 +851,6 @@ $x_2(t)\fourierpair X_2(\iu\omega)$，则
   \]
   端点取值不影响这些普通函数的逆变换。
 \end{example}
-
-\section{调制、解调与频分复用}
-\label{sec:ctft-modulation-demodulation-fdm}
-
-\subsection{带限信号与余弦调制}
-
-若 $X(\iu\omega)=0$（$|\omega|>\omega_m$），则称 $x(t)$ 为\keyterm{带限信号（band-limited signal）}。
-对于非带限信号，可以先用截止频率为 $\omega_m$、通带增益为 $1$ 的理想低通滤波器限制频带：
-\[
-  H_0(\iu\omega)=\mathbf 1_{|\omega|<\omega_m},\qquad
-  h_0(t)=\frac{\sin(\omega_m t)}{\pi t},\qquad
-  x_{\mathrm b}=x\conv h_0.
-\]
-此时\red{带外分量被滤除}，$x_{\mathrm b}$ 是用于后续传输的带限近似。
-
-对基带带限信号 $x(t)$，取\keyterm{载波（carrier）}$\cos(\omega_ct)$，其中 $\omega_c>\omega_m$。\keyterm{调制（modulation）}得到
-\[
-  y(t)=x(t)\cos(\omega_ct)
-\]
-的频谱为
-\begin{equation}
-  Y(\iu\omega)
-  =\frac12X\bigl(\iu(\omega-\omega_c)\bigr)
-  +\frac12X\bigl(\iu(\omega+\omega_c)\bigr).
-  \label{eq:ctft-cosine-modulation-again}
-\end{equation}
-\red{两份频谱副本各缩小为一半}，中心分别位于 $\omega_c$ 和 $-\omega_c$。当 $\omega_c>\omega_m$ 时，\blue{正负两个副本不重叠}，基带信号的频谱信息被搬移到载波附近，见\cref{fig:ctft-modulation-demodulation}。载频若用赫兹表示，则 $f_c=\omega_c/(2\pi)$。
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.86\textwidth]{06-ctft/modulation-demodulation.pdf}
-  \caption{取单位高度的三角形基带频谱，$\omega_m=2$、$\omega_c=6$。再次乘以同频载波后，以增益 $2$、截止频率 $\omega_p=3$ 的低通恢复基带。}
-  \label{fig:ctft-modulation-demodulation}
-\end{figure}
-
-\subsection{同步解调}
-
-\keyterm{同步解调（synchronous demodulation）}在接收端再次乘以\red{同频同相的载波}：
-\[
-  w(t)=y(t)\cos(\omega_ct)
-  =x(t)\cos^2(\omega_ct)
-  =\frac12x(t)+\frac12x(t)\cos(2\omega_ct).
-\]
-所以
-\begin{equation}
-  W(\iu\omega)
-  =\frac12X(\iu\omega)
-  +\frac14X\bigl(\iu(\omega-2\omega_c)\bigr)
-  +\frac14X\bigl(\iu(\omega+2\omega_c)\bigr).
-  \label{eq:ctft-synchronous-demodulation}
-\end{equation}
-若理想低通滤波器的频率响应为
-\begin{equation}
-  H_{\mathrm{LP}}(\iu\omega)
-  =
-  \begin{cases}
-    2,&|\omega|<\omega_p,\\
-    0,&|\omega|>\omega_p,
-  \end{cases}
-  \qquad
-  \omega_m<\omega_p<2\omega_c-\omega_m,
-  \label{eq:ctft-demodulation-lowpass}
-\end{equation}
-对应的单位冲激响应及恢复公式为
-\begin{equation}
-  h_{\mathrm{LP}}(t)=\frac{2\sin(\omega_p t)}{\pi t},\qquad
-  x(t)=\bigl[y(t)\cos(\omega_ct)\bigr]\conv h_{\mathrm{LP}}(t).
-  \label{eq:ctft-demodulation-time-domain}
-\end{equation}
-低通滤波器保留 $\frac12X(\iu\omega)$ 并将其放大 $2$，输出恢复为 $x(t)$。
-若接收端载波为 $\cos(\omega_ct+\varphi)$，低通输出变为 $x(t)\cos\varphi$；特别地，$\varphi=\pi/2$ 时输出为零。
-
-\begin{pitfall}[解调后的低通增益]
-  解调后基带部分的系数是 $1/2$，需要\red{补偿基带幅度}，故低通增益取 $2$。只画出低通通带而漏写增益，最后得到的信号会差一倍。
-\end{pitfall}
-
-\subsection{频分复用}
-
-\keyterm{频分复用（frequency-division multiplexing, FDM）}将多路信号安排在不同频带内，共用一个传输通道。
-设有 $N$ 个实带限信号 $x_k(t)$，其频谱分别集中在基带。选择正载频
-$0<\omega_{c,1}<\cdots<\omega_{c,N}$，发送信号写成
-\begin{equation}
-  y(t)=\sum_{k=1}^{N}x_k(t)\cos(\omega_{c,k}t).
-  \label{eq:ctft-frequency-division-multiplexing}
-\end{equation}
-由\cref{eq:ctft-cosine-modulation-again}，第 $k$ 路信号在 $\pm\omega_{c,k}$ 附近各产生一份频谱副本。若第 $k$ 路带宽为 $\omega_{m,k}$，相邻载波应满足
-\begin{equation}
-  \omega_{c,k+1}-\omega_{c,k}
-  >
-  \omega_{m,k}+\omega_{m,k+1},
-  \label{eq:ctft-fdm-separation}
-\end{equation}
-还应取 $\omega_{c,k}>\omega_{m,k}$，使各路正、负频带分开。\red{相邻频带应留有间隔}，避免边界附近的分量相互干扰。
-
-各路带宽均为 $\omega_m$ 时，接收端可直接将总信号乘以第 $j$ 路载波：
-\begin{align*}
-  w_j(t)
-  &=y(t)\cos(\omega_{c,j}t)\\
-  &=\frac12x_j(t)+\frac12x_j(t)\cos(2\omega_{c,j}t)\\
-  &\quad+\frac12\sum_{k\ne j}x_k(t)
-  \left[\cos\bigl((\omega_{c,k}-\omega_{c,j})t\bigr)
-       +\cos\bigl((\omega_{c,k}+\omega_{c,j})t\bigr)\right].
-\end{align*}
-\red{目标信号回到零频附近}；其余分量位于二倍载频、差频和和频附近。
-
-先看两路信号的具体安排。取 $\omega_{c,1}=4\omega_m$、$\omega_{c,2}=8\omega_m$，发送端的正频带分别为
-$[3\omega_m,5\omega_m]$ 和 $[7\omega_m,9\omega_m]$。解调第一路时，
-\[
-  w_1=\frac12x_1+\frac12x_1\cos(8\omega_m t)
-      +\frac12x_2\cos(4\omega_m t)
-      +\frac12x_2\cos(12\omega_m t).
-\]
-目标频带为 $[-\omega_m,\omega_m]$。其余正频带依次为
-$[7\omega_m,9\omega_m]$、$[3\omega_m,5\omega_m]$、
-$[11\omega_m,13\omega_m]$，负频带对称；最近的干扰从 $3\omega_m$ 开始。
-解调第二路时，
-\[
-  w_2=\frac12x_2+\frac12x_2\cos(16\omega_m t)
-      +\frac12x_1\cos(4\omega_m t)
-      +\frac12x_1\cos(12\omega_m t).
-\]
-最近的干扰仍从 $3\omega_m$ 开始。两路都可取 $\omega_m<\omega_p<3\omega_m$，如 $\omega_p=2\omega_m$；通带增益取 $2$，补偿目标项前的 $1/2$。
-频带安排见\cref{fig:ctft-two-channel-fdm}。
-
-一般的两路等带宽情况还要同时检查差频和自身二倍载频：
-\[
-  \omega_m<\omega_{p,j}<
-    \min\{\omega_{c,2}-\omega_{c,1}-\omega_m,\,
-           2\omega_{c,j}-\omega_m\},\qquad j=1,2.
-\]
-载频差大于 $2\omega_m$ 时，两路副本分开；若二倍载频带更靠近零频，低通截止频率还须低于它的左边界。
-
-对多路信号，将同一检查归纳为离零频最近的非目标中心频率
-\[
-  d_j=\min\left(\{2\omega_{c,j}\}\cup
-      \{|\omega_{c,k}-\omega_{c,j}|,\ \omega_{c,k}+\omega_{c,j}:k\ne j\}\right).
-\]
-只要
-\begin{equation}
-  \omega_m<\omega_{p,j}<d_j-\omega_m,
-  \label{eq:ctft-fdm-demodulation-cutoff}
-\end{equation}
-就能用增益为 $2$ 的低通滤波器恢复
-\[
-  x_j(t)=\bigl[y(t)\cos(\omega_{c,j}t)\bigr]
-    \conv\frac{2\sin(\omega_{p,j}t)}{\pi t}.
-\]
-选截止频率时应\blue{检查最近的非目标频带}。
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.86\textwidth]{06-ctft/fdm-spectra.pdf}
-  \caption{两路等带宽信号的频分复用与第一路的同步解调，横轴按 $\omega_m$ 归一化。}
-  \label{fig:ctft-two-channel-fdm}
-\end{figure}
-
 
 \section{尺度变换与对偶}
 \label{sec:ctft-scaling-duality}
@@ -1004,7 +901,7 @@ $|a|<1$ 时，$x(at)$ 沿时间被拉宽，频谱自变量变为 $\omega/a$，�
   \boxed{X(t)\fourierpair 2\pi x(-\omega)}.
   \label{eq:ctft-duality}
 \end{equation}
-左端的 $X(t)$ 是把频谱表达式中的 $\omega$ 换成 $t$。右端先把原信号的自变量换成 $-\omega$，再乘 $2\pi$。\hl{先互换变量，再补系数}，其中\red{频率轴要反向}，并且\red{不要漏掉二倍圆周率}。
+左端的 $X(t)$ 是把频谱表达式中的 $\omega$ 换成 $t$。右端先把原信号的自变量换成 $-\omega$，再乘 $2\pi$。\hl{先互换变量，再补系数}，其中\red{频率轴要反向}，并且\red{不要漏掉 $2\pi$}。
 
 由逆变换，
 \[
@@ -1220,6 +1117,162 @@ $\omega>0$ 时频谱为 $-\iu$，相位为 $-\pi/2$；$\omega<0$ 时频谱为 $\
   \caption{实部 $1/(1+\omega^2)$ 对应的偶部，以及由因果性恢复出的右侧指数。}
   \label{fig:ctft-causal-from-real}
 \end{figure}
+
+\section{调制、解调与频分复用}
+\label{sec:ctft-modulation-demodulation-fdm}
+
+\subsection{带限信号与余弦调制}
+
+若 $X(\iu\omega)=0$（$|\omega|>\omega_m$），则称 $x(t)$ 为\keyterm{带限信号（band-limited signal）}。
+对于非带限信号，可以先用截止频率为 $\omega_m$、通带增益为 $1$ 的理想低通滤波器限制频带：
+\[
+  H_0(\iu\omega)=\mathbf 1_{|\omega|<\omega_m},\qquad
+  h_0(t)=\frac{\sin(\omega_m t)}{\pi t},\qquad
+  x_{\mathrm b}=x\conv h_0.
+\]
+此时\red{带外分量被滤除}，$x_{\mathrm b}$ 是用于后续传输的带限近似。
+
+对基带带限信号 $x(t)$，取\keyterm{载波（carrier）}$\cos(\omega_ct)$，其中 $\omega_c>\omega_m$。由\cref{sec:ctft-frequency-shift-modulation} 的相乘性质，调制信号
+\[
+  y(t)=x(t)\cos(\omega_ct)
+\]
+的频谱为
+\begin{equation}
+  Y(\iu\omega)
+  =\frac12X\bigl(\iu(\omega-\omega_c)\bigr)
+  +\frac12X\bigl(\iu(\omega+\omega_c)\bigr).
+  \label{eq:ctft-cosine-modulation-again}
+\end{equation}
+\red{两份频谱副本各缩小为一半}，中心分别位于 $\omega_c$ 和 $-\omega_c$。当 $\omega_c>\omega_m$ 时，\blue{正负两个副本不重叠}，基带信号的频谱信息被搬移到载波附近，见\cref{fig:ctft-modulation-demodulation}。载频若用赫兹表示，则 $f_c=\omega_c/(2\pi)$。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.86\textwidth]{06-ctft/modulation-demodulation.pdf}
+  \caption{取单位高度的三角形基带频谱，$\omega_m=2$、$\omega_c=6$。再次乘以同频载波后，以增益 $2$、截止频率 $\omega_p=3$ 的低通恢复基带。}
+  \label{fig:ctft-modulation-demodulation}
+\end{figure}
+
+\subsection{同步解调}
+
+\keyterm{同步解调（synchronous demodulation）}在接收端再次乘以\red{同频同相的载波}：
+\[
+  w(t)=y(t)\cos(\omega_ct)
+  =x(t)\cos^2(\omega_ct)
+  =\frac12x(t)+\frac12x(t)\cos(2\omega_ct).
+\]
+所以
+\begin{equation}
+  W(\iu\omega)
+  =\frac12X(\iu\omega)
+  +\frac14X\bigl(\iu(\omega-2\omega_c)\bigr)
+  +\frac14X\bigl(\iu(\omega+2\omega_c)\bigr).
+  \label{eq:ctft-synchronous-demodulation}
+\end{equation}
+若理想低通滤波器的频率响应为
+\begin{equation}
+  H_{\mathrm{LP}}(\iu\omega)
+  =
+  \begin{cases}
+    2,&|\omega|<\omega_p,\\
+    0,&|\omega|>\omega_p,
+  \end{cases}
+  \qquad
+  \omega_m<\omega_p<2\omega_c-\omega_m,
+  \label{eq:ctft-demodulation-lowpass}
+\end{equation}
+对应的单位冲激响应及恢复公式为
+\begin{equation}
+  h_{\mathrm{LP}}(t)=\frac{2\sin(\omega_p t)}{\pi t},\qquad
+  x(t)=\bigl[y(t)\cos(\omega_ct)\bigr]\conv h_{\mathrm{LP}}(t).
+  \label{eq:ctft-demodulation-time-domain}
+\end{equation}
+低通滤波器保留 $\frac12X(\iu\omega)$ 并将其放大 $2$，输出恢复为 $x(t)$。
+若接收端载波为 $\cos(\omega_ct+\varphi)$，低通输出变为 $x(t)\cos\varphi$；特别地，$\varphi=\pi/2$ 时输出为零。
+
+\begin{pitfall}[解调后的低通增益]
+  解调后基带部分的系数是 $1/2$，需要\red{补偿基带幅度}，故低通增益取 $2$。只画出低通通带而漏写增益，最后得到的信号会差一倍。
+\end{pitfall}
+
+\subsection{频分复用}
+
+\keyterm{频分复用（frequency-division multiplexing, FDM）}将多路信号安排在不同频带内，共用一个传输通道。
+设有 $N$ 个实带限信号 $x_k(t)$，其频谱分别集中在基带。选择正载频
+$0<\omega_{c,1}<\cdots<\omega_{c,N}$，发送信号写成
+\begin{equation}
+  y(t)=\sum_{k=1}^{N}x_k(t)\cos(\omega_{c,k}t).
+  \label{eq:ctft-frequency-division-multiplexing}
+\end{equation}
+由\cref{eq:ctft-cosine-modulation-again}，第 $k$ 路信号在 $\pm\omega_{c,k}$ 附近各产生一份频谱副本。若第 $k$ 路带宽为 $\omega_{m,k}$，相邻载波应满足
+\begin{equation}
+  \omega_{c,k+1}-\omega_{c,k}
+  >
+  \omega_{m,k}+\omega_{m,k+1},
+  \label{eq:ctft-fdm-separation}
+\end{equation}
+还应取 $\omega_{c,k}>\omega_{m,k}$，使各路正、负频带分开。\red{相邻频带应留有间隔}，避免边界附近的分量相互干扰。
+
+各路带宽均为 $\omega_m$ 时，接收端可直接将总信号乘以第 $j$ 路载波：
+\begin{align*}
+  w_j(t)
+  &=y(t)\cos(\omega_{c,j}t)\\
+  &=\frac12x_j(t)+\frac12x_j(t)\cos(2\omega_{c,j}t)\\
+  &\quad+\frac12\sum_{k\ne j}x_k(t)
+  \left[\cos\bigl((\omega_{c,k}-\omega_{c,j})t\bigr)
+       +\cos\bigl((\omega_{c,k}+\omega_{c,j})t\bigr)\right].
+\end{align*}
+\red{目标信号回到零频附近}；其余分量位于二倍载频、差频和和频附近。
+
+先看两路信号的具体安排。取 $\omega_{c,1}=4\omega_m$、$\omega_{c,2}=8\omega_m$，发送端的正频带分别为
+$[3\omega_m,5\omega_m]$ 和 $[7\omega_m,9\omega_m]$。解调第一路时，
+\[
+  w_1=\frac12x_1+\frac12x_1\cos(8\omega_m t)
+      +\frac12x_2\cos(4\omega_m t)
+      +\frac12x_2\cos(12\omega_m t).
+\]
+目标频带为 $[-\omega_m,\omega_m]$。其余正频带依次为
+$[7\omega_m,9\omega_m]$、$[3\omega_m,5\omega_m]$、
+$[11\omega_m,13\omega_m]$，负频带对称；最近的干扰从 $3\omega_m$ 开始。
+解调第二路时，
+\[
+  w_2=\frac12x_2+\frac12x_2\cos(16\omega_m t)
+      +\frac12x_1\cos(4\omega_m t)
+      +\frac12x_1\cos(12\omega_m t).
+\]
+最近的干扰仍从 $3\omega_m$ 开始。两路都可取 $\omega_m<\omega_p<3\omega_m$，如 $\omega_p=2\omega_m$；通带增益取 $2$，补偿目标项前的 $1/2$。
+频带安排见\cref{fig:ctft-two-channel-fdm}。
+
+一般的两路等带宽情况还要同时检查差频和自身二倍载频：
+\[
+  \omega_m<\omega_{p,j}<
+    \min\{\omega_{c,2}-\omega_{c,1}-\omega_m,\,
+           2\omega_{c,j}-\omega_m\},\qquad j=1,2.
+\]
+载频差大于 $2\omega_m$ 时，两路副本分开；若二倍载频带更靠近零频，低通截止频率还须低于它的左边界。
+
+对多路信号，将同一检查归纳为离零频最近的非目标中心频率
+\[
+  d_j=\min\left(\{2\omega_{c,j}\}\cup
+      \{|\omega_{c,k}-\omega_{c,j}|,\ \omega_{c,k}+\omega_{c,j}:k\ne j\}\right).
+\]
+只要
+\begin{equation}
+  \omega_m<\omega_{p,j}<d_j-\omega_m,
+  \label{eq:ctft-fdm-demodulation-cutoff}
+\end{equation}
+就能用增益为 $2$ 的低通滤波器恢复
+\[
+  x_j(t)=\bigl[y(t)\cos(\omega_{c,j}t)\bigr]
+    \conv\frac{2\sin(\omega_{p,j}t)}{\pi t}.
+\]
+选截止频率时应\blue{检查最近的非目标频带}。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.86\textwidth]{06-ctft/fdm-spectra.pdf}
+  \caption{两路等带宽信号的频分复用与第一路的同步解调，横轴按 $\omega_m$ 归一化。}
+  \label{fig:ctft-two-channel-fdm}
+\end{figure}
+
 
 \section{理想低通滤波器}
 \label{sec:ctft-ideal-lowpass}
