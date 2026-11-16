@@ -332,6 +332,111 @@ $2/(\iu\omega)=-2\iu/\omega$ 是奇的纯虚函数：幅度为 $2/|\omega|$，�
   \label{fig:ctft-sign-spectrum}
 \end{figure}
 
+\section{周期信号的系数与频谱}
+\label{sec:ctft-periodic-signals}
+
+读取系数、变换整段周期信号、变换周期冲激串，用的不是同一个式子。系数来自一个周期的普通变换，在谐波上取样后再除以周期。整段周期信号的变换是冲激串，第 $k$ 条的权重为 $2\pi A_k$。\keyterm{周期冲激串}是后一式的特例，各条权重相同。
+
+\subsection{由一个周期读取傅里叶系数}
+\label{sec:ctft-fs-from-transform}
+
+设 $x$ 以 $T_0$ 为周期，$\omega_0=2\pi/T_0$，复系数 $A_k$ 见\cref{eq:complex-fourier-series}。\cref{eq:ctft-periodic-series-start} 中的 $a_k$ 就是这里的 $A_k$。
+
+取出一个周期内的波形，周期外置零，记为 $x_1(t)$，其变换记为 $X_1$。则
+\begin{equation}
+  \boxed{A_k=\frac{1}{T_0}X_1(\iu k\omega_0)}.
+  \label{eq:ctft-coefficient-from-transform}
+\end{equation}
+\hl{只取一个周期做变换}，再\hl{到谐波频率上取样}，然后除以 $T_0$。\red{整段周期信号不能代入} $X_1$。\blue{周期信号的普通傅里叶积分不收敛}，它的变换是下一小节的冲激串。
+
+对称矩形波的一个周期是高度 $1$、宽度 $2T_1$ 的矩形，变换为 $2T_1\Sa(T_1\omega)$。代入上式，
+\[
+  A_0=\frac{2T_1}{T_0},\qquad
+  A_k=\frac{\sin(k\omega_0 T_1)}{k\pi}\quad(k\neq 0).
+\]
+这与第五章\red{对称矩形波的余弦系数一致}：那里的周期 $T$ 就是这里的 $T_0$，$B_0=A_0$，且 $k>0$ 时 $B_k=2A_k$。三角周期波先对一个三角脉冲做变换，再按同一公式取样，见\cref{ex:ctft-triangle-fs}。
+
+\subsection{周期信号的傅里叶变换}
+\label{sec:ctft-periodic-transform}
+
+若周期信号的复指数级数为 $x(t)=\sum_k A_k\e^{\iu k\omega_0 t}$，逐项使用 $\e^{\iu k\omega_0 t}\fourierpair 2\pi\impulse(\omega-k\omega_0)$，得到
+\begin{equation}
+  \boxed{x(t)\fourierpair
+  2\pi\sum_{k=-\infty}^{\infty}A_k\impulse(\omega-k\omega_0)}.
+  \label{eq:ctft-periodic-transform}
+\end{equation}
+\red{频谱是一串冲激}。第 $k$ 条的权重是 $2\pi A_k$，\red{权重里带着级数系数}。$A_k$ 里已经有 $1/T_0$，这里再乘 $2\pi$，不能把 $X_1(\iu k\omega_0)$ 的函数值直接当成谱线权重。
+
+\begin{example}[周期矩形脉冲的冲激频谱]
+  \label{eg:ctft-periodic-rectangle-spectrum}
+  取 $T_1=1$、$T_0=4$，则 $\omega_0=\pi/2$，$A_0=1/2$，并且 $k\neq 0$ 时 $A_k=\sin(k\pi/2)/(k\pi)$。于是
+  \[
+    X(\iu\omega)
+    =\pi\impulse(\omega)
+    +\sum_{k\neq 0}\frac{2\sin(k\pi/2)}{k}
+      \impulse\!\left(\omega-\frac{k\pi}{2}\right).
+  \]
+  $k=\pm 1$ 的权重为 $2$，$k=\pm 3$ 的权重为 $-2/3$，偶数 $k\neq 0$ 的权重为零。\red{零权重也要标出位置}，见\cref{fig:ctft-periodic-rectangle-spectrum}。
+\end{example}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.92\textwidth]{06-ctft/basic/periodic-rectangle-spectrum.pdf}
+  \caption{周期 $4$、脉宽 $2$ 的矩形脉冲串，以及各谐波上的冲激权重 $2\pi A_k$。灰点表示权重为零。}
+  \label{fig:ctft-periodic-rectangle-spectrum}
+\end{figure}
+
+\begin{pitfall}[把冲激串再除以周期]
+  $A_k=X_1(\iu k\omega_0)/T_0$ 里的 $X_1$ 来自一个周期。周期信号的变换 $2\pi\sum A_k\impulse(\omega-k\omega_0)$ 已经是冲激。再除以 $T_0$，系数和频谱会差两层周期。先确认手里的频谱来自一个周期，还是来自整段周期信号。
+\end{pitfall}
+
+\subsection{周期冲激串}
+\label{sec:ctft-impulse-train}
+
+\begin{equation}
+  \boxed{\sum_{k=-\infty}^{\infty}\impulse(t-kT_0)
+  \fourierpair
+  \omega_0\sum_{k=-\infty}^{\infty}\impulse(\omega-k\omega_0)}.
+  \label{eq:ctft-impulse-train}
+\end{equation}
+一个周期内只在原点有冲激，$X_1(\iu\omega)=1$，所以每个 $A_k$ 都是 $1/T_0$。对应的复指数级数是
+\[
+  \sum_{k=-\infty}^{\infty}\impulse(t-kT_0)
+  =\frac{1}{T_0}\sum_{k=-\infty}^{\infty}\e^{\iu k\omega_0 t}.
+\]
+代入\cref{eq:ctft-periodic-transform}，权重为 $2\pi/T_0=\omega_0$。\red{时域冲激串仍变冲激串}，\red{谱线间隔等于基频}，而且\red{各条谱线权重相同}。$T_0$ 增大时，频域间隔变小，每条权重也变小。\cref{fig:ctft-impulse-train-spectrum} 里频域纵轴按 $2\pi/T_0$ 画出，各箭头一样高。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.88\textwidth]{06-ctft/basic/impulse-train-spectrum.pdf}
+  \caption{周期冲激串和它的频谱。频域每条冲激的权重都是 $2\pi/T_0$。}
+  \label{fig:ctft-impulse-train-spectrum}
+\end{figure}
+
+\cref{tab:ctft-later-map} 只列使用前要核对的条件，公式的推导仍以相应各节为准。
+
+\begin{table}[htbp]
+  \centering
+  \caption{尺度、对偶、能量、对称、理想低通和周期频谱的对照}
+  \label{tab:ctft-later-map}
+  \small
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    关系 & 结论位置 & 使用前先检查 \\
+    \midrule
+    时间尺度 & \cref{eq:ctft-scaling} & $a$ 取绝对值 \\
+    对偶 & \cref{eq:ctft-duality} & 频率反向，并乘 $2\pi$ \\
+    对偶后的矩形 & \cref{eq:ctft-dual-rectangle} & 高度是 $2\pi E$ \\
+    帕塞瓦尔 & \cref{eq:ctft-parseval} & 信号能量有限 \\
+    实信号对称 & \cref{eq:ctft-conjugate-symmetry} & 幅度谱为偶，相位谱为奇 \\
+    补充变换对 & \cref{sec:ctft-extra-pairs} & 端点跳变决定尾部衰减 \\
+    理想低通 & \cref{eq:ctft-ideal-lowpass} & 非因果，过冲不消失 \\
+    傅里叶系数 & \cref{eq:ctft-coefficient-from-transform} & 只代入一个周期 \\
+    周期信号的变换 & \cref{eq:ctft-periodic-transform} & 权重是 $2\pi A_k$ \\
+    周期冲激串 & \cref{eq:ctft-impulse-train} & 间隔为 $\omega_0$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 \section{傅里叶变换的基本性质}
 \label{sec:ctft-properties-before-integration}
 
@@ -1444,109 +1549,3 @@ $t\cos(\omega t)$ 是奇函数，积分为零，只留下
   \caption{有限长奇对称斜线、虚部频谱和相位。端点处的跳变保留在时域图中。}
   \label{fig:ctft-odd-ramp-spectrum}
 \end{figure}
-
-\section{周期信号的系数与频谱}
-\label{sec:ctft-periodic-signals}
-
-读取系数、变换整段周期信号、变换周期冲激串，用的不是同一个式子。系数来自一个周期的普通变换，在谐波上取样后再除以周期。整段周期信号的变换是冲激串，第 $k$ 条的权重为 $2\pi A_k$。\keyterm{周期冲激串}是后一式的特例，各条权重相同。
-
-\subsection{由一个周期读取傅里叶系数}
-\label{sec:ctft-fs-from-transform}
-
-设 $x$ 以 $T_0$ 为周期，$\omega_0=2\pi/T_0$，复系数 $A_k$ 见\cref{eq:complex-fourier-series}。\cref{eq:ctft-periodic-series-start} 中的 $a_k$ 就是这里的 $A_k$。
-
-取出一个周期内的波形，周期外置零，记为 $x_1(t)$，其变换记为 $X_1$。则
-\begin{equation}
-  \boxed{A_k=\frac{1}{T_0}X_1(\iu k\omega_0)}.
-  \label{eq:ctft-coefficient-from-transform}
-\end{equation}
-\hl{只取一个周期做变换}，再\hl{到谐波频率上取样}，然后除以 $T_0$。\red{整段周期信号不能代入} $X_1$。\blue{周期信号的普通傅里叶积分不收敛}，它的变换是下一小节的冲激串。
-
-对称矩形波的一个周期是高度 $1$、宽度 $2T_1$ 的矩形，变换为 $2T_1\Sa(T_1\omega)$。代入上式，
-\[
-  A_0=\frac{2T_1}{T_0},\qquad
-  A_k=\frac{\sin(k\omega_0 T_1)}{k\pi}\quad(k\neq 0).
-\]
-这与第五章\red{对称矩形波的余弦系数一致}：那里的周期 $T$ 就是这里的 $T_0$，$B_0=A_0$，且 $k>0$ 时 $B_k=2A_k$。三角周期波先对一个三角脉冲做变换，再按同一公式取样，见\cref{ex:ctft-triangle-fs}。
-
-\subsection{周期信号的傅里叶变换}
-\label{sec:ctft-periodic-transform}
-
-若周期信号的复指数级数为 $x(t)=\sum_k A_k\e^{\iu k\omega_0 t}$，逐项使用 $\e^{\iu k\omega_0 t}\fourierpair 2\pi\impulse(\omega-k\omega_0)$，得到
-\begin{equation}
-  \boxed{x(t)\fourierpair
-  2\pi\sum_{k=-\infty}^{\infty}A_k\impulse(\omega-k\omega_0)}.
-  \label{eq:ctft-periodic-transform}
-\end{equation}
-\red{频谱是一串冲激}。第 $k$ 条的权重是 $2\pi A_k$，\red{权重里带着级数系数}。$A_k$ 里已经有 $1/T_0$，这里再乘 $2\pi$，不能把 $X_1(\iu k\omega_0)$ 的函数值直接当成谱线权重。
-
-\begin{example}[周期矩形脉冲的冲激频谱]
-  \label{eg:ctft-periodic-rectangle-spectrum}
-  取 $T_1=1$、$T_0=4$，则 $\omega_0=\pi/2$，$A_0=1/2$，并且 $k\neq 0$ 时 $A_k=\sin(k\pi/2)/(k\pi)$。于是
-  \[
-    X(\iu\omega)
-    =\pi\impulse(\omega)
-    +\sum_{k\neq 0}\frac{2\sin(k\pi/2)}{k}
-      \impulse\!\left(\omega-\frac{k\pi}{2}\right).
-  \]
-  $k=\pm 1$ 的权重为 $2$，$k=\pm 3$ 的权重为 $-2/3$，偶数 $k\neq 0$ 的权重为零。\red{零权重也要标出位置}，见\cref{fig:ctft-periodic-rectangle-spectrum}。
-\end{example}
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.92\textwidth]{06-ctft/basic/periodic-rectangle-spectrum.pdf}
-  \caption{周期 $4$、脉宽 $2$ 的矩形脉冲串，以及各谐波上的冲激权重 $2\pi A_k$。灰点表示权重为零。}
-  \label{fig:ctft-periodic-rectangle-spectrum}
-\end{figure}
-
-\begin{pitfall}[把冲激串再除以周期]
-  $A_k=X_1(\iu k\omega_0)/T_0$ 里的 $X_1$ 来自一个周期。周期信号的变换 $2\pi\sum A_k\impulse(\omega-k\omega_0)$ 已经是冲激。再除以 $T_0$，系数和频谱会差两层周期。先确认手里的频谱来自一个周期，还是来自整段周期信号。
-\end{pitfall}
-
-\subsection{周期冲激串}
-\label{sec:ctft-impulse-train}
-
-\begin{equation}
-  \boxed{\sum_{k=-\infty}^{\infty}\impulse(t-kT_0)
-  \fourierpair
-  \omega_0\sum_{k=-\infty}^{\infty}\impulse(\omega-k\omega_0)}.
-  \label{eq:ctft-impulse-train}
-\end{equation}
-一个周期内只在原点有冲激，$X_1(\iu\omega)=1$，所以每个 $A_k$ 都是 $1/T_0$。对应的复指数级数是
-\[
-  \sum_{k=-\infty}^{\infty}\impulse(t-kT_0)
-  =\frac{1}{T_0}\sum_{k=-\infty}^{\infty}\e^{\iu k\omega_0 t}.
-\]
-代入\cref{eq:ctft-periodic-transform}，权重为 $2\pi/T_0=\omega_0$。\red{时域冲激串仍变冲激串}，\red{谱线间隔等于基频}，而且\red{各条谱线权重相同}。$T_0$ 增大时，频域间隔变小，每条权重也变小。\cref{fig:ctft-impulse-train-spectrum} 里频域纵轴按 $2\pi/T_0$ 画出，各箭头一样高。
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.88\textwidth]{06-ctft/basic/impulse-train-spectrum.pdf}
-  \caption{周期冲激串和它的频谱。频域每条冲激的权重都是 $2\pi/T_0$。}
-  \label{fig:ctft-impulse-train-spectrum}
-\end{figure}
-
-\cref{tab:ctft-later-map} 只列使用前要核对的条件，公式的推导仍以相应各节为准。
-
-\begin{table}[htbp]
-  \centering
-  \caption{尺度、对偶、能量、对称、理想低通和周期频谱的对照}
-  \label{tab:ctft-later-map}
-  \small
-  \begin{tabular}{@{}lll@{}}
-    \toprule
-    关系 & 结论位置 & 使用前先检查 \\
-    \midrule
-    时间尺度 & \cref{eq:ctft-scaling} & $a$ 取绝对值 \\
-    对偶 & \cref{eq:ctft-duality} & 频率反向，并乘 $2\pi$ \\
-    对偶后的矩形 & \cref{eq:ctft-dual-rectangle} & 高度是 $2\pi E$ \\
-    帕塞瓦尔 & \cref{eq:ctft-parseval} & 信号能量有限 \\
-    实信号对称 & \cref{eq:ctft-conjugate-symmetry} & 幅度谱为偶，相位谱为奇 \\
-    补充变换对 & \cref{sec:ctft-extra-pairs} & 端点跳变决定尾部衰减 \\
-    理想低通 & \cref{eq:ctft-ideal-lowpass} & 非因果，过冲不消失 \\
-    傅里叶系数 & \cref{eq:ctft-coefficient-from-transform} & 只代入一个周期 \\
-    周期信号的变换 & \cref{eq:ctft-periodic-transform} & 权重是 $2\pi A_k$ \\
-    周期冲激串 & \cref{eq:ctft-impulse-train} & 间隔为 $\omega_0$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
