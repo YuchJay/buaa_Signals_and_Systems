@@ -1,70 +1,69 @@
 \chapter{周期信号的傅里叶级数}
 \label{chap:fourier-series}
 
-\keyterm{傅里叶级数}把周期信号展开成一组彼此正交的正弦或复指数。\red{展开系数给出离散谐波线谱}。本章先讨论连续时间周期信号，再用有限组复指数表示离散时间周期序列；后面的傅里叶变换、LTI 系统频率响应和滤波分析沿用这些展开。
+周期信号由一组谐波叠加而成。\keyterm{傅里叶级数}做的事就是把它拆开：用彼此正交的正弦或复指数作基，\red{系数给出离散的谐波线谱}。本章先讲连续时间，再讲离散时间；后面的傅里叶变换、频率响应和滤波都建立在这套展开上。
 
 \section{数学准备}
 \label{sec:fourier-inner-product-foundations}
 
-内积、正交基、投影系数和 Gram--Schmidt 正交化见第一章\cref{sec:inner-product-foundations}。这里直接把这些结果用于周期区间上的\keyterm{傅里叶基}。
+内积、正交基、投影系数和 Gram--Schmidt 正交化见第一章\cref{sec:inner-product-foundations}。这里直接拿来用：在周期区间上取内积，基函数选复指数，展开系数就是投影。
 
 \section{周期信号的三角傅里叶级数}
 \label{sec:trigonometric-fourier-series}
 
-设 $x(t)$ 以 $T_0>0$ 为周期，即 $x(t+T_0)=x(t)$，\keyterm{基本角频率}为
+设 $x(t)$ 以 $T_0>0$ 为周期，即 $x(t+T_0)=x(t)$。\keyterm{基本角频率}为
 \begin{equation}
   \omega_0=\frac{2\pi}{T_0}.
   \label{eq:fundamental-angular-frequency}
 \end{equation}
-\keyterm{三角形式的傅里叶级数}写作
+\keyterm{三角形式的傅里叶级数}写成
 \begin{equation}
   x(t)=B_0+\sum_{n=1}^{\infty}
   \bigl[B_n\cos(n\omega_0t)+C_n\sin(n\omega_0t)\bigr].
   \label{eq:trigonometric-fourier-series}
 \end{equation}
-系数可在任意完整周期上计算；取 $[t_0,t_0+T_0]$ 时，
+系数在任意一个完整周期上算。取 $[t_0,t_0+T_0]$：
 \begin{align}
   B_0&=\frac{1}{T_0}\int_{t_0}^{t_0+T_0}x(t)\dd t,\\
   B_n&=\frac{2}{T_0}\int_{t_0}^{t_0+T_0}x(t)\cos(n\omega_0t)\dd t,\\
   C_n&=\frac{2}{T_0}\int_{t_0}^{t_0+T_0}x(t)\sin(n\omega_0t)\dd t.
   \label{eq:trigonometric-fourier-coefficients}
 \end{align}
-其中 $B_0$ 是\red{一个周期内的平均值}，$B_n,C_n$ 分别记录余弦和正弦谐波的权重。取积分区间时最重要的是\blue{完整覆盖一个周期}，不一定要从 $0$ 开始。
+$B_0$ 是\red{一个周期内的平均值}，$B_n,C_n$ 分别记录余弦、正弦谐波的权重。积分区间只要求\blue{完整覆盖一个周期}，从哪一点开始都可以。
 
-系数中的 $1/T_0$ 与 $2/T_0$ 来自基函数的积分。以 $[0,T_0]$ 为例，
+系数前的 $1/T_0$、$2/T_0$ 来自基函数的积分。以 $[0,T_0]$ 为例：
 \[
   \int_0^{T_0}1\dd t=T_0,\qquad
   \int_0^{T_0}\cos^2(n\omega_0t)\dd t
   =\int_0^{T_0}\sin^2(n\omega_0t)\dd t=\frac{T_0}{2}.
 \]
-\red{不同谐波的乘积}以及\red{正弦、余弦之间的乘积}在完整周期上的积分为零。
-将级数两边乘以 $\cos(m\omega_0t)$ 再积分，只剩
+\red{不同谐波的乘积}、\red{正弦与余弦的乘积}在一个完整周期上积分为零。求 $B_m$ 时，把级数两边乘 $\cos(m\omega_0t)$ 再积分，其他项全被正交性消掉：
 \[
   \int_0^{T_0}x(t)\cos(m\omega_0t)\dd t
   =B_m\int_0^{T_0}\cos^2(m\omega_0t)\dd t
   =\frac{T_0}{2}B_m.
 \]
-于是便可得到 $B_m$。同理，乘以正弦可求 $C_m$，直接积分则求 $B_0$。
+乘正弦可求 $C_m$，直接积分可求 $B_0$。\hl{乘哪个基函数，就取出哪个系数}。
 
 \subsection{收敛条件与跳变点}
 
-常用的 \keyterm{Dirichlet 条件}可概括为：
+常用的 \keyterm{Dirichlet 条件}：
 \begin{itemize}
-  \item 在一个周期内，信号应绝对可积；
+  \item 一个周期内绝对可积；
   \item 只有有限个极值；
   \item 只有有限个有限幅度的间断点。
 \end{itemize}
 
-满足这些条件时，傅里叶级数在连续点收敛到 $x(t)$，在跳变点 $t_0$ 收敛到左右极限的平均值：
+满足时，级数在连续点收敛到 $x(t)$；在跳变点 $t_0$ 收敛到左右极限的平均值：
 \begin{equation}
   \lim_{N\to\infty}S_N(t_0)
   =\frac{x(t_0^-)+x(t_0^+)}{2}.
   \label{eq:fourier-jump-convergence}
 \end{equation}
-所以级数在跳变处出现 \keyterm{Gibbs 现象}并不表示计算错误；部分和会在跳变附近振荡，\red{振荡宽度随项数增加而缩小}，但\red{过冲幅度不会完全消失}。判断收敛时应区分\red{连续点取函数值，跳变点取左右平均}。
+所以跳变处出现 \keyterm{Gibbs 现象}不是算错了。部分和在跳变附近来回振荡，\red{振荡宽度随项数增加而缩小}，\red{过冲幅度不会完全消失}。做题时记住：\blue{连续点取函数值，跳变点取左右平均}。
 
 \begin{example}[对称矩形波的傅里叶级数]
-  设 $x(t)$ 以 $T$ 为周期，在每个周期中心附近满足
+  设 $x(t)$ 以 $T$ 为周期，每个周期中心附近为
   \[
     x(t)=
     \begin{cases}
@@ -73,7 +72,7 @@
     \end{cases}
     \qquad 0<T_1<T/2.
   \]
-  该信号为偶信号，所以 $C_n=0$。取 $[-T/2,T/2]$ 为一个周期，得到
+  这是偶信号，\red{正弦项直接为零}，$C_n=0$。取 $[-T/2,T/2]$ 为一个周期：
   \begin{align*}
     B_0&=\frac1T\int_{-T_1}^{T_1}1\dd t=\frac{2T_1}{T},\\
     B_n&=\frac{2}{T}\int_{-T_1}^{T_1}\cos(n\omega_0t)\dd t
@@ -88,7 +87,7 @@
     +\sum_{n=1}^{\infty}
     \frac{2\sin(2\pi nT_1/T)}{n\pi}\cos(n\omega_0t).
   \]
-  例如取 $T=4T_1$，则 $\omega_0T_1=\pi/2$，
+  取 $T=4T_1$，则 $\omega_0T_1=\pi/2$：
   \[
     B_0=\frac12,\quad B_1=\frac2\pi,\quad B_2=0,\quad
     B_3=-\frac{2}{3\pi},\quad B_4=0,\quad B_5=\frac{2}{5\pi}.
@@ -99,7 +98,7 @@
       \cos(\omega_0t)-\frac{\cos(3\omega_0t)}3
       +\frac{\cos(5\omega_0t)}5-\cdots\right].
   \]
-  \Cref{fig:rectangular-fourier-series} 同时画出矩形波和有限项部分和。\hl{先用偶对称性消去正弦项}，\hl{再检查哪些余弦系数为零}。
+  \Cref{fig:rectangular-fourier-series} 画出矩形波和有限项部分和。做法：\hl{先用偶对称性消去正弦项}，\hl{再检查哪些余弦系数为零}。
 
   \begin{figure}[htbp]
     \centering
@@ -112,7 +111,7 @@
 \section{复指数形式与系数转换}
 \label{sec:complex-fourier-series}
 
-利用欧拉公式，三角级数也可写成\keyterm{复指数形式}：
+用欧拉公式把余弦、正弦换成复指数，三角级数变成\keyterm{复指数形式}：
 \begin{equation}
   \boxed{
     x(t)=\sum_{k=-\infty}^{\infty}A_k\e^{\iu k\omega_0t}
@@ -122,9 +121,9 @@
   x(t)\e^{-\iu k\omega_0t}\dd t.
   \label{eq:complex-fourier-series}
 \end{equation}
-复指数形式把\red{正、负频率统一在一个整数下标中}，通常更适合推导和变换。其系数本身是复数，\red{模表示该谐波的强度}，\red{辐角则包含相位信息}。
+好处是\red{正、负频率统一在一个整数下标里}，推导时不用把两套频率分开写。系数本身是复数：\red{模表示该谐波的强度}，\red{辐角给出相位}。
 
-\blue{对实信号}，$A_{-k}=\overline{A_k}$。三角系数与复系数的关系为
+\blue{对实信号}，$A_{-k}=\overline{A_k}$。与三角系数的换算是
 \begin{align}
   B_0&=A_0,\\
   B_k&=A_k+A_{-k},\\
@@ -139,9 +138,9 @@
   \qquad k>0.
   \label{eq:fourier-coefficient-conversion-inverse}
 \end{equation}
-若信号是偶函数，则 $C_k=0$；若信号是奇函数，则 $B_0=B_k=0$。这些对称性\hl{在积分前直接消去一半系数}。
+偶信号 $C_k=0$；奇信号 $B_0=B_k=0$。这些对称性\hl{在积分前就能消掉一半系数}。
 
-对前面的矩形波，复指数系数也可直接积分。$k\ne0$ 时，
+前面的矩形波也可以直接积复系数。$k\ne0$ 时，
 \begin{align*}
   A_k&=\frac1T\int_{-T_1}^{T_1}\e^{-\iu k\omega_0t}\dd t
       =\frac1T\left[\frac{\e^{-\iu k\omega_0t}}{-\iu k\omega_0}\right]_{-T_1}^{T_1}\\
@@ -149,12 +148,12 @@
              {\iu k\omega_0T}
       =\frac{\sin(k\omega_0T_1)}{k\pi}.
 \end{align*}
-$k=0$ \hl{须单独积分}，$A_0=2T_1/T$。该信号满足 $A_{-k}=A_k$，\hl{把正负频率配对}可得
+$k=0$ 要\hl{单独积分}，$A_0=2T_1/T$。这里 $A_{-k}=A_k$，\hl{把正负频率配对}：
 \[
   A_k\e^{\iu k\omega_0t}+A_{-k}\e^{-\iu k\omega_0t}
   =2A_k\cos(k\omega_0t),
 \]
-与三角形式的 $B_k=2A_k$ 一致。
+正好是三角形式的 $B_k=2A_k$。
 
 \begingroup
 \raggedbottom
@@ -162,19 +161,19 @@ $k=0$ \hl{须单独积分}，$A_0=2T_1/T$。该信号满足 $A_{-k}=A_k$，\hl{�
 \section{傅里叶级数的性质}
 \label{sec:fourier-series-properties}
 
-已知一个周期信号的系数后，平移、反转或叠加信号时，可以直接求新系数。以下沿用\cref{eq:complex-fourier-series} 的约定，记
+已知系数后，平移、反转、叠加信号，可以直接写出新系数。以下沿用\cref{eq:complex-fourier-series}，记
 \[
   x(t)=\sum_{k=-\infty}^{\infty}A_k\e^{\iu k\omega_0t},
   \qquad
   y(t)=\sum_{k=-\infty}^{\infty}D_k\e^{\iu k\omega_0t},
   \qquad \omega_0=\frac{2\pi}{T_0}.
 \]
-两个信号参与同一运算时，须\blue{选用共同的参考周期} $T_0$；它可以大于各自的基本周期。若两个基本周期之比为无理数，其和或乘积一般不再是周期信号，不能直接使用同一组谐波下标。
+两个信号一起运算，要\blue{选共同的参考周期} $T_0$，它可以大于各自的基本周期。两个基本周期之比为无理数时，和或乘积一般不再是周期信号，也就没有同一组谐波下标可用。
 
 \subsection{线性、平移与对称性}
 \label{subsec:fs-basic-properties}
 
-\cref{tab:ctfs-properties} 汇集常用的系数变换。表中 $\alpha,\beta$ 为常数，$m$ 为整数。
+\cref{tab:ctfs-properties} 汇总常用变换。$\alpha,\beta$ 为常数，$m$ 为整数。
 \begin{table}[H]
   \centering
   \caption{连续时间傅里叶级数的常用性质}
@@ -197,40 +196,40 @@ $k=0$ \hl{须单独积分}，$A_0=2T_1/T$。该信号满足 $A_{-k}=A_k$，\hl{�
   \endgroup
 \end{table}
 
-例如时间平移时，直接在展开式中代入 $t-t_0$：
+时间平移直接在展开式里代 $t-t_0$：
 \[
   x(t-t_0)=\sum_k
   \left(A_k\e^{-\iu k\omega_0t_0}\right)\e^{\iu k\omega_0t}.
 \]
-每个谐波的系数都多了一个相位因子，模保持不变，所以\red{时移只改变各谐波的相位}。谐波调制则把频率 $k\omega_0$ 移到 $(k+m)\omega_0$，相应系数下标平移。
+每个谐波多一个相位因子，模不变。\red{时移只改各谐波的相位，不改幅度}。谐波调制把频率 $k\omega_0$ 搬到 $(k+m)\omega_0$，系数下标随之平移。
 
-时间伸缩须连同基频一起解释：
+时间伸缩要连基频一起看：
 \[
   x(\lambda t)=\sum_k A_k\e^{\iu k(\lambda\omega_0)t}.
 \]
-以新周期 $T_0/\lambda$ 展开时，\red{系数不变，谐波间隔改变}，不额外乘 $1/\lambda$。若 $\lambda<0$，先按 $|\lambda|$ 伸缩，再用时间反转得到系数 $A_{-k}$。
+按新周期 $T_0/\lambda$ 展开时，\red{系数不变，谐波间隔变了}，不额外乘 $1/\lambda$。$\lambda<0$ 时先按 $|\lambda|$ 伸缩，再做时间反转，系数为 $A_{-k}$。
 
-\red{实信号}满足 $A_{-k}=A_k^*$；\red{实偶信号}的系数\red{实且偶}，\red{实奇信号}的系数\red{纯虚且奇}。
+\red{实信号}：$A_{-k}=A_k^*$。进一步，\red{实偶信号}的系数实且偶，\red{实奇信号}的系数纯虚且奇。
 
-表中的微分公式对连续、分段光滑的周期信号可由分部积分得到；若信号有跳变，则导数须包含跳变处的冲激，按广义函数解释，不能只对各段求导。
+微分公式由分部积分得到，前提是信号连续、分段光滑。信号有跳变时，导数在跳变处还要带冲激，按广义函数处理，不能只对各段分别求导。
 
 \subsection{相乘与周期卷积}
 \label{subsec:fs-product-periodic-convolution}
 
-两个同周期信号相乘时，记 $x$ 中频率为 $\ell\omega_0$ 的复指数系数为 $A_\ell$，$y$ 中频率为 $(k-\ell)\omega_0$ 的复指数系数为 $D_{k-\ell}$，乘积中频率为 $k\omega_0$ 的系数为 $C_k$，则
+两个同周期信号相乘。设 $x$ 中频率 $\ell\omega_0$ 的系数为 $A_\ell$，$y$ 中频率 $(k-\ell)\omega_0$ 的系数为 $D_{k-\ell}$，乘积中频率 $k\omega_0$ 的系数为 $C_k$，则
 \begin{equation}
   x(t)y(t)\quad\longleftrightarrow\quad
   C_k=\sum_{\ell=-\infty}^{\infty}A_\ell D_{k-\ell}.
   \label{eq:ctfs-product}
 \end{equation}
-这是\red{系数序列的普通离散卷积}。对有限级数，乘积中频率为 $k\omega_0$ 的项来自所有下标满足 $\ell+r=k$ 的组合，逐项收集就得到上式。一个周期内平方可积时，该关系可由有限部分和取均方极限得到；对每个固定 $k$，右侧求和由 Cauchy--Schwarz 不等式保证绝对收敛。
+这是\red{系数序列的普通离散卷积}。所有 $\ell+r=k$ 的项都落到第 $k$ 条谱线上，逐项收起来就是上式。一个周期内平方可积时，可由有限部分和取均方极限得到；对每个固定 $k$，Cauchy--Schwarz 不等式保证右边绝对收敛。
 
-两个周期信号在全时间轴上的普通卷积通常不收敛。把积分范围限制为一个周期，定义连续时间的\keyterm{周期卷积（periodic convolution）}：
+两个周期信号在全时间轴上的普通卷积一般不收敛。把积分限制在一个周期，得到\keyterm{周期卷积（periodic convolution）}：
 \begin{equation}
   z(t)=\int_{t_0}^{t_0+T_0}x(\tau)y(t-\tau)\dd\tau.
   \label{eq:ctfs-periodic-convolution}
 \end{equation}
-被积函数关于 $\tau$ 以 $T_0$ 为周期，所以积分起点可以任取。将两信号展开后，一个周期上的正交积分只保留相同谐波：
+被积函数关于 $\tau$ 以 $T_0$ 为周期，积分起点随便取。把两个信号展开，一个周期上的正交积分只留下相同谐波：
 \[
   \int_{t_0}^{t_0+T_0}
   \e^{\iu(\ell-r)\omega_0\tau}\dd\tau
@@ -244,60 +243,60 @@ $k=0$ \hl{须单独积分}，$A_0=2T_1/T$。该信号满足 $A_{-k}=A_k$，\hl{�
   z(t)=\sum_k T_0A_kD_k\e^{\iu k\omega_0t}.
   \label{eq:ctfs-periodic-convolution-coefficients}
 \end{equation}
-即\red{周期卷积对应系数逐项相乘}，并带有周期因子 $T_0$。本章的定义没有在积分前除以周期；若改用归一化周期卷积 $T_0^{-1}\int_{T_0}xy$，系数才是 $A_kD_k$。例如 $x=y=1$ 时，积分结果为 $T_0$，可用来核对这个因子。
+\red{周期卷积对应系数逐项相乘}，前面带周期因子 $T_0$。本章的周期卷积没有先除以周期；若改用 $T_0^{-1}\int_{T_0}$，系数才是 $A_kD_k$。取 $x=y=1$，积分得 $T_0$，正好用来自查这个因子。
 
 \subsection{积分与直流分量}
 \label{subsec:fs-integration}
 
-设 $q'(t)=x(t)$，积分取有限起点
+设 $q'(t)=x(t)$，积分从有限起点算：
 \[
   q(t)=q(t_0)+\int_{t_0}^{t}x(\tau)\dd\tau.
 \]
-每经过一个周期，
+过一个周期，
 \[
   q(t+T_0)-q(t)=\int_t^{t+T_0}x(\tau)\dd\tau=T_0A_0.
 \]
-所以 $q$ 为周期信号的条件是\blue{输入的平均值为零}，即 $A_0=0$；非零直流分量会积累成斜坡，使积分结果失去周期性。满足零均值条件时，若 $q$ 的系数为 $Q_k$，由微分性质可得
+所以 $q$ 仍是周期信号的条件是\blue{输入平均值为零}，即 $A_0=0$。非零直流积分后变成斜坡，周期性被破坏。满足零均值时，设 $q$ 的系数为 $Q_k$，由微分性质
 \begin{equation}
   Q_k=\frac{A_k}{\iu k\omega_0}\quad(k\ne0),
   \qquad Q_0\text{ 由积分常数确定}.
   \label{eq:ctfs-integration}
 \end{equation}
-\red{零频系数须单独确定}。例如 $x(t)=\cos\omega_0t$ 的周期原函数为 $q(t)=\sin(\omega_0t)/\omega_0+C$，常数 $C$ 不由 $x$ 决定。即使均值为零，从 $-\infty$ 起算的普通反常积分仍可能不收敛，不能用它代替这里的有限起点积分。
+\red{零频系数要单独定}。例如 $x(t)=\cos\omega_0t$ 的周期原函数是 $q(t)=\sin(\omega_0t)/\omega_0+C$，常数 $C$ 不由 $x$ 决定。均值为零也不代表从 $-\infty$ 起算的反常积分收敛，仍要用有限起点。
 
 \subsection{Parseval 关系与平均功率}
 \label{subsec:ctfs-parseval}
 
-若\blue{一个周期内平方可积}，则\keyterm{帕塞瓦尔关系（Parseval's relation）}为
+若\blue{一个周期内平方可积}，\keyterm{帕塞瓦尔关系（Parseval's relation）}为
 \begin{equation}
   P_x=\frac1{T_0}\int_{t_0}^{t_0+T_0}|x(t)|^2\dd t
   =\sum_{k=-\infty}^{\infty}|A_k|^2.
   \label{eq:ctfs-parseval}
 \end{equation}
-对有限部分和，模平方展开后的交叉项在一个周期上积分为零，留下 $T_0\sum_k|A_k|^2$；再取均方极限即得上式。单个谐波 $A_k\e^{\iu k\omega_0t}$ 的平均功率为 $|A_k|^2$，因此\red{总功率等于各谐波功率之和}。对实信号，利用正负频率成对出现，还可写成
+有限部分和展开模平方，交叉项在一个周期上积分为零，只剩 $T_0\sum_k|A_k|^2$；再取均方极限即得。单个谐波 $A_k\e^{\iu k\omega_0t}$ 的平均功率是 $|A_k|^2$，所以\red{总功率等于各谐波功率之和}。实信号正负频率成对，也可写成
 \[
   P_x=|A_0|^2+2\sum_{k=1}^{\infty}|A_k|^2
      =B_0^2+\frac12\sum_{k=1}^{\infty}(B_k^2+C_k^2).
 \]
-这里计算的是平均功率；非零周期信号在整个实轴上的总能量一般为无穷大，不能套用有限能量信号的频谱平方积分。
+这里算的是平均功率。非零周期信号在整个实轴上的总能量通常无穷大，有限能量那套频谱平方积分在这里用不上。
 
 \begin{example}[平移矩形波并去掉直流分量]
-  取前面占空比为 $1/2$ 的对称矩形波，以 $T_0$ 为周期，其系数为
+  前面占空比 $1/2$ 的对称矩形波，以 $T_0$ 为周期，系数为
   \[
     A_0=\frac12,\qquad A_k=\frac{\sin(k\pi/2)}{k\pi}\quad(k\ne0).
   \]
-  令 $g(t)=x(t-T_0/4)-1/2$。先平移，系数乘 $\e^{-\iu k\pi/2}$；再减去常数，只改变零频项：
+  令 $g(t)=x(t-T_0/4)-1/2$。先平移，系数乘 $\e^{-\iu k\pi/2}$；再减常数，只动零频项：
   \[
     G_0=0,\qquad
     G_k=\e^{-\iu k\pi/2}\frac{\sin(k\pi/2)}{k\pi}\quad(k\ne0).
   \]
-  例如 $G_1=-\iu/\pi$、$G_{-1}=\iu/\pi$，偶数下标系数均为零，无须重新做分段积分。$g(t)$ 除跳变点外取 $\pm1/2$，故平均功率为 $1/4$；系数也给出
+  例如 $G_1=-\iu/\pi$、$G_{-1}=\iu/\pi$，偶数下标全为零，不必重新做分段积分。$g(t)$ 除跳变点外取 $\pm1/2$，平均功率为 $1/4$；用系数也算一遍：
   \[
     \sum_k|G_k|^2
     =\frac{2}{\pi^2}\sum_{r=0}^{\infty}\frac1{(2r+1)^2}
     =\frac14.
   \]
-  计算时可\hl{先处理平移，再调整直流项}，并用平均功率核对系数的归一化。
+  做法：\hl{先处理平移，再调整直流项}，最后用平均功率核对归一化。
 \end{example}
 
 \begin{remark}[与傅里叶变换性质的对应]
@@ -305,7 +304,7 @@ $k=0$ \hl{须单独积分}，$A_0=2T_1/T$。该信号满足 $A_{-k}=A_k$，\hl{�
   \[
     X(\iu\omega)=2\pi\sum_k A_k\impulse(\omega-k\omega_0).
   \]
-  变换的时移、反转和共轭性质作用到各条谱线上，就给出本节的系数关系。使用时仍须区分平均功率与总能量、周期卷积与普通卷积；含冲激的频谱不能直接作模平方后套入有限能量公式。
+  变换的时移、反转、共轭性质作用到每条谱线上，就是本节这些系数关系。使用时留意两点：平均功率不是总能量；周期卷积不是普通卷积。频谱含冲激，不能直接模平方后套有限能量公式。
 \end{remark}
 
 \endgroup
@@ -324,7 +323,7 @@ $k=0$ \hl{须单独积分}，$A_0=2T_1/T$。该信号满足 $A_{-k}=A_k$，\hl{�
   =T_0\,\mathbf{1}_{k=\ell},
   \label{eq:fourier-exponential-orthogonality}
 \end{equation}
-其中 $\mathbf{1}_{k=\ell}$ 在 $k=\ell$ 时为 $1$，否则为 $0$。当 $k=\ell$，被积函数为 $1$，积分等于 $T_0$；当 $k\ne\ell$，
+其中 $\mathbf{1}_{k=\ell}$ 在 $k=\ell$ 时为 $1$，否则为 $0$。$k=\ell$ 时被积函数是 $1$，积出 $T_0$；$k\ne\ell$ 时
 \begin{align*}
   \langle e_k,e_\ell\rangle
   &=\int_{t_0}^{t_0+T_0}\e^{\iu(k-\ell)\omega_0t}\dd t\\
@@ -332,22 +331,21 @@ $k=0$ \hl{须单独积分}，$A_0=2T_1/T$。该信号满足 $A_{-k}=A_k$，\hl{�
           {\iu(k-\ell)\omega_0}
     \left[\e^{\iu(k-\ell)\omega_0T_0}-1\right]=0,
 \end{align*}
-因为方括号内为 $\e^{\iu2\pi(k-\ell)}-1=0$。
+方括号里是 $\e^{\iu2\pi(k-\ell)}-1=0$。
 
-将 $x(t)=\sum_kA_ke_k(t)$ 与 $e_r$ 取内积，逐项计算为
+把 $x(t)=\sum_kA_ke_k(t)$ 与 $e_r$ 取内积：
 \[
   \langle x,e_r\rangle=\sum_k A_k\langle e_k,e_r\rangle=T_0A_r,
   \qquad
-  A_r=\frac{\langle x,e_r\rangle}{T_0},
+  A_r=\frac{\langle x,e_r\rangle}{T_0}.
 \]
-这就得到\cref{eq:complex-fourier-series}中的系数公式。傅里叶级数的系数计算可以统一理解为\red{在正交基上做投影}。
+这就是\cref{eq:complex-fourier-series} 的系数公式。求傅里叶系数，本质上就是\red{在正交基上做投影}。
 
 \subsection{其他常见正交基}
 
-傅里叶基\blue{适合周期且具有全局振荡结构的信号}。在此补充其他几类的正交展开：
-
+傅里叶基\blue{适合周期、带全局振荡结构的信号}。另外几种常见展开：
 \begin{itemize}
-  \item \keyterm{Haar 基}由局部矩形函数组成，\blue{适合表示局部突变和分段结构}；
+  \item \keyterm{Haar 基}由局部矩形函数组成，\blue{适合局部突变和分段结构}；
   \item \keyterm{Legendre 多项式}在 $[-1,1]$ 上正交，定义为
   \begin{equation}
     P_n(x)=\frac{1}{2^n n!}\frac{\dd^n}{\dd x^n}(x^2-1)^n,
@@ -360,10 +358,10 @@ $k=0$ \hl{须单独积分}，$A_0=2T_1/T$。该信号满足 $A_{-k}=A_k$，\hl{�
     \label{eq:legendre-orthogonality}
   \end{equation}
   因此 $f(x)=\sum_{n\geq0}a_nP_n(x)$ 时，$a_n=(2n+1)\langle f,P_n\rangle/2$；
-  \item \keyterm{主成分分析（principal component analysis，PCA）}也可看作在数据向量空间中寻找一组正交方向。先去除均值 $A_0=N^{-1}\sum_{i=1}^{N}x_i$，再用正交方向 $A_1,A_2,\ldots$ 展开样本；每个系数仍由内积投影得到。与傅里叶展开的差别在于：傅里叶基由周期结构预先给定，\red{PCA 的方向则由数据本身决定}。
+  \item \keyterm{主成分分析（principal component analysis，PCA）}在数据向量空间里找一组正交方向。先减均值 $A_0=N^{-1}\sum_{i=1}^{N}x_i$，再用正交方向 $A_1,A_2,\ldots$ 展开样本，系数仍由内积投影得到。区别在于：傅里叶基由周期结构预先给定，\red{PCA 的方向由数据本身决定}。
 \end{itemize}
 
-这些方法都先选择正交方向，再计算投影系数并重构信号。对离散时间周期序列，一个周期内只有有限个样值，同样的投影方法便成为有限维的正交展开。
+这些方法做法相同：先选正交方向，再算投影系数，最后重构。到了离散时间周期序列，一个周期只有有限个样值，同一套投影就变成有限维正交展开。
 
 % DTFS 例题与配图从第七章迁入；基础定义与性质在此集中讲述。
 \clearpage
@@ -376,12 +374,12 @@ $k=0$ \hl{须单独积分}，$A_0=2T_1/T$。该信号满足 $A_{-k}=A_k$，\hl{�
 \subsection{独立谐波、定义与正交性}
 \label{subsec:dtfs-analysis-synthesis}
 
-设 $x[n+N]=x[n]$，其中 $N$ 为正整数，取参考角频率 $\omega_0=2\pi/N$；当 $N$ 是基本周期时，$\omega_0$ 就是基本角频率。与连续时间一样，选取谐波相关的复指数 $\e^{\iu k\omega_0n}$ 作基函数。不过，离散复指数满足
+设 $x[n+N]=x[n]$，$N$ 为正整数，取参考角频率 $\omega_0=2\pi/N$。$N$ 是基本周期时，$\omega_0$ 就是基本角频率。基函数仍取谐波相关的复指数 $\e^{\iu k\omega_0n}$。不过离散复指数有
 \[
   \e^{\iu(k+N)\omega_0n}=\e^{\iu k\omega_0n}\e^{\iu2\pi n}
   =\e^{\iu k\omega_0n}.
 \]
-频率下标相差 $N$ 时得到同一个序列，所以\red{只有有限个独立谐波}，取 $k=0,\ldots,N-1$ 即可。
+下标相差 $N$ 得到同一个序列，所以\red{只有有限个独立谐波}，取 $k=0,\ldots,N-1$ 就够了。
 
 \begin{definition}[离散傅里叶级数]
   对 $N$ 周期序列，\keyterm{离散傅里叶级数（discrete-time Fourier series, DTFS）}的重构式与分析式为
@@ -391,12 +389,12 @@ $k=0$ \hl{须单独积分}，$A_0=2T_1/T$。该信号满足 $A_{-k}=A_k$，\hl{�
     a_k=\frac1N\sum_{n=0}^{N-1}x[n]\e^{-\iu k\omega_0n}.
     \label{eq:dtfs-analysis-synthesis}
   \end{equation}
-  系数满足 $a_{k+N}=a_k$。重构式只对\blue{一组连续的独立下标}求和；分析式也只需读取一个周期的 $N$ 个样值。
+  系数满足 $a_{k+N}=a_k$。重构式只对\blue{一组连续的独立下标}求和；分析式也只读一个周期的 $N$ 个样值。
 \end{definition}
 
-这两个求和区间都可以改取任意连续 $N$ 个整数。$a_0=N^{-1}\sum_{n=0}^{N-1}x[n]$ 是一个周期内的平均值。$a_k$ 延拓为周期序列便于使用负频率下标，但不会增加独立系数的个数；例如 $a_{N-1}=a_{-1}$。
+两个求和区间都可以换成任意连续 $N$ 个整数。$a_0=N^{-1}\sum_{n=0}^{N-1}x[n]$ 是一个周期的平均值。把 $a_k$ 按周期延拓是为了方便写负频率下标，独立系数仍是 $N$ 个；例如 $a_{N-1}=a_{-1}$。
 
-系数中的 $1/N$ 仍由正交性给出。对整数 $k,r$，
+$1/N$ 还是从正交性来的。对整数 $k,r$，
 \begin{equation}
   \sum_{n=0}^{N-1}\e^{\iu(k-r)\omega_0n}
   =\begin{cases}
@@ -405,10 +403,10 @@ $k=0$ \hl{须单独积分}，$A_0=2T_1/T$。该信号满足 $A_{-k}=A_k$，\hl{�
   \end{cases}
   \label{eq:dtfs-orthogonality}
 \end{equation}
-同余时，每项都是 $1$；不同余时，令 $q=\e^{\iu(k-r)\omega_0}$，则 $q^N=1$ 且 $q\ne1$，有限等比和 $(1-q^N)/(1-q)$ 为零。将重构式两边乘 $\e^{-\iu r\omega_0n}$，在一个周期内求和，就只留下 $Na_r$，从而得到分析式。
+同余时每项都是 $1$；不同余时，令 $q=\e^{\iu(k-r)\omega_0}$，则 $q^N=1$、$q\ne1$，有限等比和 $(1-q^N)/(1-q)=0$。重构式两边乘 $\e^{-\iu r\omega_0n}$，在一个周期内求和，只剩 $Na_r$，分析式就出来了。
 
 \begin{intuition}[有限项展开与收敛]
-  一个周期内的 $N$ 个样值是 $N$ 个未知数，$N$ 个正交复指数恰好提供一组基。\red{有限项即可精确重构}所有样值，无须像连续时间级数那样讨论无限部分和的收敛，也不需要在离散样值处取跳变左右平均。重构式中的 $n$ 只取整数；连成连续曲线属于另外的内插问题。
+  一个周期有 $N$ 个样值，就是 $N$ 个未知数；$N$ 个正交复指数正好给一组基。\red{有限项就能精确重构}所有样值，不必像连续时间那样讨论无限部分和的收敛，也没有跳变点左右平均的问题。重构式里的 $n$ 只取整数；要把它连成连续曲线，属于内插问题。
 \end{intuition}
 
 \newpage
@@ -420,7 +418,7 @@ $k=0$ \hl{须单独积分}，$A_0=2T_1/T$。该信号满足 $A_{-k}=A_k$，\hl{�
   \[
     x[0]=1,\quad x[1]=1,\quad x[2]=0,\quad x[3]=0.
   \]
-  四个系数逐项计算为
+  四个系数逐个算：
   \begin{align*}
     a_0&=\frac14(1+1+0+0)=\frac12,\\
     a_1&=\frac14\bigl(1+1\cdot(-\iu)+0\cdot(-1)+0\cdot\iu\bigr)
@@ -429,25 +427,25 @@ $k=0$ \hl{须单独积分}，$A_0=2T_1/T$。该信号满足 $A_{-k}=A_k$，\hl{�
     a_3&=\frac14\bigl(1+1\cdot\iu+0\cdot(-1)+0\cdot(-\iu)\bigr)
        =\frac{1+\iu}{4}.
   \end{align*}
-  零样值仍占据 $n=2,3$ 的位置，指数因子的下标不随样值是否为零而改变。将系数代回重构式：
+  零样值照样占位，$n=2,3$ 的指数因子不因为样值为零就跳过。代回重构式：
   \[
     x[n]=\frac12+\frac{1-\iu}{4}\e^{\iu\pi n/2}
          +0\cdot\e^{\iu\pi n}
          +\frac{1+\iu}{4}\e^{\iu3\pi n/2}.
   \]
-  对整数 $n$，最后一项的指数也等于 $\e^{-\iu\pi n/2}$。将正负频率配对，得到
+  整数 $n$ 下，最后一项也等于 $\e^{-\iu\pi n/2}$。正负频率配对：
   \[
     x[n]=\frac12+\frac12\cos\frac{\pi n}{2}
                   +\frac12\sin\frac{\pi n}{2}.
   \]
-  再逐点代入检查一个完整周期：
+  逐点代入检查一个周期：
   \begin{align*}
     x[0]&=\frac12+\frac12\cdot1+\frac12\cdot0=1,\\
     x[1]&=\frac12+\frac12\cdot0+\frac12\cdot1=1,\\
     x[2]&=\frac12+\frac12\cdot(-1)+\frac12\cdot0=0,\\
     x[3]&=\frac12+\frac12\cdot0+\frac12\cdot(-1)=0.
   \end{align*}
-  各谐波都以 $4$ 为周期，因而这四个样值也确定了全部整数下标上的重构。\cref{fig:dtfs-four-point} 同时画出序列与系数的周期性；$a_2=0$ 的位置保留，$a_3=a_{-1}=a_1^*$ 与实序列的共轭对称性一致。计算时\hl{列全一个周期，再按下标求和}，零样值仍须占位。
+  各谐波都以 $4$ 为周期，四个样值确定全部整数下标。\cref{fig:dtfs-four-point} 同时画出序列和系数的周期性；$a_2=0$ 的位置保留，$a_3=a_{-1}=a_1^*$，符合实序列的共轭对称。做题时\hl{列全一个周期，再按下标求和}，零样值仍占位。
 \end{example}
 
 \begin{figure}[H]
@@ -463,7 +461,7 @@ $k=0$ \hl{须单独积分}，$A_0=2T_1/T$。该信号满足 $A_{-k}=A_k$，\hl{�
 \subsection{性质表与周期下标}
 \label{subsec:dtfs-property-table}
 
-设 $x[n]$、$y[n]$ 都以 $N$ 为周期，其 DTFS 系数分别为 $a_k$、$b_k$。周期不同时可取共同周期重新展开。\cref{tab:dtfs-properties} 沿用 $\omega_0=2\pi/N$，$n_0,m$ 为整数，$\alpha,\beta$ 为常数；\blue{系数下标均按周期折回}，如 $b_{-1}=b_{N-1}$。
+设 $x[n]$、$y[n]$ 都以 $N$ 为周期，DTFS 系数分别为 $a_k$、$b_k$。周期不同时取共同周期重新展开。\cref{tab:dtfs-properties} 沿用 $\omega_0=2\pi/N$，$n_0,m$ 为整数，$\alpha,\beta$ 为常数；\blue{系数下标都按周期折回}，如 $b_{-1}=b_{N-1}$。
 
 \begin{table}[H]
   \centering
@@ -488,40 +486,40 @@ $k=0$ \hl{须单独积分}，$A_0=2T_1/T$。该信号满足 $A_{-k}=A_k$，\hl{�
   \endgroup
 \end{table}
 
-线性、时移、反转和共轭的推导与连续部分相同，只需把一个周期的积分改为求和。例如 $x[n-n_0]$ 的每个谐波多出相位因子 $\e^{-\iu k\omega_0n_0}$；从 $x[n]$ 中减去 $x[n-1]$，就得到表中的差分系数。
+线性、时移、反转、共轭的推导和连续部分一样，只是积分换成一个周期求和。例如 $x[n-n_0]$ 的每个谐波多出 $\e^{-\iu k\omega_0n_0}$；$x[n]-x[n-1]$ 直接相减就得到表中的差分系数。
 
-实序列满足 $a_{-k}=a_k^*$，因此\red{正负频率系数互为共轭}；实偶序列的系数实且偶，实奇序列的系数纯虚且奇。对称性须按模 $N$ 的下标理解：$a_{N-k}=a_k^*$；$N$ 为偶数时，$a_0$ 和 $a_{N/2}$ 都是实数，因为这两个下标各自与其负下标等价。
+实序列 $a_{-k}=a_k^*$，\red{正负频率系数互为共轭}；实偶序列系数实且偶，实奇序列系数纯虚且奇。对称性按模 $N$ 的下标看：$a_{N-k}=a_k^*$。$N$ 为偶数时，$a_0$ 和 $a_{N/2}$ 都是实数，因为这两个下标的负下标就是自己。
 
-相乘性质与连续部分的区别在于\red{系数相卷积时也按周期折回}。乘积中 $\ell+r=k+qN$ 的谐波都等于第 $k$ 个谐波，故系数为一个周期内的和 $\sum_{\ell=0}^{N-1}a_\ell b_{k-\ell}$，不能对周期系数作全整数范围的普通卷积。时域周期卷积同样只求和 $N$ 项，正交求和留下因子 $N$；例如两个恒为 $1$ 的周期序列卷积得到 $N$，可用来检查归一化。第七章将把一个周期存成有限数组，进一步讨论对应的循环卷积。
+相乘性质和连续部分的区别在\red{系数相卷积时也要按周期折回}。乘积中 $\ell+r=k+qN$ 的谐波都归到第 $k$ 个，所以系数取一个周期内的和 $\sum_{\ell=0}^{N-1}a_\ell b_{k-\ell}$，不能拿周期系数去做全整数范围的普通卷积。时域周期卷积也只加 $N$ 项，正交求和留下因子 $N$；两个恒为 $1$ 的周期序列卷出 $N$，可用来自查归一化。第七章把一周期存成有限数组，再讨论对应的循环卷积。
 
-离散时间伸缩也不能直接套用连续部分的 $x(\lambda t)$：$n/\lambda$ 未必是整数。本表保留常用的平移、反转和差分；插零扩展与频谱变化见\cref{sec:dtft-expansion}。
+离散时间伸缩没有 $x(\lambda t)$ 那么直接：$n/\lambda$ 未必是整数。表中保留常用的平移、反转和差分；插零扩展与频谱变化见\cref{sec:dtft-expansion}。
 
 \subsection{周期累加与平均功率}
 \label{subsec:dtfs-sum-power}
 
-与连续时间积分类似，若周期序列 $q[n]$ 满足 $q[n]-q[n-1]=x[n]$，在一个周期内累加得
+与连续时间的积分类似，设 $q[n]-q[n-1]=x[n]$，一个周期内累加：
 \[
   \sum_{n=0}^{N-1}x[n]=q[N-1]-q[-1]=0.
 \]
-因此，\blue{输入须为零均值}，即 $a_0=0$。这个条件也足以使有限起点的递推累加得到周期解。由差分性质，其系数为
+所以\blue{输入必须零均值}，即 $a_0=0$。这个条件也保证有限起点的递推累加得到周期解。由差分性质，
 \[
   Q_k=\frac{a_k}{1-\e^{-\iu k\omega_0}}\quad(k=1,\ldots,N-1),
   \qquad Q_0\text{ 由累加常数确定}.
 \]
-分母在 $k\equiv0\pmod N$ 处为零，故\red{直流项须单独确定}；这里使用有限起点的递推，零均值不保证从负无穷开始的普通无穷和收敛。
+分母在 $k\equiv0\pmod N$ 处为零，\red{直流项单独定}。这里用的是有限起点递推；零均值并不保证从负无穷开始的普通无穷和收敛。
 
-离散周期序列的 Parseval 关系为
+离散周期序列的 Parseval 关系：
 \begin{equation}
   P_x=\frac1N\sum_{n=0}^{N-1}|x[n]|^2
   =\sum_{k=0}^{N-1}|a_k|^2.
   \label{eq:dtfs-parseval}
 \end{equation}
-将有限重构式代入模平方求和，由\cref{eq:dtfs-orthogonality} 消去交叉项，即得上式。与连续部分一样，\red{总功率等于各谐波功率之和}；右端只计一组独立系数，重复累加周期副本会把同一谐波重复计数。\cref{eg:dtfs-four-point} 的时域平均功率为 $(1+1+0+0)/4=1/2$，系数平方和为 $1/4+1/8+0+1/8=1/2$，两种算法一致。
+把有限重构式代入模平方求和，用\cref{eq:dtfs-orthogonality} 消掉交叉项即得。和连续部分一样，\red{总功率等于各谐波功率之和}；右边只算一组独立系数，重复累加周期副本会重复计算同一谐波。\cref{eg:dtfs-four-point} 的时域平均功率是 $(1+1+0+0)/4=1/2$，系数平方和是 $1/4+1/8+0+1/8=1/2$，两种算法一致。
 
 \begin{pitfall}[把周期系数当成无限组不同谐波]
-  $a_{k+N}=a_k$ 表示同一组系数的重复，若在重构式或功率式中对所有整数 $k$ 求和，就会重复加入同一个谐波。连续时间级数的系数下标一般不周期，离散时间级数则只用连续 $N$ 个下标。套公式前先核对求和范围，再按模 $N$ 处理负下标。
+  $a_{k+N}=a_k$ 只是同一组系数在重复。在重构式或功率式里对所有整数 $k$ 求和，会把同一个谐波反复加进去。连续时间级数的系数下标一般不周期，离散时间级数只取连续 $N$ 个下标。套公式前先看求和范围，负下标按模 $N$ 折回。
 \end{pitfall}
 
-连续与离散级数都把周期信号分解为谐波，只是独立谐波的个数不同。下一章先从连续时间级数出发，让周期增大、谐波间隔缩小，\red{过渡到连续频率变量}；DTFS 与有限点 DFT 的关系见\cref{subsec:dtfs-dft-relation}。
+连续与离散级数都在把周期信号拆成谐波，区别只是独立谐波的个数。下一章让周期增大、谐波间隔缩小，\red{从离散谱线过渡到连续频率}；DTFS 与有限点 DFT 的关系见\cref{subsec:dtfs-dft-relation}。
 
 \endgroup

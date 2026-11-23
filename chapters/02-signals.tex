@@ -3,63 +3,62 @@
 \chapter{信号的描述、分类与基本运算}
 \label{chap:signals}
 
-信号是“自变量到信号值”的映射。自变量通常是时间，信号值既可以来自物理测量，也可以是算法生成的数据。以下先区分自变量和值域，再讨论信号的变换与分类。
+信号描述某个量随自变量的变化。自变量通常是时间，写成 $x(t)$ 或 $x[n]$。信号值可以是实数，也可以是复数。
 
 \section{连续时间信号与离散时间信号}
 \label{sec:continuous-and-discrete-signals}
 
 \begin{definition}[连续时间信号]
   \label{def:continuous-time-signal}
-  \keyterm{连续时间信号（continuous-time signal）}是以连续变量为自变量的函数，通常记作
+  \keyterm{连续时间信号（continuous-time signal）}的自变量连续取值，记
   \[
     x(t),\quad t\in\R.
   \]
-  信号值可以是实数，也可以是复数，即 $x(t)\in\R$ 或 $x(t)\in\C$。
 \end{definition}
 
 \begin{definition}[离散时间信号]
   \label{def:discrete-time-signal}
-  \keyterm{离散时间信号（discrete-time signal）}的自变量只取离散值。本书默认其定义域为整数集，记作
+  \keyterm{离散时间信号（discrete-time signal）}的自变量只取离散值，默认取整数，记
   \[
     x[n],\quad n\in\Z.
   \]
-  它也称为序列（sequence），方括号用来提醒我们：$n$ 是离散下标。
+  也叫\keyterm{序列（sequence）}。方括号提醒我们：$n$ 是离散下标。
 \end{definition}
 
-\begin{pitfall}[“连续时间”不等于“函数连续”]
-  连续时间描述的是自变量 $t$ 可以连续取值。阶跃信号在跳变点不连续，但\red{它仍是连续时间信号}。相应地，“离散时间”也不表示信号幅值只能取离散值；序列 $x[n]$ 完全可以取任意实数或复数。
-\end{pitfall}
+“连续时间”指\red{自变量连续}，不是函数连续。阶跃在跳变点断开，仍是连续时间信号。
 
-\begin{remark}[离散时间与数字信号]
-  离散时间只限制时间下标。数字信号通常还要求幅值经过量化，因此离散时间信号未必是数字信号。采样使\red{时间离散化}，量化使\red{幅值离散化}，两步各管一件事。
-\end{remark}
+“离散时间”也不要求幅值离散，$x[n]$ 仍可以取任意实数或复数。\blue{采样把时间变离散，量化把幅值变离散}，两者分别处理不同方面；量化之后才称为数字信号。
 
 \section{自变量变换与信号运算}
 \label{sec:independent-variable-transformations}
 
-设原信号为 $x(t)$，变换后的信号为
+设原信号为 $x(t)$，变换后为
 \[
   y(t)=x\bigl(g(t)\bigr).
 \]
-在时刻 $t$ 观察 $y$，实际读取原信号在 $g(t)$ 处的值。判断图像怎样变化时，最好\hl{跟踪一个具体的特征点}；只看括号里的正负号很容易弄反方向。
+在 $t$ 时刻观察 $y$，实际读取的是原信号在 $g(t)$ 处的值。
+
+作图时只需\hl{跟踪特征点}：端点、峰值、跳变点被移到哪里，图像就画到哪里。括号内的正负号容易看反，不确定时可代入一个点核对。
 
 \subsection{时移}
 
-连续时间信号的时移写成
+连续时间时移写成
 \begin{equation}
   y(t)=x(t-t_0).
   \label{eq:continuous-time-shift}
 \end{equation}
-若 $t_0>0$，原来位于 $t=t_1$ 的特征点会出现在 $t=t_1+t_0$，所以图像\red{向右移动} $t_0$，称为\keyterm{延迟（delay）}。$x(t+t_0)$ 则\red{向左移动} $t_0$，称为\keyterm{超前（advance）}。
+$t_0>0$ 时，原来在 $t=t_1$ 的点移到 $t_1+t_0$，所以图像\red{向右移动} $t_0$，叫\keyterm{延迟（delay）}。$x(t+t_0)$ 则\red{向左移动} $t_0$，叫\keyterm{超前（advance）}。
 
-离散时间信号的规则相同：
+口诀是\hl{左加右减}，但仅适用于 $x(t-t_0)$ 这种标准形式。括号内带系数时，应先提取系数，或直接解方程。
+
+离散时间规则相同：
 \[
   y[n]=x[n-n_0],\qquad n_0\in\Z.
 \]
-由于下标必须保持为整数，离散时间序列通常\blue{只讨论整数点的平移}。
+下标必须为整数，因此离散序列\blue{只作整数平移}。
 
-\begin{pitfall}[括号内是减号，图像却向右]
-  在 $x(t-t_0)$ 中，令内部自变量等于原特征点 $t_1$，得到 $t-t_0=t_1$，即新位置为 $t_1+t_0$。直接解这个方程，比背“左加右减”稳妥。
+\begin{pitfall}[括号里是减号，图却往右]
+  把内部自变量等于原特征点：$t-t_0=t_1$，得 $t=t_1+t_0$。直接解这个方程，比死记口诀可靠。
 \end{pitfall}
 
 \subsection{尺度变换与时间反转}
@@ -69,16 +68,18 @@
   y(t)=x(at),\qquad a\ne0.
   \label{eq:continuous-time-scaling}
 \end{equation}
-原来位于 $t=t_1$ 的特征点变到 $t=t_1/a$，因此：
+原特征点 $t_1$ 变到 $t_1/a$，所以
 \begin{itemize}
-  \item $|a|>1$ 时，图像沿时间轴\red{压缩}；
-  \item $0<|a|<1$ 时，图像沿时间轴\red{扩展}；
-  \item $a<0$ 时，还会\red{关于纵轴翻转}。特别地，$x(-t)$ 是 $x(t)$ 的\keyterm{时间反转}。
+  \item $|a|>1$：图像沿时间轴\red{压缩}；
+  \item $0<|a|<1$：图像沿时间轴\red{拉伸}；
+  \item $a<0$：再\red{关于纵轴翻转}。$x(-t)$ 叫\keyterm{时间反转}。
 \end{itemize}
-尺度变换只改变信号在时间轴上的位置，不改变其纵坐标取值。$Ax(t)$ 改变的是幅值，不属于自变量变换。
+伸缩由\red{系数的绝对值}决定，负号只负责翻转。
 
-\begin{pitfall}[离散时间不能任意缩放]
-  对序列来说，$x[2n]$ 只保留原序列的偶数下标样本；$x[n/2]$ 在奇数 $n$ 处甚至没有对应的整数下标，除非另外规定插值或补零方式。因此，离散时间尺度变换\blue{不能直接照搬}连续时间图像的伸缩规则。
+尺度变换只改变时间轴，不改变纵坐标。$Ax(t)$ 改变的是幅值，不属于自变量变换。
+
+\begin{pitfall}[离散序列不能照搬伸缩]
+  $x[2n]$ 只留下偶数下标；$x[n/2]$ 在奇数 $n$ 处根本没有整数下标。离散尺度变换\blue{须先规定插值或补零}，不能直接套用连续时间的伸缩规则。
 \end{pitfall}
 
 \subsection{一般仿射变换}
@@ -90,37 +91,42 @@
   \qquad a\ne0,
   \label{eq:affine-time-transformation}
 \end{equation}
-按括号内的形式，先把 $x(t)$ 变成 $x(at)$：$a<0$ 时翻转，再按 $|a|$ 压缩或扩展；然后平移 $-b/a$。每一步都\hl{记录端点、峰值和跳变点的位置}，幅度保持不变。完整作图过程见\cref{ex:signals-affine-triangle}。
+按以下四步：
+\begin{enumerate}
+  \item \hl{化成标准形式} $x\bigl(a(t-t_0)\bigr)$；
+  \item 看 $a$ 的负号，决定要不要翻转；
+  \item $|a|>1$ 压缩，$|a|<1$ 拉伸；
+  \item 最后平移，口诀\hl{左加右减}。
+\end{enumerate}
+每一步都\hl{记录端点、峰值和跳变点}，幅度保持不变。完整作图见\cref{ex:signals-affine-triangle}。
 
-作图后还可逐点核对。若原信号在 $t=\tau$ 处有一个特征点，则它在新信号中的位置满足
+作图后可逐点核对。原信号在 $t=\tau$ 处的点，新位置满足
 \begin{equation}
   at+b=\tau,
   \qquad
   t=\frac{\tau-b}{a}.
   \label{eq:feature-point-mapping}
 \end{equation}
-这个对应关系用于检查各步变换后的最终位置。
+代入几个特征点即可检查位置是否正确。
 
 \begin{example}[画出复合变换的关键位置]
-  设 $y(t)=x(-2t+4)=x\bigl(-2(t-2)\bigr)$。先翻转，特征点从 $\tau$ 到 $-\tau$；再二倍压缩，到 $-\tau/2$；最后向右平移 $2$，到 $2-\tau/2$。代回自变量核对：
+  设 $y(t)=x(-2t+4)=x\bigl(-2(t-2)\bigr)$。先翻转：$\tau\to-\tau$；再压缩：$-\tau\to-\tau/2$；最后右移 $2$：$-\tau/2\to2-\tau/2$。代回核对：
   \[
     -2t+4=\tau,
     \qquad
     t=2-\frac{\tau}{2}.
   \]
-  原点 $\tau=0$ 移到 $t=2$；原来相距 $2$ 的两点在新图像中只相距 $1$，且左右顺序颠倒。
+  原点 $\tau=0$ 到 $t=2$；原来相距 $2$ 的两点现在只相距 $1$，左右顺序也颠倒。
 \end{example}
 
-\begin{intuition}
-  $y(t)=x(g(t))$ 改变的是“以什么速度、方向读取原信号”。若 $g(t)$ 增长得更快，就更快扫过原信号，图像看起来被压缩；若 $g(t)$ 随 $t$ 减小，就从后向前读取，图像发生反转。
-\end{intuition}
+这套规则的来源：$g(t)$ 增长越快，图像被压得越窄；$g(t)$ 随 $t$ 减小，则从后向前读取，图像反转。\red{改变的是读取原信号的速度和方向}。
 
-\cref{fig:time-transformations}把三种基本变换放在一起比较，峰值与支撑区间的位置变化和前面的特征点映射一致。
+\cref{fig:time-transformations}把时移、压缩、反转放在一起比较，峰值和端点的位置与上面的特征点映射一致。
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.88\textwidth]{02-signals/time-transformations.pdf}
-  \caption{同一连续时间信号经过时移、压缩和反转后的图像。比较峰值与端点的位置，比只看公式中的正负号更直观。}
+  \caption{同一连续时间信号经过时移、压缩和反转后的图像。看峰值和端点的位置，比看公式里的正负号直观。}
   \label{fig:time-transformations}
 \end{figure}
 
@@ -131,62 +137,60 @@
 
 \begin{definition}[连续时间周期信号]
   \label{def:continuous-time-periodic-signal}
-  若存在 $T>0$，使得对任意 $t\in\R$ 都有
+  若存在 $T>0$，使对任意 $t\in\R$ 都有
   \begin{equation}
     x(t+T)=x(t),
     \label{eq:continuous-time-periodicity}
   \end{equation}
-  则 $x(t)$ 是连续时间周期信号，$T$ 是它的一个周期。若所有正周期中存在最小值，则称其为\keyterm{基波周期（fundamental period）}，记作 $T_0$。
+  则 $x(t)$ 是周期信号，$T$ 是它的一个周期。所有正周期中最小的那个叫\keyterm{基波周期（fundamental period）}，记 $T_0$。
 \end{definition}
 
 \begin{definition}[离散时间周期信号]
   \label{def:discrete-time-periodic-signal}
-  若存在正整数 $N$，使得对任意 $n\in\Z$ 都有
+  若存在正整数 $N$，使对任意 $n\in\Z$ 都有
   \begin{equation}
     x[n+N]=x[n],
     \label{eq:discrete-time-periodicity}
   \end{equation}
-  则 $x[n]$ 是离散时间周期信号。满足条件的最小正整数称为基波周期，记作 $N_0$。
+  则 $x[n]$ 是周期序列。最小的正整数叫基波周期，记 $N_0$。
 \end{definition}
 
-若 $T$ 是连续时间信号的周期，则 $mT$（$m\in\Z_{>0}$）也是周期；离散时间信号也有相同结论。常数连续时间信号比较特殊：任意正数都是它的周期，因此\red{没有最小正周期}。
+$T$ 是周期，$2T,3T,\ldots$ 也是。常数信号比较特殊：任意正数都是它的周期，所以\red{没有最小正周期}。
 
 \begin{example}[复指数信号的周期性]
-  连续时间复指数 $\e^{\iu\omega_0t}$ 在 $\omega_0\ne0$ 时的基本周期为
+  连续时间复指数 $\e^{\iu\omega_0t}$，$\omega_0\ne0$，基本周期
   \[
     T_0=\frac{2\pi}{|\omega_0|}.
   \]
-  离散时间复指数 $\e^{\iu\omega_0n}$ 只有在 $\omega_0/(2\pi)$ 为有理数时才是周期序列。这一区别来自\red{离散时间周期必须是整数}。
+  离散时间复指数 $\e^{\iu\omega_0n}$ 只有在 $\omega_0/(2\pi)$ 为有理数时才是周期序列。原因是\red{离散周期必须是整数}，$N=2\pi m/\omega_0$ 必须取到整数。
 \end{example}
 
-\begin{remark}[多个周期信号相加]
-  两个连续时间周期信号之和不一定周期。只有当\blue{它们的周期之比为有理数}时，才能找到公共周期。离散时间周期均为整数，因此有限个离散时间周期信号之和仍然周期，其周期可取各周期的公倍数。
-\end{remark}
+两个连续周期信号相加不一定周期，要求\blue{周期之比为有理数}，才能找到公共周期。离散周期都是整数，有限个相加仍然周期，周期取公倍数。
 
 \subsection{奇信号与偶信号}
 
 \begin{definition}[偶信号]
   \label{def:even-signal}
-  若连续时间信号满足
+  满足
   \[
-    x(-t)=x(t),\qquad t\in\R,
+    x(-t)=x(t),\qquad t\in\R
   \]
-  则称其为\keyterm{偶信号（even signal）}。对离散时间信号，把上式换成 $x[-n]=x[n]$。
+  的信号叫\keyterm{偶信号（even signal）}。离散形式为 $x[-n]=x[n]$。
 \end{definition}
 
 \begin{definition}[奇信号]
   \label{def:odd-signal}
-  若连续时间信号满足
+  满足
   \[
-    x(-t)=-x(t),\qquad t\in\R,
+    x(-t)=-x(t),\qquad t\in\R
   \]
-  则称其为\keyterm{奇信号（odd signal）}。离散时间形式为 $x[-n]=-x[n]$。只要奇信号在原点有定义，就必有 $x(0)=0$ 或 $x[0]=0$。
+  的信号叫\keyterm{奇信号（odd signal）}。离散形式为 $x[-n]=-x[n]$。奇信号在原点的值只能是零。
 \end{definition}
 
-偶信号关于纵轴对称，奇信号关于原点反对称。这里的判断只涉及时间反转，即使 $x$ 是复信号，也\red{不对信号值取共轭}。
+偶信号关于纵轴对称，奇信号关于原点反对称。这里只翻转时间，\red{信号值不取共轭}，复信号也一样。
 
 \begin{theorem}[奇偶分解]
-  任意信号都可以\red{唯一分解为一个偶分量与一个奇分量之和}：
+  任何信号都能\red{唯一拆成一个偶分量加一个奇分量}：
   \begin{align}
     x(t)&=x_{\mathrm e}(t)+x_{\mathrm o}(t),
     \label{eq:even-odd-decomposition}\\
@@ -194,35 +198,33 @@
     &x_{\mathrm o}(t)&=\frac{x(t)-x(-t)}{2}.
     \label{eq:even-odd-components}
   \end{align}
-  对离散时间信号，只需把 $t$ 换成 $n$。
+  离散情形把 $t$ 换成 $n$。
 \end{theorem}
 
 \begin{example}[分解多项式信号]
-  对 $x(t)=2+t+t^2$，有
+  对 $x(t)=2+t+t^2$，
   \[
     x_{\mathrm e}(t)=2+t^2,
     \qquad
     x_{\mathrm o}(t)=t.
   \]
-  两部分相加正好还原 $x(t)$。检查结果也很直接：$2+t^2$ 关于纵轴对称，而 $t$ 关于原点反对称。
+  相加即还原原信号。偶分量关于纵轴对称，奇分量关于原点反对称，可直接验算。
 \end{example}
 
-\cref{fig:even-odd-decomposition}画出了这个例子的两部分。偶分量保留左右对称的部分，奇分量则保留反对称的部分。
+\cref{fig:even-odd-decomposition}画出了这两部分。
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.92\textwidth]{02-signals/even-odd-decomposition.pdf}
-  \caption{$x(t)=2+t+t^2$ 及其偶分量、奇分量。偶分量关于纵轴对称，奇分量关于原点反对称。}
+  \caption{$x(t)=2+t+t^2$ 及其偶分量、奇分量。}
   \label{fig:even-odd-decomposition}
 \end{figure}
 
-\begin{pitfall}[把“关于某点对称”当作偶信号]
-  奇偶性\red{默认相对于原点判断}。一个信号可能关于 $t=t_0$ 对称，但只要它不满足 $x(-t)=x(t)$，就不是偶信号。遇到平移后的对称图像，应先看清对称中心。
-\end{pitfall}
+注意，奇偶性\red{相对原点}判断。图像关于 $t=t_0$ 对称，不等于偶信号；先确认对称中心是否为原点。
 
 \subsection{能量信号与功率信号}
 
-信号的能量由 $|x|^2$ 在全部时间上的累积给出。连续时间和离散时间分别定义为
+把 $x(t)$ 看成 1$\Omega$ 电阻上的电压（或电流），瞬时功率是 $|x(t)|^2$，积分即为能量。连续和离散的定义合写为
 \begin{equation}
   E_x=
   \begin{cases}
@@ -233,7 +235,7 @@
   \end{cases}
   \label{eq:signal-energy}
 \end{equation}
-能量描述总累积量。平均功率关心长期平均，因此先在有限对称区间内取平均，再让区间不断扩大：
+平均功率看长期平均，先在有限区间上取平均，再让区间扩大：
 \begin{equation}
   P_x=
   \begin{cases}
@@ -246,14 +248,16 @@
   \end{cases}
   \label{eq:average-signal-power}
 \end{equation}
-\blue{前提是相应的积分、求和与极限存在}。
+\blue{前提是积分、求和与极限都存在}。
 
 \begin{definition}[能量信号与功率信号]
   \label{def:energy-and-power-signals}
-  若 $0<E_x<\infty$，则称 $x$ 为\keyterm{能量信号（energy signal）}；若 $0<P_x<\infty$，则称 $x$ 为\keyterm{功率信号（power signal）}。按照这里采用的严格不等式，\red{零信号}既不归入能量信号，也不归入功率信号。
+  $0<E_x<\infty$ 的叫\keyterm{能量信号（energy signal）}，此时 $P_x=0$。$0<P_x<\infty$ 的叫\keyterm{功率信号（power signal）}，此时 $E_x=\infty$。
 \end{definition}
 
-非零能量信号的\red{平均功率为零}。若周期信号在一个周期内的能量有限且非零，则它的\red{总能量无限}，平均功率有限且非零。周期信号的平均功率可以在任意一个完整周期上计算：
+按严格不等式，零信号不属于两者中的任何一类。\blue{考试中遇到零信号，照定义写“既不是能量信号也不是功率信号”}。
+
+周期信号的总能量通常发散，平均功率有限。算功率时取任意一个完整周期即可：
 \begin{align}
   P_x&=\frac{1}{T_0}\int_{t_0}^{t_0+T_0}|x(t)|^2\dd t,
   &&\text{连续时间},
@@ -262,10 +266,10 @@
   &&\text{离散时间}.
   \label{eq:periodic-dt-power}
 \end{align}
-起点 $t_0$ 或 $n_0$ 可以任取，因为完整周期内的累积量相同。
+起点 $t_0$、$n_0$ 可任取，一个周期内的累积量不变。
 
 \begin{example}[有限时宽脉冲的能量]
-  设 $A\ne0$、$T_1>0$，且
+  设 $A\ne0$、$T_1>0$，
   \[
     x(t)=
     \begin{cases}
@@ -273,25 +277,23 @@
       0,&\text{其他}.
     \end{cases}
   \]
-  由\cref{eq:signal-energy}可得
+  则
   \[
     E_x=\int_{-T_1/2}^{T_1/2}|A|^2\dd t=|A|^2T_1,
     \qquad P_x=0.
   \]
-  因此它是\red{能量信号}。
+  所以它是\red{能量信号}。
 \end{example}
 
 \begin{example}[正弦信号的平均功率]
-  对 $x(t)=A\cos(\omega_0t+\varphi)$，其中 $A>0$、$\omega_0\ne0$，在一个周期内计算可得
+  对 $x(t)=A\cos(\omega_0t+\varphi)$，$A>0$、$\omega_0\ne0$，在一个周期内算得
   \[
     P_x=\frac{A^2}{2}.
   \]
-  结果与初相位 $\varphi$ 无关。该信号持续时间无限、总能量发散，因此\red{是功率信号而不是能量信号}。
+  与初相位无关。信号一直持续，总能量发散，所以\red{是功率信号}。
 \end{example}
 
-\begin{pitfall}[能量信号和功率信号不是一对互补标签]
-  有些信号既没有有限非零能量，也没有有限非零平均功率。例如 $x(t)=t$ 的能量和平均功率都发散。判断时应回到\cref{eq:signal-energy,eq:average-signal-power}计算，“不是能量信号”\red{不代表它是功率信号}。
-\end{pitfall}
+能量信号与功率信号\red{不是一对互补分类}。$x(t)=t$ 的能量和平均功率都发散，两者都不属于。“不是能量信号”不代表它是功率信号，应回到定义计算。
 
 \section{基本信号与信号分解}
 \label{sec:elementary-signals}
@@ -312,69 +314,52 @@
   \end{equation}
 \end{definition}
 
-$\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之后为一，因此常用来表示信号\red{从某一时刻开始出现}。类似地，$\stepfun(t_0-t)$ 在 $t=t_0$ 之后关闭。
+$t=0$ 这一点，有的书写 $0$，有的写 $1$，有的写 $1/2$；\blue{单点不影响积分}。本书取 $1/2$，与后面频域的对称处理一致。
 
-\begin{remark}[零点取值约定]
-  不同教材可能把 $\stepfun(0)$ 定义为 $0$、$1/2$ 或 $1$。单个点通常不影响普通积分，也不改变大多数连续时间系统结论。我们采用 $\stepfun(0)=1/2$，因为这一约定满足
-  \[
-    \stepfun(t)+\stepfun(-t)=1
-  \]
-  并且与后续傅里叶分析中的对称处理一致。使用其他资料时，应先检查它在原点采用的约定。
-\end{remark}
+$\stepfun(t-t_0)$ 在 $t=t_0$ 跳变，之前为零、之后为一，用于表示\red{信号从某时刻开始}。$\stepfun(t_0-t)$ 则在这一刻关闭。
 
-两个移位阶跃之差可以\red{截取一个时间区间}。若 $t_1<t_2$，则
+两个移位阶跃相减，可以截出一段：
 \begin{equation}
-  x(t)=A\bigl[\stepfun(t-t_1)-\stepfun(t-t_2)\bigr]
+  x(t)=A\bigl[\stepfun(t-t_1)-\stepfun(t-t_2)\bigr],
+  \qquad t_1<t_2,
   \label{eq:rectangular-pulse-with-steps}
 \end{equation}
-在区间 $(t_1,t_2)$ 内等于 $A$，在区间外等于零；\blue{两个端点的值由阶跃的零点约定决定}。
+在 $(t_1,t_2)$ 内等于 $A$，外面为零。\blue{端点的值由阶跃的零点约定决定}。
 
 \begin{example}[用阶跃信号表示有限时宽脉冲]
-  一个从 $t=-2$ 开始、到 $t=3$ 结束、幅值为 $4$ 的脉冲可写成
+  从 $t=-2$ 开始、到 $t=3$ 结束、幅值为 $4$ 的脉冲写成
   \[
     x(t)=4\bigl[\stepfun(t+2)-\stepfun(t-3)\bigr].
   \]
-  第一项在 $t=-2$ 打开信号，第二项在 $t=3$ 把它关闭。
+  第一项在 $-2$ 处开启，第二项在 $3$ 处关闭。
 \end{example}
 
-\begin{pitfall}[只看阶跃函数前的正负号]
-  判断阶跃发生在哪里，应\hl{令括号内的自变量等于零}。例如 $\stepfun(2t-4)$ 在 $t=2$ 跳变。若还要判断跳变方向，再检查括号内自变量在跳变点两侧的正负。
-\end{pitfall}
+判断阶跃的跳变位置，\hl{令括号里的自变量为零}。$\stepfun(2t-4)$ 在 $t=2$ 跳变；判断方向时，再看跳变点两侧的正负。
 
 \subsection{连续时间单位冲激信号}
 
 \begin{definition}[单位冲激信号]
   \label{def:ct-unit-impulse}
-  \keyterm{连续时间单位冲激信号（unit impulse signal）}，也称狄拉克冲激（Dirac delta），记作 $\impulse(t)$。它在 $t\ne0$ 处为零，并具有单位面积：
+  \keyterm{连续时间单位冲激信号（unit impulse signal）}，也叫狄拉克冲激（Dirac delta），记 $\impulse(t)$。它在 $t\ne0$ 处为零，面积为一：
   \begin{equation}
     \int_{-\infty}^{\infty}\impulse(t)\dd t=1.
     \label{eq:unit-area-impulse}
   \end{equation}
-  更准确地说，$\impulse(t)$ 是\red{广义函数}。它由与普通函数积分时产生的作用来定义，不能用 $t=0$ 处的有限函数值描述。
+  $\impulse(t)$ 是\red{广义函数}：$t=0$ 处没有普通函数值，只在与普通函数积分时起作用。
 \end{definition}
 
-移位冲激 $\impulse(t-t_0)$ 集中在 $t=t_0$。若 $x(t)$ 在 $t_0$ 附近连续，则冲激的抽样性质（sifting property）为
+移位冲激 $\impulse(t-t_0)$ 集中在 $t=t_0$。$x(t)$ 在 $t_0$ 附近连续时，
 \begin{equation}
   \int_{-\infty}^{\infty}
     x(t)\impulse(t-t_0)\dd t=x(t_0).
   \label{eq:ct-impulse-sifting}
 \end{equation}
-冲激只保留 $x(t)$ 在 $t_0$ 处的值，其余位置不参与积分。
+冲激只取出 $x(t_0)$，其余位置不参与积分。
 
-\begin{intuition}
-  可以把冲激想成一个越来越窄、越来越高，但面积始终为一的脉冲。例如
-  \[
-    \impulse_\varepsilon(t)=
-    \begin{cases}
-      1/\varepsilon,&|t|<\varepsilon/2,\\
-      0,&\text{其他}
-    \end{cases}
-  \]
-  的面积恒为一。当 $\varepsilon\to0$ 时，它不会收敛为普通意义下的函数，却能在积分中表现出\cref{eq:ct-impulse-sifting}的抽样效果。
-\end{intuition}
+绘制冲激时，\red{箭头高度不是函数值}，旁边的数字表示面积（权重）。
 
-\begin{theorem}[单位冲激的常用性质]
-  若 $x(t)$ 在 $t_0$ 附近连续，且 $a\ne0$，则冲激满足
+\begin{definition}[冲激的常用性质]
+  若 $x(t)$ 在 $t_0$ 附近连续，$a\ne0$，则
   \begin{align}
     \impulse(-t)&=\impulse(t),
     \label{eq:impulse-even}\\
@@ -383,48 +368,48 @@ $\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之�
     x(t)\impulse(t-t_0)&=x(t_0)\impulse(t-t_0).
     \label{eq:impulse-multiplication}
   \end{align}
-  因而
+  因此
   \begin{equation}
     \impulse(at-b)
     =\frac{1}{|a|}\impulse\!\left(t-\frac{b}{a}\right).
     \label{eq:shifted-scaled-impulse}
   \end{equation}
-\end{theorem}
+\end{definition}
 
-\cref{fig:continuous-step-impulse}给出了单位阶跃和单位冲激的常用画法。冲激箭头的高度\red{不表示普通函数值}，读图时应看它旁边标注的面积或权重。
+\begin{example}[带尺度和位移的冲激]
+  化简 $\impulse(3t-6)$：
+  \[
+    \impulse(3t-6)
+    =\frac{1}{3}\impulse(t-2).
+  \]
+  它位于 $t=2$，权重 $1/3$，总面积为 $1/3$。
+\end{example}
+
+缩放时出现 $1/|a|$，因为时间轴压缩后需要补偿面积。\red{绝对值不能丢}；$a<0$ 只把时间反转，不改变面积的符号。
+
+\cref{fig:continuous-step-impulse}是阶跃和冲激的常用画法。
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.82\textwidth]{02-signals/continuous-step-impulse.pdf}
-  \caption{连续时间单位阶跃与单位冲激。冲激用带箭头的竖线表示，箭头旁的数字表示面积。}
+  \caption{连续时间单位阶跃与单位冲激。冲激旁的数字表示面积。}
   \label{fig:continuous-step-impulse}
 \end{figure}
 
-缩放冲激时出现 $1/|a|$，是因为时间轴压缩后必须补偿面积。\red{绝对值不能省略}；$a<0$ 带来的时间反转不会把单位面积变成负数。
-
-单位阶跃和单位冲激之间有微分、积分关系：
+阶跃与冲激互为微积分关系：
 \begin{align}
   \frac{\dd}{\dd t}\stepfun(t)&=\impulse(t),
   \label{eq:step-derivative-impulse}\\
   \stepfun(t)&=\int_{-\infty}^{t}\impulse(\tau)\dd\tau.
   \label{eq:impulse-integral-step}
 \end{align}
-第一式应在广义函数意义下理解。普通函数的导数无法描述阶跃在一个瞬间完成的跳变，冲激正好记录了这次跳变的位置和大小。
+第一式在广义函数意义下成立。普通函数在一个瞬间完成跳变，导数无法描述，冲激恰好记录这次跳变的位置和大小。
 
-更一般地，若信号在 $t=t_k$ 处发生大小为 $A_k$ 的跳变，那么它的广义导数中会出现 $A_k\impulse(t-t_k)$。向上跳变对应正冲激，向下跳变对应负冲激。
+更一般地，信号在 $t=t_k$ 跳了 $A_k$，广义导数里就多一项 $A_k\impulse(t-t_k)$。\red{向上跳对应正冲激，向下跳对应负冲激}。
 
 \begin{pitfall}[把冲激当成“函数值为无穷大”]
-  写成“$\impulse(0)=\infty$”只能帮助形成粗略图像，不能作为计算规则。计算冲激时要看位置、权重和积分面积，并使用\hl{抽样性质或尺度性质}；不要把 $t=0$ 代进一个所谓的函数值。
+  $\impulse(0)=\infty$ 仅用于直观理解，不能用于计算。实际计算时\hl{使用抽样性质或尺度性质}，看位置、权重和面积。
 \end{pitfall}
-
-\begin{example}[带尺度和位移的冲激]
-  化简 $\impulse(3t-6)$。由\cref{eq:shifted-scaled-impulse}可得
-  \[
-    \impulse(3t-6)
-    =\frac{1}{3}\impulse(t-2).
-  \]
-  它位于 $t=2$，权重为 $1/3$，所以在全时间轴上的积分为 $1/3$。
-\end{example}
 
 \subsection{单位阶跃序列与单位冲激序列}
 
@@ -443,7 +428,7 @@ $\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之�
 
 \begin{definition}[单位冲激序列]
   \label{def:dt-unit-impulse}
-  \keyterm{离散时间单位冲激序列（unit impulse sequence）}，也称单位样值序列或 Kronecker delta，定义为
+  \keyterm{离散时间单位冲激序列（unit impulse sequence）}，也叫单位样值序列或 Kronecker delta：
   \begin{equation}
     \impulse[n]=
     \begin{cases}
@@ -454,79 +439,72 @@ $\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之�
   \end{equation}
 \end{definition}
 
-\cref{fig:discrete-step-impulse}直接画出了两个序列的样值。与连续时间冲激的示意箭头不同，离散冲激在原点处确实取值为一。
+$\delta[n]$ 是\red{普通序列}，$n=0$ 时就是 $1$。应与 $\delta(t)$ 区分：连续冲激的“值”不是 $1$，离散冲激的值就是 $1$。
+
+\cref{fig:discrete-step-impulse}画出了这两个序列。
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.82\textwidth]{02-signals/discrete-step-impulse.pdf}
-  \caption{离散时间单位阶跃序列与单位冲激序列。每个圆点都对应一个整数下标处的实际样值。}
+  \caption{离散时间单位阶跃序列与单位冲激序列。每个圆点是一个实际样值。}
   \label{fig:discrete-step-impulse}
 \end{figure}
 
-与连续时间冲激不同，$\impulse[n]$ \red{是普通序列}，在 $n=0$ 处的值就是 $1$，切记区分！移位后的 $\impulse[n-n_0]$ 只在 $n=n_0$ 处取 $1$，因此
+移位冲激只在 $n=n_0$ 处取 $1$，所以
 \begin{equation}
   \sum_{k=-\infty}^{\infty}
     x[k]\impulse[k-n_0]=x[n_0].
   \label{eq:dt-impulse-sifting}
 \end{equation}
 
-离散单位阶跃与单位冲激通过一阶差分联系起来：
+阶跃与冲激通过差分、求和联系：
 \begin{align}
   \impulse[n]&=\stepfun[n]-\stepfun[n-1],
   \label{eq:dt-step-difference-impulse}\\
   \stepfun[n]&=\sum_{k=-\infty}^{n}\impulse[k].
   \label{eq:dt-impulse-sum-step}
 \end{align}
-连续时间中用微分找出瞬时跳变；离散时间没有两个相邻样本之间的取值，所以\red{对应操作变成差分}。
+连续时间用微分寻找跳变；离散时间没有两点之间的值，\red{对应操作改为差分}。
 
 \begin{example}[离散矩形脉冲]
-  长度为 $N$、从 $n=0$ 开始的离散矩形脉冲可以写成
+  从 $n=0$ 开始、长度为 $N$ 的矩形脉冲：
   \begin{equation}
     x[n]=\stepfun[n]-\stepfun[n-N],
     \qquad N\in\Z_{>0}.
     \label{eq:dt-rectangular-pulse}
   \end{equation}
-  它在 $n=0,1,\ldots,N-1$ 时等于 $1$，一共包含 $N$ 个非零样本。右端点是 $N-1$，不是 $N$。
+  它在 $n=0,1,\ldots,N-1$ 处为 $1$，共 $N$ 个非零样值。最右边是 $N-1$，不是 $N$。
 \end{example}
 
-\begin{pitfall}[混用连续冲激与离散冲激的尺度规则]
-  连续时间冲激满足 $\impulse(at)=\impulse(t)/|a|$。离散序列的下标只能取整数，$\impulse[an]$ 会改变哪些下标被访问，\blue{不能机械套用同一公式}。例如对任意非零整数 $a$，$\impulse[an]=\impulse[n]$，并不会多出 $1/|a|$。
+\begin{pitfall}[把连续冲激的尺度规则搬到离散]
+  $\impulse[an]=\impulse[n]$（$a$ 为非零整数），\red{没有} $1/|a|$。离散下标只能取整数，$\impulse[an]$ 只是选取了另一些下标，不会产生面积因子。
 \end{pitfall}
 
 \subsection{用单位冲激分解信号}
 
-单位冲激可以选中某一个时刻的信号值。\red{把所有时刻的贡献叠加起来}，就能还原原信号。连续时间信号满足
+冲激能取出某一时刻的值，将所有时刻的贡献叠加，即还原原信号：
 \begin{equation}
   x(t)=\int_{-\infty}^{\infty}
     x(\tau)\impulse(t-\tau)\dd\tau,
   \label{eq:ct-impulse-decomposition}
 \end{equation}
-离散时间信号满足
 \begin{equation}
   x[n]=\sum_{k=-\infty}^{\infty}
     x[k]\impulse[n-k].
   \label{eq:dt-impulse-decomposition}
 \end{equation}
 
-\begin{intuition}
-  在\cref{eq:dt-impulse-decomposition}中，$\impulse[n-k]$ 是位于 $n=k$ 的单位冲激，乘上 $x[k]$ 后高度变为该处的样值。对所有 $k$ 求和，就是把序列逐点重新拼起来。连续时间公式表达的是同一件事，只是求和变成了积分。
-\end{intuition}
+以离散式为例：$\impulse[n-k]$ 是位于 $n=k$ 的单位冲激，乘上 $x[k]$ 后高度变成该处的样值。对所有 $k$ 求和，就是把序列逐点重建。连续式表达同一关系，只是求和换成积分。
 
 \begin{example}[用冲激表示有限长序列]
-  若序列只有
-  \[
-    x[0]=2,\qquad x[1]=-1,\qquad x[2]=3
-  \]
-  三个非零样值，则
+  若 $x[0]=2$、$x[1]=-1$、$x[2]=3$，其余为零，则
   \[
     x[n]=2\impulse[n]-\impulse[n-1]+3\impulse[n-2].
   \]
-  每个移位冲激负责一个下标，前面的\red{系数就是该下标处的信号值}。
+  每个移位冲激对应一个下标，\red{前面的系数即该处的信号值}。
 \end{example}
 
-\begin{remark}[与 LTI 系统的联系]
-  冲激分解把一般信号写成许多移位冲激的加权叠加。研究 LTI 系统时，只要知道系统对单位冲激的响应，就能借助线性和时不变性求出任意输入的响应。这里引出了后文的\red{冲激响应与卷积表示}。
-\end{remark}
+这一步是卷积的起点：一般信号拆成移位冲激的加权和，LTI 系统只要知道单位冲激响应，就能靠线性和时不变性求出任意输入的响应。后文的\red{冲激响应与卷积}由此得到。
 
 \subsection{抽样函数}
 \label{subsec:sampling-function}
@@ -542,26 +520,20 @@ $\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之�
     \end{cases}
     \label{eq:sampling-function}
   \end{equation}
-  \red{原点处的值来自极限} $\lim_{t\to0}\sin t/t=1$；分式在 $t=0$ 处不能直接代入。
 \end{definition}
 
-抽样函数在原点取得主瓣峰值 $1$，并在
-\[
-  t=k\pi,
-  \qquad k\in\Z\setminus\{0\}
-\]
-处过零。远离原点后，振荡仍在继续，但振幅包络按 $1/|t|$ 衰减。因此 $\Sa(t)$ \red{是偶信号，却不是周期信号}。
+原点处直接代入会得到 $0/0$，取极限 $\lim_{t\to0}\sin t/t=1$，所以\red{峰值是 $1$}。
 
-两种常见定义及其零点位置见\cref{fig:sampling-functions}。
+零点在 $t=k\pi$（$k$ 为非零整数）。离原点越远，振荡仍存在，但包络按 $1/|t|$ 衰减。$\Sa(t)$ \red{是偶信号，但不是周期信号}。
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.88\textwidth]{02-signals/sampling-functions.pdf}
-  \caption{非归一化抽样函数 $\Sa(t)$ 与归一化抽样函数 $\sinc(t)$。黑点标出非零零点；两种定义形状相同，横轴尺度相差 $\pi$。}
+  \caption{非归一化抽样函数 $\Sa(t)$ 与归一化抽样函数 $\sinc(t)$。黑点标出非零零点，两种定义横轴差一个 $\pi$。}
   \label{fig:sampling-functions}
 \end{figure}
 
-教材更常使用\keyterm{归一化抽样函数}
+教材更常用\keyterm{归一化抽样函数}
 \begin{equation}
   \sinc(t)=
   \begin{cases}
@@ -572,34 +544,33 @@ $\stepfun(t-t_0)$ 的跳变发生在 $t=t_0$。它在 $t_0$ 之前为零、之�
   \sinc(t)=\Sa(\pi t).
   \label{eq:normalized-sinc}
 \end{equation}
-$\sinc(t)$ 的非零零点位于整数处，而 $\Sa(t)$ 的非零零点位于 $k\pi$。看到 `sinc` 时，必须先确认作者的约定：$\pi$ 是否放进了函数定义。
+$\sinc(t)$ 的零点是整数，$\Sa(t)$ 的零点是 $k\pi$。看到 sinc，\blue{先确认定义中是否包含 $\pi$}。
 
-\begin{theorem}[抽样函数的常用性质]
-  抽样函数满足
-  \begin{align}
-    \Sa(-t)&=\Sa(t),
-    \label{eq:sampling-function-even}\\
-    \lim_{|t|\to\infty}\Sa(t)&=0,
-    \label{eq:sampling-function-decay}\\
-    \int_{-\infty}^{\infty}\Sa(t)\dd t&=\pi,
-    \label{eq:sampling-function-area}\\
-    \int_{-\infty}^{\infty}|\Sa(t)|^2\dd t&=\pi.
-    \label{eq:sampling-function-energy}
-  \end{align}
-  对应地，归一化函数满足
-  \[
-    \int_{-\infty}^{\infty}\sinc(t)\dd t=1,
-    \qquad
-    \int_{-\infty}^{\infty}|\sinc(t)|^2\dd t=1.
-  \]
-  第一个广义积分条件收敛；第二个积分\red{说明抽样函数是能量信号}。
-\end{theorem}
+\noindent\textbf{常用性质}
+\begin{align}
+  \Sa(-t)&=\Sa(t),
+  \label{eq:sampling-function-even}\\
+  \lim_{|t|\to\infty}\Sa(t)&=0,
+  \label{eq:sampling-function-decay}\\
+  \int_{-\infty}^{\infty}\Sa(t)\dd t&=\pi,
+  \label{eq:sampling-function-area}\\
+  \int_{-\infty}^{\infty}|\Sa(t)|^2\dd t&=\pi.
+  \label{eq:sampling-function-energy}
+\end{align}
+对应地，
+\[
+  \int_{-\infty}^{\infty}\sinc(t)\dd t=1,
+  \qquad
+  \int_{-\infty}^{\infty}|\sinc(t)|^2\dd t=1.
+\]
+第一个积分条件收敛；第二个积分说明\red{抽样函数是能量信号}。
 
-面积公式可用\hl{引入参数后求导}计算。设 $a>0$，
+\noindent\textbf{面积怎么算}
+引入参数 $a>0$：
 \[
   I(a)=\int_0^\infty\e^{-at}\frac{\sin t}{t}\dd t.
 \]
-指数因子使积分绝对收敛。对 $a$ 求导，并用欧拉公式展开正弦：
+$\e^{-at}$ 保证积分绝对收敛。对 $a$ 求导，再用欧拉公式把正弦拆开：
 \begin{align*}
   I'(a)
   &=-\int_0^\infty\e^{-at}\sin t\dd t\\
@@ -608,52 +579,44 @@ $\sinc(t)$ 的非零零点位于整数处，而 $\Sa(t)$ 的非零零点位于 $
   &=-\frac1{2\iu}\left(\frac1{a-\iu}-\frac1{a+\iu}\right)
    =-\frac1{a^2+1}.
 \end{align*}
-于是 $I(a)=-\arctan a+C$。由 $|\sin t/t|\le1$，
-$|I(a)|\le\int_0^\infty\e^{-at}\dd t=1/a$，故 $a\to\infty$ 时 $I(a)\to0$，得到
+于是 $I(a)=-\arctan a+C$。又 $|\sin t/t|\le1$，所以 $|I(a)|\le1/a$，$a\to\infty$ 时 $I(a)\to0$，定出
 \[
   C=\frac{\pi}{2},\qquad I(a)=\frac{\pi}{2}-\arctan a.
 \]
-让 $a\to0^+$，得 $\int_0^\infty\sin t/t\dd t=\pi/2$。这里的极限与广义积分一致：分部积分可将
-$\int_R^\infty\e^{-at}\sin t/t\dd t$ 的绝对值统一控制在 $2/R$ 内，再在有限区间上令 $a\to0^+$ 即可。利用偶性，
+令 $a\to0^+$，得 $\int_0^\infty\sin t/t\dd t=\pi/2$。由偶性，
 \[
   \int_{-\infty}^{\infty}\frac{\sin t}{t}\dd t
     =2\times\frac{\pi}{2}=\pi.
 \]
-平方积分的计算见\cref{eg:ctft-sinc-energy}。
+平方积分见\cref{eg:ctft-sinc-energy}。
 
-尺度和时移决定主瓣的位置与宽度。对 $B>0$，
+\hl{参数积分：引入衰减因子，求导，再令参数趋于零}。这是计算此类积分的常用方法。
+
+尺度和平移决定主瓣的位置和宽度：
 \begin{equation}
-  x(t)=A\Sa\bigl(B(t-t_0)\bigr)
+  x(t)=A\Sa\bigl(B(t-t_0)\bigr),
   \label{eq:scaled-shifted-sampling-function}
 \end{equation}
-在 $t=t_0$ 处取值 $A$，非零零点位于
+峰值在 $t=t_0$，取 $A$；零点在
 \[
   t=t_0+\frac{k\pi}{B},
   \qquad k\in\Z\setminus\{0\}.
 \]
-$B$ 越大，\red{零点间距越小，主瓣越窄}。由能量的尺度变换可得
+$B$ 越大，\red{零点越密，主瓣越窄}。能量为
 \begin{equation}
   E_x=\frac{|A|^2\pi}{B}.
   \label{eq:scaled-sampling-function-energy}
 \end{equation}
 
 \begin{example}[读取抽样函数的峰值、零点与能量]
-  设
-  \[
-    x(t)=3\Sa\bigl(2(t-1)\bigr).
-  \]
-  它的峰值位于 $t=1$，峰值为 $3$；非零零点为
+  设 $x(t)=3\Sa\bigl(2(t-1)\bigr)$。峰值在 $t=1$，等于 $3$；零点在
   \[
     t=1+\frac{k\pi}{2},
     \qquad k\in\Z\setminus\{0\}.
   \]
-  由\cref{eq:scaled-sampling-function-energy}可得 $E_x=9\pi/2$。
+  能量 $E_x=9\pi/2$。
 \end{example}
 
-\begin{intuition}
-  改变 $B$ 会在时间轴上压缩或拉伸抽样函数。主瓣变窄时，旁瓣和零点也按相同比例靠近中心。傅里叶变换中会得到\red{“时间越窄、频域越宽”}的对应关系，理想低通滤波和带限信号重建由此都会遇到抽样函数。
-\end{intuition}
+改变 $B$ 时，主瓣、旁瓣、零点按同一比例伸缩。到傅里叶变换中，就表现为\red{“时域越窄，频域越宽”}；理想低通和带限重建都会用到抽样函数。
 
-\begin{pitfall}[“抽样函数”不等于“对信号抽样”]
-  $\Sa(t)$ 是一个确定的连续时间函数；信号抽样是从连续信号中取出离散样值的操作。名称虽近，含义不同。采样周期、采样频率和频谱混叠见\cref{chap:sampling}。
-\end{pitfall}
+“抽样函数”是一个确定的连续时间函数；“对信号抽样”是另一种操作。名称相近，含义不同。采样和混叠见\cref{chap:sampling}。

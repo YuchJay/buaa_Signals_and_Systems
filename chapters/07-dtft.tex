@@ -3,7 +3,7 @@
 \chapter{离散时间傅里叶变换}
 \label{chap:dtft}
 
-离散时间信号 $x[n]$ 的时域自变量是整数，频域自变量仍可连续变化。\keyterm{离散时间傅里叶变换（discrete-time Fourier transform, DTFT）}用连续的频率描述序列中各复指数分量。本章采用 $X(\e^{\iu\omega})$ 记号；有限点\keyterm{离散傅里叶变换（DFT）}是另一种变换，不能由名称中的“离散”将两者混同。
+离散时间信号的时域下标是整数，频率却可以连续变化。\keyterm{离散时间傅里叶变换（discrete-time Fourier transform, DTFT）}就用连续频率描述序列里的各复指数分量。本章写 $X(\e^{\iu\omega})$。它和有限点\keyterm{离散傅里叶变换（DFT）}不是一回事：DTFT 的频域连续，DFT 的时域、频域都是有限数组。
 
 \section{定义、周期性与收敛}
 \label{sec:dtft-definition}
@@ -25,7 +25,7 @@
   记作 $x[n]\fourierpair X(\e^{\iu\omega})$。其中 $\omega$ 是离散时间角频率，单位为 $\mathrm{rad/sample}$，即每个样值间隔的弧度数。上述和式与积分\blue{须在相应的收敛意义下解释}。
 \end{definition}
 
-正变换对整数 $n$ 求和；逆变换\red{对连续频率积分}。频谱的记号 $\e^{\iu\omega}$ 表明它按单位圆上的位置取值；沿单位圆转过一周后频谱重复，\red{频率自变量仍连续}。幅度谱和相位谱的定义沿用\cref{sec:ctft-magnitude-phase}，只需把 $X(\iu\omega)$ 换成 $X(\e^{\iu\omega})$。
+正变换是求和，\red{逆变换是连续频率上的积分}。$\e^{\iu\omega}$ 表示频谱在单位圆上取值：绕一圈回到原处，频谱重复，但\red{$\omega$ 本身仍连续}。幅度谱和相位谱照\cref{sec:ctft-magnitude-phase} 定义，只需把 $X(\iu\omega)$ 换成 $X(\e^{\iu\omega})$。
 
 在 $\sum_n|x[n]|<\infty$ 时，将正变换代入逆变换，可交换求和与积分：
 \begin{align*}
@@ -58,16 +58,16 @@ $n=k$ 时被积函数为 $1$；$n\ne k$ 时，积分两端的指数相同，差�
   =X(\e^{\iu\omega}).
   \label{eq:dtft-periodicity}
 \end{equation}
-所以 DTFT 的频谱\red{必以二倍圆周率为周期}。$2\pi$ 未必是最小正周期，例如 $x[n]=\impulse[n]$ 的频谱恒为 $1$。
+所以 DTFT 的频谱\red{必以 $2\pi$ 为周期}。$2\pi$ 未必是最小正周期，例如 $x[n]=\impulse[n]$ 的频谱恒为 $1$。
 
 逆变换的被积函数 $X(\e^{\iu\omega})\e^{\iu\omega n}$ 同样以 $2\pi$ 为周期，积分区间可以改成任意一个长度为 $2\pi$ 的区间：
 \[
   x[n]=\frac{1}{2\pi}\int_{\alpha}^{\alpha+2\pi}
     X(\e^{\iu\omega})\e^{\iu\omega n}\dd\omega.
 \]
-计算时\red{只积分一个完整周期}。对普通函数，有限个端点的取值不影响积分；若边界上有冲激，应把相邻周期的边界当作同一个频率点，\blue{不能重复计入}。选一个边界不经过谱线的区间通常更方便。
+计算时\red{只积一个完整周期}。普通函数在有限个端点的取值不影响积分；边界上有冲激时，相邻周期的边界是同一个频率点，\blue{只计一次}。选一个不经过谱线的边界通常更方便。
 
-频率 $\omega$ 与 $\omega+2r\pi$ 对应同一个复指数序列。零频附近以及偶数倍 $\pi$ 附近都表示缓慢变化的分量，奇数倍 $\pi$ 附近则表示逐点快速交替的分量。\red{高低频按主周期判断}，不能仅凭 $|\omega|$ 的数值大小排序。特别地，
+$\omega$ 与 $\omega+2r\pi$ 对应同一个复指数序列。零频和偶数倍 $\pi$ 附近变化慢，奇数倍 $\pi$ 附近逐点交替。\red{高低频按主周期判断}：只看 $|\omega|$ 的大小，会把 $\omega=\pi$ 当成最高频，还会把 $\omega=3\pi$ 当成更高频。特别地，
 \[
   \e^{\iu\pi n}=\e^{-\iu\pi n}=(-1)^n,
 \]
@@ -85,12 +85,12 @@ $n=k$ 时被积函数为 $1$；$n\ne k$ 时，积分两端的指数相同，差�
 
 若只满足 $\sum_n|x[n]|^2<\infty$，则可在\blue{均方意义下定义频谱}。例如后面的 sinc 型序列通常不绝对可和，却有有限能量，仍能得到周期矩形频谱；频谱跳跃处用对称极限取左右值的平均数。
 
-常数、单位阶跃以及非零的正弦、余弦序列都没有有限能量，其 DTFT \red{要在广义函数意义下解释}。\blue{不收敛时先辨认意义}，不能把发散级数直接套进无限等比级数公式。含冲激的频谱仍用\cref{eq:dtft-inverse} 反演，相关判等约定见\cref{chap:math-foundations}。
+常数、单位阶跃以及非零的正弦、余弦序列都没有有限能量，其 DTFT \red{要在广义函数意义下解释}。\blue{遇到不收敛，先确认用哪种意义}；把发散级数硬套无限等比公式，会得到一个没有意义的有限值。含冲激的频谱仍用\cref{eq:dtft-inverse} 反演，相关判等约定见\cref{chap:math-foundations}。
 
 \section{典型序列的傅里叶变换}
 \label{sec:dtft-basic-pairs}
 
-以下变换对依次为右侧指数、单位冲激、常数、有限长矩形、sinc 型序列、正余弦、单位阶跃和符号序列，与连续时间典型变换的顺序对应。冲激 $\impulse[n]$ 是离散时间单位样值；频域的 $\impulse(\omega-\omega_0)$ 则是连续频率变量上的狄拉克冲激，箭头旁标的是权重。
+下面按连续时间那套顺序排：指数、冲激、常数、矩形、sinc、正余弦、阶跃、符号序列。先分清两种冲激：$\impulse[n]$ 是离散单位样值；频域的 $\impulse(\omega-\omega_0)$ 是连续频率上的狄拉克冲激，箭头旁标的是权重。
 
 \subsection{右侧衰减指数序列}
 \label{sec:dtft-exponential}
@@ -108,7 +108,7 @@ $n=k$ 时被积函数为 $1$；$n\ne k$ 时，积分两端的指数相同，差�
     {1-a\e^{-\iu\omega}}
   =\frac{1}{1-a\e^{-\iu\omega}}.
 \]
-等比级数收敛要求\red{公比的模小于一}，与 $\omega$ 无关。
+等比级数收敛要求\red{公比的模小于一}，与 $\omega$ 无关。\hl{看到右边指数，分母写一减公比}。
 
 对实数 $-1<a<1$，
 \begin{align*}
@@ -143,7 +143,7 @@ $0<a<1$ 时，幅度在 $\omega=2r\pi$ 处最大，峰值为 $1/(1-a)$。$-1<a<0
 \]
 它的\red{幅度谱处处为一}，相位处处为零。逆向核对时，\cref{eq:dtft-orthogonality} 给出
 $\frac1{2\pi}\int_{-\pi}^{\pi}\e^{\iu\omega n}\dd\omega=\impulse[n]$。
-这个变换表明，时域若改变零点样值，频域就会叠加一个\red{覆盖全部频率的常数}，见\cref{fig:dtft-impulse-constant} 上行。因此\blue{零点样值不能忽略}。
+这个变换表明，时域若改变零点样值，频域就会叠加一个\red{覆盖全部频率的常数}，见\cref{fig:dtft-impulse-constant} 上行。所以\blue{零点样值也要算进去}。
 
 \subsection{常数序列}
 
@@ -232,7 +232,7 @@ $\omega=2k\pi/(2N_1+1)$，其中 $k$ 不为 $2N_1+1$ 的整数倍。零频主瓣
     \e^{\iu\omega n}\dd\omega
   =\frac{\sin(\omega_0 n)}{\pi n}.
 \]
-$n=0$ 时直接积分得到 $\omega_0/\pi$，与把 $n$ 暂看成连续变量求极限的结果一致。\red{中心值由频谱面积确定}，不能因表达式出现 $0/0$ 就将它置零。频域边界 $\omega=\pm\omega_0+2r\pi$ 采用对称求和时取 $1/2$；有限个\blue{边界点的取值不影响反演}。
+$n=0$ 时直接积分得到 $\omega_0/\pi$，与把 $n$ 暂看成连续变量求极限的结果一致。\red{中心值由频谱面积确定}；表达式出现 $0/0$ 时直接写零，会丢掉这个中心样值。频域边界 $\omega=\pm\omega_0+2r\pi$ 采用对称求和时取 $1/2$；有限个\blue{边界点的取值不影响反演}。
 
 \cref{fig:dtft-sinc} 对比 $\omega_0=\pi/4$ 与 $3\pi/4$。序列是连续 sinc 曲线在整数点的样值，频谱则是\red{周期延拓的矩形}。参数为 $3\pi/4$ 时，矩形半宽为 $3\pi/4$，$s[0]=3/4$；取 $-\pi/4$ 时序列整体反号，矩形高度也变成 $-1$。
 \begin{figure}[H]
@@ -287,7 +287,7 @@ $0<\omega_0<\pi$ 时，一个主周期内有两条不同的谱线。余弦的两
   \label{eq:dtft-alternating}
 \end{equation}
 余弦的两份权重在同一位置相加为 $2\pi$；正弦的两份权重相消，
-$\sin(\pi n)=0$，其频谱也为零。\hl{重合谱线先合并权重}。在 $[-\pi,\pi]$ 上绘图时，两端属于同一个基本周期的边界点，\hl{边界谱线不能算两次}。为便于读取，\cref{fig:dtft-alternating} 显示了多个周期。
+$\sin(\pi n)=0$，其频谱也为零。\hl{重合谱线先合并权重}。在 $[-\pi,\pi]$ 上绘图时，两端属于同一个基本周期的边界点，\hl{边界谱线只算一次}。为便于读取，\cref{fig:dtft-alternating} 显示了多个周期。
 这些变换对用于单个谐波；由多个谐波组成的一般周期序列，见\cref{sec:dtft-periodic-signals}。
 \begin{figure}[H]
   \centering
@@ -311,7 +311,7 @@ $\sin(\pi n)=0$，其频谱也为零。\hl{重合谱线先合并权重}。在 $[
   \frac{1}{1-\e^{-\iu\omega}}
   =\frac12-\frac{\iu}{2}\cot\frac{\omega}{2}.
 \]
-实部含常数 $1/2$ 和权重 $\pi$ 的周期冲激，虚部为 $-\frac12\operatorname{pv}\cot(\omega/2)$。\red{阶跃频谱须保留冲激}，\blue{不能只写这个分式}。
+实部含常数 $1/2$ 和权重 $\pi$ 的周期冲激，虚部为 $-\frac12\operatorname{pv}\cot(\omega/2)$。\red{阶跃频谱须保留冲激}。
 
 为推导该式，先取 $0<r<1$ 的衰减序列 $r^n\stepfun[n]$。其频谱的实部、虚部为
 \[
@@ -363,7 +363,7 @@ $\sin(\pi n)=0$，其频谱也为零。\hl{重合谱线先合并权重}。在 $[
     -\iu\operatorname{pv}\cot\frac{\omega}{2}}.
   \label{eq:dtft-sign}
 \end{equation}
-也可写成 $-\iu/\tan(\omega/2)$，\blue{奇点仍按周期主值理解}。序列是实奇序列，频谱为\red{纯虚的奇函数}。在普通函数部分，幅度为 $|\cot(\omega/2)|$；在主周期内，$-\pi<\omega<0$ 时相位为 $\pi/2$，$0<\omega<\pi$ 时为 $-\pi/2$。奇数倍 $\pi$ 处频谱为零，相位未定义；偶数倍 $\pi$ 处是主值奇点，不能赋予有限的幅度或相位。对应图像见\cref{fig:dtft-sign}。
+也可写成 $-\iu/\tan(\omega/2)$，\blue{奇点仍按周期主值理解}。序列是实奇序列，频谱为\red{纯虚的奇函数}。在普通函数部分，幅度为 $|\cot(\omega/2)|$；在主周期内，$-\pi<\omega<0$ 时相位为 $\pi/2$，$0<\omega<\pi$ 时为 $-\pi/2$。奇数倍 $\pi$ 处频谱为零，相位未定义；偶数倍 $\pi$ 处是主值奇点，没有有限的幅度或相位。对应图像见\cref{fig:dtft-sign}。
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.96\textwidth]{07-dtft/sign.pdf}
@@ -376,7 +376,7 @@ $\sin(\pi n)=0$，其频谱也为零。\hl{重合谱线先合并权重}。在 $[
 
 离散周期序列既可用 DTFS 系数表示，也可用含冲激的 DTFT 表示。
 DTFS 只需一组独立系数，DTFT 则将这些系数放到相应的谐波频率上，形成以 $2\pi$ 为周期的冲激频谱。
-本节与\cref{sec:ctft-periodic-signals} 对应：先由一个周期求系数，再写出整段周期序列的频谱，最后讨论周期单位冲激序列。
+本节与\cref{sec:ctft-periodic-signals} 对应。
 
 \subsection{由一个周期读取傅里叶系数}
 \label{sec:dtft-fs-from-transform}
@@ -391,7 +391,7 @@ DTFS 的分析、重构和正交关系见\cref{sec:discrete-fourier-series}，�
     0,&\text{其他整数 }n.
   \end{cases}
 \]
-这些样值按周期重复后恢复 $x[n]$，即
+这些样值按周期重复后形成 $x[n]$，即
 \begin{equation}
   x[n]=\sum_{r=-\infty}^{\infty}x_1[n-rN]
       =x_1[n\bmod N].
@@ -408,7 +408,7 @@ DTFS 的分析、重构和正交关系见\cref{sec:discrete-fourier-series}，�
 \end{equation}
 计算时\hl{取一个周期，再到谐波上取样}，然后除以 $N$。
 也可以取任意连续 $N$ 个整数位置，但须保留它们的实际下标，才能得到相同的相位。
-\red{取样对象是有限序列的频谱}；整段非零周期序列的 DTFT 含冲激，不能代入这里的 $X_1$。
+\red{取样对象是有限序列的频谱}；整段非零周期序列的 DTFT 含冲激，代入 $X_1$ 会得到错误权重。
 
 \subsection{由级数系数构造冲激频谱}
 \label{sec:dtft-periodic-transform}
@@ -446,7 +446,7 @@ $[-\omega_0/2,\,2\pi-\omega_0/2]$，只取 $\ell=0,\ldots,N-1$ 的冲激：
   =x[n].
 \]
 冲激的权重与逆变换的 $1/(2\pi)$ 抵消，留下 DTFS 重构式。
-这一过程把级数系数与傅里叶变换联系起来，不需要再计算发散的普通无穷和。
+这一过程把级数系数与傅里叶变换联系起来。
 
 \begin{example}[四周期序列的冲激频谱]
   \label{eg:dtft-periodic-four-point-spectrum}
@@ -526,7 +526,7 @@ $N\cdot(2\pi/N)/(2\pi)=1$，可用来核对权重。
   aX_1(\e^{\iu\omega})+bX_2(\e^{\iu\omega}).
   \label{eq:dtft-linearity}
 \end{equation}
-将线性组合代入定义，拆开求和便得到该式。\red{相加的是复频谱}，不能直接把幅度谱相加；相位不同的分量可能抵消。
+将线性组合代入定义，拆开求和便得到该式。\red{相加的是复频谱}；直接把幅度谱相加，相位不同的分量就丢了。
 
 \begin{example}[sinc 序列与冲激的叠加]
   用\cref{eq:dtft-sinc-pair,eq:dtft-impulse}，
@@ -547,12 +547,12 @@ $N\cdot(2\pi/N)/(2\pi)=1$，可用来核对权重。
 
 对整数 $n_0$，
 \begin{equation}
-  x[n-n_0]\fourierpair
-  \e^{-\iu\omega n_0}X(\e^{\iu\omega}).
+  \boxed{x[n-n_0]\fourierpair
+  \e^{-\iu\omega n_0}X(\e^{\iu\omega}).}
   \label{eq:dtft-time-shift}
 \end{equation}
 令 $m=n-n_0$，则
-\[
+  \[
   \sum_n x[n-n_0]\e^{-\iu\omega n}
   =\sum_m x[m]\e^{-\iu\omega(m+n_0)}
   =\e^{-\iu\omega n_0}X(\e^{\iu\omega}).
@@ -574,7 +574,7 @@ $N\cdot(2\pi/N)/(2\pi)=1$，可用来核对权重。
   =\sum_n x[n]\e^{-\iu(\omega-\omega_0)n}
   =X\bigl(\e^{\iu(\omega-\omega_0)}\bigr).
 \]
-乘以正频率复指数，把频谱向右移 $\omega_0$。画主周期时，\red{越过边界须周期折回}，\blue{不能截掉越界部分}。\cref{fig:dtft-shifts} 分别展示延迟的幅相变化与跨越 $\pi$ 边界的频移。低通矩形平移 $\pi$ 后成为高通的计算已在\cref{ex:dtft-highpass} 给出；此时乘子是 $\e^{\iu\pi n}=(-1)^n$。
+乘以正频率复指数，把频谱向右移 $\omega_0$。画主周期时，\red{越过边界要周期折回}；截掉越界部分，会把移过去的一半频谱丢掉。\cref{fig:dtft-shifts} 分别展示延迟的幅相变化与跨越 $\pi$ 边界的频移。低通矩形平移 $\pi$ 后成为高通的计算已在\cref{ex:dtft-highpass} 给出；此时乘子是 $\e^{\iu\pi n}=(-1)^n$。
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.96\textwidth]{07-dtft/shifts.pdf}
@@ -612,7 +612,7 @@ $N\cdot(2\pi/N)/(2\pi)=1$，可用来核对权重。
 \end{align*}
 \blue{对两个有限能量序列}，该式也成立：时域乘积绝对可和，频域周期卷积可由平方可积频谱定义，并用有限截断的极限得到。
 
-与\cref{eq:dtft-convolution} 对照，时域卷积对应频谱的普通乘法，没有 $1/(2\pi)$；时域乘法对应频谱的周期卷积，带 $1/(2\pi)$。连续时间的调制性质见\cref{eq:ctft-frequency-convolution}，其频域卷积在整条实轴上积分。两个非零周期频谱不能直接在整条实轴上做普通卷积，否则\red{会重复计算所有副本}，积分通常发散。
+与\cref{eq:dtft-convolution} 对照，时域卷积对应频谱的普通乘法，没有 $1/(2\pi)$；时域乘法对应频谱的周期卷积，带 $1/(2\pi)$。连续时间的调制性质见\cref{eq:ctft-frequency-convolution}，其频域卷积在整条实轴上积分。两个非零周期频谱若直接在整条实轴上做普通卷积，\red{所有副本会被重复计算}，积分通常发散。
 
 \subsection{时域差分}
 \label{sec:dtft-difference}
@@ -675,7 +675,7 @@ $N\cdot(2\pi/N)/(2\pi)=1$，可用来核对权重。
     \frac1{(1-a\e^{-\iu\omega})^r}},\qquad |a|<1.
   \label{eq:dtft-repeated-pole}
 \end{equation}
-其中 $\binom{n+r-1}{r-1}=(n+r-1)!/[n!(r-1)!]$ 只在 $n\ge0$ 分支使用。$r=1$ 是指数，$r=2$ 是 $(n+1)a^n$，$r=3$ 是 $(n+1)(n+2)a^n/2$；$a=0$ 时均约定零点样值为 $1$，其余为零。\red{高次分母对应多项式因子}，反演时不能把分母次数当作指数参数的幂次。$r=2$ 的样值与幅相谱见\cref{fig:dtft-weighted-exponential}。
+其中 $\binom{n+r-1}{r-1}=(n+r-1)!/[n!(r-1)!]$ 只在 $n\ge0$ 分支使用。$r=1$ 是指数，$r=2$ 是 $(n+1)a^n$，$r=3$ 是 $(n+1)(n+2)a^n/2$；$a=0$ 时均约定零点样值为 $1$，其余为零。\red{高次分母对应多项式因子}；把分母次数直接当成 $a$ 的幂次，反演出的序列就错了。$r=2$ 的样值与幅相谱见\cref{fig:dtft-weighted-exponential}。
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.96\textwidth]{07-dtft/weighted-exponential.pdf}
@@ -702,7 +702,7 @@ $N\cdot(2\pi/N)/(2\pi)=1$，可用来核对权重。
       \left[\sum_m h[m]\e^{-\iu\omega m}\right]
       =X(\e^{\iu\omega})H(\e^{\iu\omega}).
 \end{align*}
-这一步把\red{卷积和变成普通乘法}。与逆变换不同，此处\red{乘积没有归一化系数}，不额外乘 $1/(2\pi)$。含阶跃或正弦等广义频谱时，还须确认时域卷积与频域乘积有定义，\blue{不能任意相乘两个奇异分布}。
+这一步把\red{卷积和变成普通乘法}。与逆变换不同，此处\red{乘积没有归一化系数}，不额外乘 $1/(2\pi)$。含阶跃或正弦等广义频谱时，先确认时域卷积与频域乘积有定义；\blue{两个奇异分布直接相乘可能没有定义}。
 
 \section{离散 LTI 系统的频率响应}
 \label{sec:dtft-lti}
@@ -725,7 +725,7 @@ $N\cdot(2\pi/N)/(2\pi)=1$，可用来核对权重。
   |Y|=|H||X|,\qquad
   \arg Y=\arg H+\arg X\pmod{2\pi}.
 \]
-零点处不使用相位相加式。若 $H$ 和 $Y$ 可由已知输入输出求出，形式上有 $H=Y/X$，但\red{只能在输入频谱非零处相除}；输入没有激励到的频率，通常不能仅凭该组输入输出确定响应。\cref{ex:dtft-identify-system} 给出输入频谱处处非零的情况。
+零点处不使用相位相加式。若 $H$ 和 $Y$ 可由已知输入输出求出，形式上有 $H=Y/X$，但\red{只能在输入频谱非零处相除}；输入没有激励到的频率，通常无法仅凭该组输入输出确定响应。\cref{ex:dtft-identify-system} 给出输入频谱处处非零的情况。
 
 若 $\sum_n|h[n]|<\infty$，$H$ 为普通连续函数，系统 BIBO 稳定；\blue{因果还须另查} $h[n]=0$（$n<0$），两条时域判据见第四章。以广义函数形式写出 $H$，不自动保证稳定性。
 
@@ -750,7 +750,7 @@ $N\cdot(2\pi/N)/(2\pi)=1$，可用来核对权重。
     +\pi\sum_m\impulse(\omega-2m\pi).
 \]
 它因果，但 $h[n]$ \blue{不绝对可和}，\red{累加器不满足稳定判据}。例如从零时刻开始的有界阶跃输入产生
-$(n+1)\stepfun[n]$，输出无界。含奇点与冲激的频谱不能当作零频处取有限值的普通频率响应。
+$(n+1)\stepfun[n]$，输出无界。含奇点与冲激的频谱在零频没有有限值；当普通频率响应用，会在零频取到无穷。
 
 对整数 $n_0$，延时器为
 \[
@@ -775,7 +775,7 @@ $(n+1)\stepfun[n]$，输出无界。含奇点与冲激的频谱不能当作零�
     =\e^{\iu\omega_0n}\sum_k h[k]\e^{-\iu\omega_0k}
     =H(\e^{\iu\omega_0})\e^{\iu\omega_0n}.
 \]
-因此复指数经过 LTI 系统后\red{频率保持不变}，只乘以该频率处的复增益。这里输入在所有整数时刻存在；若乘上 $\stepfun[n]$ 使其从零时刻开始，完整输出还可能含有起始过程，\blue{不能直接套这个式子}。
+因此复指数经过 LTI 系统后\red{频率保持不变}，只乘以该频率处的复增益。这里输入在所有整数时刻存在；若乘上 $\stepfun[n]$ 使其从零时刻开始，完整输出还可能含有起始过程，直接套这个式子会漏掉它。
 
 对 $x[n]=\cos(\omega_0n)$，先取 $0<\omega_0<\pi$，一个主周期内有 $\pm\omega_0$ 两条权重为 $\pi$ 的谱线。频域乘以 $H$，利用冲激取样，
 \begin{align*}
@@ -826,16 +826,16 @@ $H(\e^{-\iu\omega_0})=H^*(\e^{\iu\omega_0})$。两项才能合成实余弦：
          {\displaystyle\sum_{k=0}^{N}a_k\e^{-\iu\omega k}}.
   \label{eq:dtft-difference-equation}
 \end{equation}
-求解时\red{先说明零状态条件}。给定差分方程还可能有不同的齐次解；因果性、初始条件或稳定性用于选定所讨论的系统。带独立初始储能的总响应不能直接写成 $Y=HX$。
+求解时\red{先说明零状态条件}。给定差分方程还可能有不同的齐次解；因果性、初始条件或稳定性用于选定所讨论的系统。
 
-课程计算可按以下顺序进行：
+计算可按以下顺序进行：
 \begin{enumerate}
   \item 每个延迟 $k$ 写成乘子 $\e^{-\iu\omega k}$，移项后提取 $Y$ 与 $X$。
   \item 分母按 $\e^{-\iu\omega}$ 因式分解，再展开部分分式。
   \item 不同的一次因子用\cref{eq:dtft-exponential} 反演；重复因子用\cref{eq:dtft-repeated-pole}。
-  \item 求输出时再乘输入频谱，检查输入是否使一次因子变成重复因子。
+  \item 求输出时再乘输入频谱；注意检查输入是否使一次因子变成重复因子。
 \end{enumerate}
-\red{输出可能新增重复因子}，不能沿用求 $h[n]$ 时的部分分式形式。完整计算见\cref{ex:dtft-difference-equation}；若所得右侧指数参数的模不小于 $1$，\blue{还须回查 DTFT 的收敛条件}。
+\red{输出可能新增重复因子}；沿用求 $h[n]$ 时的部分分式形式，会漏掉这个因子。完整计算见\cref{ex:dtft-difference-equation}；若所得右侧指数参数的模不小于 $1$，\blue{还须回查 DTFT 的收敛条件}。
 
 \section{累加性质与综合应用}
 \label{sec:dtft-pair-tips}
@@ -939,7 +939,7 @@ $\sin((\gamma+2q\pi)n)=\sin(\gamma n)$；零点样值却增加 $2q$。因此
   \end{cases}
   \label{eq:dtft-sinc-sum}
 \end{equation}
-式中 $n=0$ 的项必须按 $\gamma/\pi$ 补上，\blue{求和按对称极限理解}。该式的\red{参数范围不能删去}；超出主周期时应使用前一小节的重叠频谱。例如 $\gamma=9\pi/4$ 时，零频值为 $3$。
+式中 $n=0$ 的项必须按 $\gamma/\pi$ 补上，\blue{求和按对称极限理解}。该式的\red{参数范围要保留}；去掉后直接套，正负号会错。超出主周期时，改用前一小节的重叠频谱。例如 $\gamma=9\pi/4$ 时，零频值为 $3$。
 
 若只对非零整数求和，\blue{就须减去零点项}：
 \begin{equation}
@@ -974,7 +974,12 @@ $\sin((\gamma+2q\pi)n)=\sin(\gamma n)$；零点样值却增加 $2q$。因此
 
 正弦、余弦与 sinc 型序列都可能含有参数 $\omega_0$，但化简规则要检查整个表达式。正余弦的频率加 $2\pi$ 后全序列相同；sinc 型序列的非零样值相同，零点样值可能不同。作参数化简前，\blue{检查定义中的零点约定}。
 
-\section{时域扩展与插零}
+\section{时域扩展与对偶关系}
+\label{sec:dtft-expansion-duality}
+
+本节与\cref{sec:ctft-duality} 所在的尺度与对偶主题对应。离散时间的尺度变化先讨论插零；对偶关系则须区分 DTFT 与连续时间级数的对应，以及 DTFS 内部的对应。
+
+\subsection{时域扩展与插零}
 \label{sec:dtft-expansion}
 
 离散序列仅在整数下标有定义。取正整数 $k$，\keyterm{时域扩展（time expansion）}定义为
@@ -1018,8 +1023,83 @@ $\sin((\gamma+2q\pi)n)=\sin(\gamma n)$；零点样值却增加 $2q$。因此
 \end{example}
 
 \begin{pitfall}[把插零当作任意尺度变换]
-  $x[n/k]$ 在非整数自变量处没有定义，必须连同\cref{eq:dtft-expansion-definition} 的零值分支一起使用。$x[kn]$ 则只保留每隔 $k$ 个位置的样值，是另一种运算；不能由插零公式把 $k$ 换成 $1/k$ 来求其频谱。
+  $x[n/k]$ 在非整数自变量处没有定义，必须连同\cref{eq:dtft-expansion-definition} 的零值分支一起使用。$x[kn]$ 则只保留每隔 $k$ 个位置的样值，是另一种运算；把 $k$ 换成 $1/k$ 去套插零公式，得到的是另一个序列。
 \end{pitfall}
+
+\subsection{DTFT 与连续时间傅里叶级数的对偶}
+\label{sec:dtft-ctfs-duality}
+
+连续时间变换的两端都是连续变量函数，可以按\cref{eq:ctft-duality} 互换角色。DTFT 的两端分别是离散序列和连续周期函数，交换角色后，对应的是连续时间傅里叶级数。
+
+设 $x[n]\fourierpair X(\e^{\iu\omega})$，将频谱看作连续变量 $\theta$ 的周期函数
+$g(\theta)=X(\e^{\iu\theta})$。这里 $\theta$ 是周期为 $2\pi$ 的无量纲变量。按第五章的连续时间级数约定，
+\[
+  g(\theta)=\sum_{k=-\infty}^{\infty}c_k\e^{\iu k\theta},
+  \qquad
+  c_k=\frac1{2\pi}\int_{-\pi}^{\pi}
+        g(\theta)\e^{-\iu k\theta}\dd\theta.
+\]
+与\cref{eq:dtft-inverse} 中 $n=-k$ 的情形比较，得到
+\begin{equation}
+  \boxed{c_k=x[-k],\qquad
+    X(\e^{\iu\theta})=\sum_{k=-\infty}^{\infty}
+       x[-k]\e^{\iu k\theta}}.
+  \label{eq:dtft-ctfs-duality}
+\end{equation}
+即\red{频谱的级数系数是反褶序列}。反过来，若已知 $2\pi$ 周期函数 $g(\theta)$ 的级数系数为 $c_k$，则序列 $c_{-n}$ 的 DTFT 就是 $g(\omega)$。
+绝对可和序列的级数绝对收敛；对一般有限能量序列，上述展开\blue{按均方意义理解}，不要求每个频率点都逐点收敛。
+
+\begin{example}[由周期矩形的系数读取 sinc 序列的变换]
+  取 $0<a<\pi$，令 $g(\theta)$ 为 $2\pi$ 周期矩形，在 $|\theta|<a$ 时为 $1$，在 $a<|\theta|<\pi$ 时为 $0$。其系数为
+  \[
+    c_k=\frac1{2\pi}\int_{-a}^{a}\e^{-\iu k\theta}\dd\theta
+    =\begin{cases}
+      \displaystyle\frac{\sin(ak)}{\pi k},&k\ne0,\\[4pt]
+      \displaystyle\frac a\pi,&k=0.
+    \end{cases}
+  \]
+  系数是实偶序列，所以 $c_{-n}=c_n=s_a[n]$。由\cref{eq:dtft-ctfs-duality} 直接读出
+  $s_a[n]\fourierpair R_a(\omega)$，与\cref{eq:dtft-sinc-pair,fig:dtft-sinc} 一致，无须另算无穷和。矩形跳跃处按对称求和取半值；改变有限个边界点不改变级数系数或逆变换。
+\end{example}
+
+\begin{pitfall}[把连续时间的自对偶公式照搬到 DTFT]
+  直接把连续时间的自对偶公式套到 DTFT 会写错：$x$ 只在整数下标有定义，写不出 $x[-\omega]$。应先把 $X$ 看作连续周期函数，再读取它的级数系数。按本书的级数归一化，系数为 $x[-k]$，\red{不额外乘以 $2\pi$}。
+\end{pitfall}
+
+\subsection{离散傅里叶级数的对偶性}
+\label{sec:dtfs-duality}
+
+DTFS 的序列 $x[n]$ 与系数 $a_k$ 都以 $N$ 为周期，可以互换角色。沿用\cref{eq:dtfs-analysis-synthesis}，若将 $a_n$ 作为新序列，记它的级数系数为 $b_k$，则
+\begin{equation}
+  \boxed{x[n]\xleftrightarrow{\mathrm{DTFS}}a_k
+    \quad\Longrightarrow\quad
+    a_n\xleftrightarrow{\mathrm{DTFS}}\frac1N x[-k]}.
+  \label{eq:dtfs-duality}
+\end{equation}
+这里 $x[-k]=x[(-k)\bmod N]$，负下标须\blue{按同一个周期折回}。把 $a_n$ 的分析式代入，得到
+\begin{align*}
+  b_k
+    &=\frac1N\sum_{n=0}^{N-1}a_n\e^{-\iu2\pi kn/N}\\
+    &=\frac1{N^2}\sum_{m=0}^{N-1}x[m]
+        \sum_{n=0}^{N-1}\e^{-\iu2\pi n(m+k)/N}\\
+    &=\frac1N x[(-k)\bmod N].
+\end{align*}
+内层和仅在 $m+k\equiv0\pmod N$ 时为 $N$，其他情形为零。因此互换后\red{既要反褶，也要除以周期}。
+
+\begin{example}[四周期序列与系数互换]
+  \cref{eg:dtfs-four-point} 已给出 $x[0],x[1],x[2],x[3]$ 为 $(1,1,0,0)$ 时的系数
+  \[
+    (a_0,a_1,a_2,a_3)
+      =\left(\frac12,\frac{1-\iu}{4},0,\frac{1+\iu}{4}\right).
+  \]
+  将这四个系数按周期排列成新序列 $a_n$，其系数无需重新逐项求和：
+  \[
+    (b_0,b_1,b_2,b_3)
+      =\frac14\bigl(x[0],x[3],x[2],x[1]\bigr)
+      =\left(\frac14,0,0,\frac14\right).
+  \]
+  循环反褶后零号位置仍为零号位置，$1$ 与 $3$ 号位置交换。DTFS 分析式带有 $1/N$；后面 DFT 的归一化不同，其对偶公式见\cref{sec:dft-duality}。
+\end{example}
 
 \section{帕塞瓦尔定理}
 \label{sec:dtft-energy-symmetry}
@@ -1033,7 +1113,7 @@ $\sin((\gamma+2q\pi)n)=\sin(\gamma n)$；零点样值却增加 $2q$。因此
        |X(\e^{\iu\omega})|^2\dd\omega}.
   \label{eq:dtft-parseval}
 \end{equation}
-频谱\red{只积一个完整周期}；它的周期副本描述同一组离散频率，把所有周期的能量加起来会重复计数。被积函数为\red{幅度的平方}，一般复频谱不能直接写成 $X^2$。
+频谱\red{只积一个完整周期}；它的周期副本描述同一组离散频率，把所有周期的能量加起来会重复计数。被积函数为\red{幅度的平方}；一般复频谱写成 $X^2$ 会丢掉共轭。
 
 对有限长或绝对可和序列，将 $X^*$ 展开，再用逆变换：
 \begin{align*}
@@ -1053,7 +1133,7 @@ $\sin((\gamma+2q\pi)n)=\sin(\gamma n)$；零点样值却增加 $2q$。因此
   \sum_n s_a^2[n]=\frac{2a}{2\pi}=\frac a\pi,
   \qquad 0<a<\pi.
 \]
-它也等于\cref{eq:dtft-sinc-square} 的零频值；这一核对同时检查周期卷积的系数。排除 $n=0$ 后，右边须减去 $a^2/\pi^2$，\blue{不能省略零点样值}。
+它也等于\cref{eq:dtft-sinc-square} 的零频值；这一核对同时检查周期卷积的系数。排除 $n=0$ 后，右边要减去 $a^2/\pi^2$；\blue{漏掉零点样值，结果就会差这一项}。
 
 \section{共轭对称性}
 \label{sec:dtft-symmetry}
@@ -1107,7 +1187,7 @@ $\sin((\gamma+2q\pi)n)=\sin(\gamma n)$；零点样值却增加 $2q$。因此
   \qquad x_{\mathrm o}[n]\fourierpair\iu\Im X(\e^{\iu\omega})}.
   \label{eq:dtft-even-odd-spectrum}
 \end{equation}
-因此\red{实部确定偶分量}，\red{虚部确定奇分量}；$\Im X$ 本身不包含前面的 $\iu$，反演奇分量时不能漏掉这个因子。\cref{fig:dtft-even-odd-spectrum} 用一个短实序列展示分解。
+因此\red{实部确定偶分量}，\red{虚部确定奇分量}；$\Im X$ 本身不包含前面的 $\iu$，反演奇分量时漏掉这个因子，符号就反了。\cref{fig:dtft-even-odd-spectrum} 用一个短实序列展示分解。
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.96\textwidth]{07-dtft/even-odd-spectrum.pdf}
@@ -1122,7 +1202,7 @@ $\sin((\gamma+2q\pi)n)=\sin(\gamma n)$；零点样值却增加 $2q$。因此
 \]
 象限与零点的检查沿用\cref{sec:ctft-magnitude-phase}。只用 $\arctan(\Im X/\Re X)$ \blue{会在负实部区域丢失象限}，也无法处理实部为零的情况。
 
-若另知 $x[n]=0$（$n>0$），则对 $n<0$ 有 $x[-n]=0$，所以 $x[n]=2x_{\mathrm o}[n]$。奇分量的零点恒为零，\blue{不能由虚部确定} $x[0]$；再用能量与零点符号条件可求该样值。频域指数拆分、奇分量作图和能量核对的具体计算见\cref{ex:dtft-imaginary-energy-recovery}。
+若另知 $x[n]=0$（$n>0$），则对 $n<0$ 有 $x[-n]=0$，所以 $x[n]=2x_{\mathrm o}[n]$。奇分量的零点恒为零，虚部里没有 $x[0]$ 的信息；再用能量与零点符号条件可求该样值。频域指数拆分、奇分量作图和能量核对的具体计算见\cref{ex:dtft-imaginary-energy-recovery}。
 
 
 \section{调制与频域周期卷积的应用}
@@ -1167,7 +1247,7 @@ $\sin((\gamma+2q\pi)n)=\sin(\gamma n)$；零点样值却增加 $2q$。因此
       \sum_{m=-\infty}^{\infty}C_0(\omega-2m\pi).
   \label{eq:dtft-periodic-folding}
 \end{equation}
-计算顺序是：\hl{先卷积，再周期平移}；\hl{重合部分逐点相加}。折回主周期\red{会同时带入相邻副本}，不能只把中央曲线截在 $[-\pi,\pi)$ 内。
+计算顺序是：\hl{先卷积，再周期平移}；\hl{重合部分逐点相加}。折回主周期\red{会同时带入相邻副本}；只把中央曲线截在 $[-\pi,\pi)$ 内，相邻副本就丢了。
 
 例如两个高度为 $1$、支撑为 $(-a,a)$ 的矩形相卷积，在 $\omega$ 处的值是区间 $(-a,a)$ 与 $(\omega-a,\omega+a)$ 的重叠长度：
 \[
@@ -1186,7 +1266,7 @@ $\sin((\gamma+2q\pi)n)=\sin(\gamma n)$；零点样值却增加 $2q$。因此
        (2a-|\omega-2m\pi|)_+}.
   \label{eq:dtft-sinc-square}
 \end{equation}
-它是\red{三角形的周期叠加}，宽度较大时会带有非零背景；主周期两侧\red{不能只按中央三角形读取}。时域 $n=0$ 处则是\hl{先补值，再平方}，结果为 $a^2/\pi^2$。\cref{ex:dtft-sinc-square-narrow,ex:dtft-sinc-square-wide} 分别计算 $a=\pi/4$ 与 $a=3\pi/4$。
+它是\red{三角形的周期叠加}，宽度较大时会带有非零背景；只按中央三角形读取，会漏掉两侧叠加。时域 $n=0$ 处则是\hl{先补值，再平方}，结果为 $a^2/\pi^2$。\cref{ex:dtft-sinc-square-narrow,ex:dtft-sinc-square-wide} 分别计算 $a=\pi/4$ 与 $a=3\pi/4$。
 
 反过来，令 $T_b(\omega)$ 为以 $2\pi$ 为周期、主周期内
 \[
@@ -1207,7 +1287,7 @@ $\sin((\gamma+2q\pi)n)=\sin(\gamma n)$；零点样值却增加 $2q$。因此
     \fourierpair T_b(\omega).
   \label{eq:dtft-triangle-pair}
 \end{equation}
-峰值为 $1$ 的三角形面积为 $b$，其零点样值正好是面积除以 $2\pi$；此式中的 $b$ 是半宽，不能与矩形卷积前的半宽 $a$ 混用。
+峰值为 $1$ 的三角形面积为 $b$，其零点样值正好是面积除以 $2\pi$；这里的 $b$ 是半宽，矩形卷积前的半宽记作 $a$，两者不要混。
 
 \section{有限点 DFT 与快速计算}
 \label{sec:dtft-dft}
@@ -1281,7 +1361,7 @@ DFT 的逆变换先恢复给定的有限向量；超出这 $N$ 个位置如何�
 \[
   \Delta\omega=\frac{2\pi}{N}
 \]
-是 DFT 的频率采样间隔。\red{DFT 是有限长序列 DTFT 的等间隔采样}；它只保留 $N$ 个频率点，不能把这 $N$ 个数\blue{直接当作连续频谱函数}。
+是 DFT 的频率采样间隔。\red{DFT 是有限长序列 DTFT 的等间隔采样}；它只保留 $N$ 个频率点，这 $N$ 个数只是采样值，直接当连续频谱函数会读错。\hl{DFT 就是 DTFT 在主周期上等间隔取点}。
 
 若按\cref{eq:dft-periodic-extension} 将有限序列周期延拓，其 DTFS 系数为 $X[k]/N$；
 再由\cref{eq:dtft-periodic-transform}，对应的冲激权重为 $2\pi X[k]/N$。
@@ -1328,6 +1408,25 @@ DFT 的逆变换先恢复给定的有限向量；超出这 $N$ 个位置如何�
   \label{eq:dft-inverse-proof}
 \end{align}
 其中 $n=0,1,\ldots,N-1$。交换两个有限和后，内层和由正交关系消去所有 $m\ne n$ 的项，只留下 $x[n]$。
+
+\subsection{DFT 的对偶性}
+\label{sec:dft-duality}
+
+按\cref{eq:dft-pair}，若 $x[n]$ 的 $N$ 点 DFT 为 $X[k]$，把 $X[0],\ldots,X[N-1]$ 再作为输入，所得 DFT 记为 $Y[k]$，则
+\begin{equation}
+  \boxed{Y[k]=\sum_{n=0}^{N-1}X[n]\e^{-\iu2\pi kn/N}
+    =N x[(-k)\bmod N]}.
+  \label{eq:dft-duality}
+\end{equation}
+把 $X[n]$ 的正变换表达式代入，内层仍是\cref{sec:dtfs-duality} 中的正交和，但 DFT 正变换没有 $1/N$，因此结果\red{乘以点数后循环反褶}。这与 DTFS 对偶中的 $x[-k]/N$ 系数不同，归一化关系是\cref{eq:dtfs-dft-normalization}。
+
+例如四点数组 $(1,1,0,0)$ 的 DFT 为 $(2,1-\iu,0,1+\iu)$。再对后一个数组做 DFT，
+\[
+  (2,1-\iu,0,1+\iu)
+    \xrightarrow{\mathrm{DFT}}(4,0,0,4)
+    =4(1,0,0,1).
+\]
+两次正变换一般不能恢复原数组：结果循环反褶，还乘了 $N$。把第二次正变换当逆变换，恢复出来的数组会差这两步；\blue{先查循环反褶和点数因子}。
 
 \subsection{矩阵表示与下标周期性}
 \label{sec:dft-matrix}
@@ -1382,7 +1481,7 @@ $v_k=\e^{-\iu\omega_k}$，由有限长序列 DTFT 得到的方程组为
   X(\e^{\iu\omega})
   =\sum_{n=0}^{N-1}x[n]\e^{-\iu\omega n}.
 \]
-这里的可恢复性依赖于“时域只有 $N$ 个未知样值”这一前提。任意连续频谱函数不能仅凭 $N$ 个点恢复；同时，恢复出整个有限和 DTFT 也不意味着可以把 DFT 数组本身直接当作连续频率函数。
+这里的可恢复性依赖于“时域只有 $N$ 个未知样值”这一前提。任意连续频谱函数仅凭 $N$ 个点恢复不出来；恢复出整个有限和 DTFT，也不等于能把 DFT 数组直接当连续频率函数。
 
 \begin{figure}[H]
   \centering
@@ -1495,7 +1594,7 @@ $W_N^{2kr}=W_{N/2}^{kr}$，可得
 \[
   T(N)=O(N\log_2N).
 \]
-FFT 的\red{优势来自复指数因子的重复使用}；流图中的同一旋转因子会在许多位置反复出现，不能把每条连线都当成一次全新的 $N$ 项求和。\hl{先看蝶形，再看层数}，\hl{最后数运算量}。
+FFT 的\red{优势来自复指数因子的重复使用}；流图中的同一旋转因子会在许多位置反复出现，每条连线并不对应一次全新的 $N$ 项求和。\hl{先看蝶形，再看层数}，\hl{最后数运算量}。
 
 \subsection{循环卷积与 DFT 的乘法性质}
 \label{sec:dft-circular-convolution}
@@ -1534,7 +1633,7 @@ FFT 的\red{优势来自复指数因子的重复使用}；流图中的同一旋�
   \]
 \end{example}
 
-在本例中，普通线性卷积的长度为 $4+4-1=7$。循环卷积只有 $4$ 个输出，线性卷积超过第 $3$ 个下标的部分会绕回前面并与前面的结果相加。对于其他题目，先判断题目要求的\blue{是普通卷积还是循环卷积}；看到模 $N$ 折回，就\red{不能直接套线性卷积的有限支撑范围}。
+在本例中，普通线性卷积的长度为 $4+4-1=7$。循环卷积只有 $4$ 个输出，线性卷积超过第 $3$ 个下标的部分会绕回前面并与前面的结果相加。做题先判断要的是\blue{普通卷积还是循环卷积}；看到模 $N$ 折回，\red{直接套线性卷积的支撑范围会漏掉绕回部分}。
 
 设 $X[k]$、$H[k]$ 分别是 $x[n]$、$h[n]$ 的 $N$ 点 DFT，$Y_{\mathrm c}[k]$ 是\cref{eq:circular-convolution} 的 DFT。则
 \begin{equation}
@@ -1558,7 +1657,7 @@ FFT 的\red{优势来自复指数因子的重复使用}；流图中的同一旋�
 \subsection{用 FFT 计算线性卷积}
 \label{sec:fft-linear-convolution}
 
-若要求普通线性卷积，不能直接把两个原长度序列分别做 DFT 后相乘，因为\red{这会得到循环卷积}。设 $x[n]$ 长度为 $N_1$，$h[n]$ 长度为 $N_2$，\hl{先在尾部补零}，使两者都成为长度 $N$ 的序列，其中
+若要求普通线性卷积，直接把两个原长度序列分别做 DFT 再相乘，得到的是\red{循环卷积}。设 $x[n]$ 长度为 $N_1$，$h[n]$ 长度为 $N_2$，\hl{先在尾部补零}，使两者都成为长度 $N$ 的序列，其中
 \begin{equation}
   N\ge N_1+N_2-1.
   \label{eq:fft-zero-padding}

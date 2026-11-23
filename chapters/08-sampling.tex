@@ -3,7 +3,7 @@
 \chapter{采样与信号重建}
 \label{chap:sampling}
 
-采样在等间隔时刻读取连续时间信号，得到样本序列。序列的频谱用第七章的离散时间傅里叶变换描述。要从样本回到原来的连续信号，必须知道采样周期，并确认频谱副本没有重叠。本章处理冲激串采样、采样定理、信号重建及连续系统的离散实现，末尾讨论希尔伯特变换与瞬时包络、相位和频率。第六章的频率变量 $\omega$ 在这里记为连续时间角频率 $\Omega$，单位仍是 $\mathrm{rad/s}$。离散时间频率仍记为 $\omega$，单位是 $\mathrm{rad/sample}$。
+采样在等间隔时刻读取连续时间信号，得到样本序列。序列的频谱用第七章的离散时间傅里叶变换描述。要从样本回到原来的连续信号，先要知道采样周期，再看频谱副本有没有重叠。本章处理冲激串采样、采样定理、信号重建及连续系统的离散实现，末尾讨论希尔伯特变换与瞬时包络、相位和频率。第六章的频率变量 $\omega$ 在这里记为连续时间角频率 $\Omega$，单位仍是 $\mathrm{rad/s}$。离散时间频率仍记为 $\omega$，单位是 $\mathrm{rad/sample}$。
 
 \section{冲激串采样与三组关系}
 \label{sec:sampling-impulse}
@@ -18,7 +18,7 @@
   \Omega_s=\frac{2\pi}{T}.
   \label{eq:sampling-frequency}
 \end{equation}
-$x[n]$ 的下标没有时间量纲。只拿到序列、不知道 $T$，就不能把下标 $n$ 换回时刻 $nT$。
+$x[n]$ 的下标没有时间量纲。只拿到序列、不知道 $T$，下标 $n$ 就换不回时刻 $nT$。
 
 周期冲激串
 \[
@@ -339,7 +339,7 @@ $\cos(\Omega_s t)$ 把低通频谱各分一半，移到 $\pm\Omega_s$。因此 $
   \label{fig:sampling-ideal-filters}
 \end{figure}
 
-这四组的通带高度都是 $1$。\hl{对照表增益为一}。采样恢复不能直接套这张表。基带恢复要把低通增益改成 $T$，脉冲响应相应乘 $T$，用来抵消\cref{eq:impulse-sampled-spectrum}里的 $1/T$。取出 $\pm\Omega_s$ 两份副本时，窗口高度是 $T/2$，脉冲响应写成 $T\sin(\Omega_0 t)\cos(\Omega_s t)/(\pi t)$，余弦前面没有\cref{eq:sampling-ideal-bandpass}里的 $2$。增益为 $1$ 的带通则要把 $\sin(\Omega_0 t)\cos(\Omega_s t)/(\pi t)$ 乘 $2$，正负两段合起来才回到高度 $1$。先核对通带高度，再选系数。
+这四组的通带高度都是 $1$。\hl{对照表增益为一}。采样恢复要另算增益，别直接套这张表。基带恢复要把低通增益改成 $T$，脉冲响应相应乘 $T$，用来抵消\cref{eq:impulse-sampled-spectrum}里的 $1/T$。取出 $\pm\Omega_s$ 两份副本时，窗口高度是 $T/2$，脉冲响应写成 $T\sin(\Omega_0 t)\cos(\Omega_s t)/(\pi t)$，余弦前面没有\cref{eq:sampling-ideal-bandpass}里的 $2$。增益为 $1$ 的带通则要把 $\sin(\Omega_0 t)\cos(\Omega_s t)/(\pi t)$ 乘 $2$，正负两段合起来才回到高度 $1$。先核对通带高度，再选系数。
 
 \begin{pitfall}[恢复低通和增益为一的低通用同一个脉冲响应]
   $\sin(\Omega_0 t)/(\pi t)$ 的通带高度是 $1$。采样恢复还要乘 $T$，否则基带只剩下原来的 $1/T$。带通也有两套系数：增益为 $1$ 的带通在 $\cos$ 前乘 $2$；从 $X_p$ 取出 $\pm\Omega_s$ 副本时，窗口高度是 $T/2$，$\cos$ 前不再乘 $2$。两套式子差一个因子时，先核对通带高度。
@@ -392,7 +392,7 @@ $\cos(\Omega_s t)$ 把低通频谱各分一半，移到 $\pm\Omega_s$。因此 $
   X_0(\iu\Omega)=X_p(\iu\Omega)H_0(\iu\Omega).
   \label{eq:sampling-zoh-spectrum}
 \end{equation}
-$\Omega=0$ 处按极限取 $H_0(0)=\tau$。零点在 $\Omega=2k\pi/\tau$，$k\ne0$。幅度为 $\tau|\Sa(\Omega\tau/2)|$；在第一对零点之间，$\Sa$ 为正，相位是 $-\Omega\tau/2$。\red{矩形中心带来延时}，对应延时量 $\tau/2$。过了零点后，$\Sa$ 的符号还会使相位增加或减少 $\pi$，不能把整个实轴上的相位都画成同一条直线；\blue{零点处相位未定义}。
+$\Omega=0$ 处按极限取 $H_0(0)=\tau$。零点在 $\Omega=2k\pi/\tau$，$k\ne0$。幅度为 $\tau|\Sa(\Omega\tau/2)|$；在第一对零点之间，$\Sa$ 为正，相位是 $-\Omega\tau/2$。\red{矩形中心带来延时}，对应延时量 $\tau/2$。过了零点后，$\Sa$ 的符号还会使相位增加或减少 $\pi$；整个实轴画成一条直线，会漏掉这些跳变。\blue{零点处相位未定义}。
 
 取 $\tau=T$。在没有混叠的基带内，$X_p=X/T$，于是
 \[
@@ -420,7 +420,7 @@ $\Omega=0$ 处按极限取 $H_0(0)=\tau$。零点在 $\Omega=2k\pi/\tau$，$k\ne
   |C_0(\iu\Omega)|=\frac1{\Sa(\Omega T/2)},\qquad
   \arg C_0(\iu\Omega)=\frac{\Omega T}{2}.
 \]
-高频衰减更大，补偿幅度也更大；正的相位斜率用来抵消保持脉冲的延时。\blue{通带不能包含保持零点}，\red{否则所需补偿增益无界}。这是理想恢复模型，精确的频带截断和时间超前不能直接由一个因果滤波器实现。\cref{fig:sampling-hold-spectra} 将保持与补偿的幅相放在一起。
+高频衰减更大，补偿幅度也更大；正的相位斜率用来抵消保持脉冲的延时。\blue{通带要避开保持零点}，\red{否则所需补偿增益无界}。这是理想恢复模型，精确的频带截断和时间超前不能直接由一个因果滤波器实现。\cref{fig:sampling-hold-spectra} 将保持与补偿的幅相放在一起。
 
 \begin{pitfall}[保持后只接增益为一的理想低通]
   增益为一的低通能去掉频谱副本，但保留下来的基带仍乘着 $\Sa(\Omega T/2)\e^{-\iu\Omega T/2}$。要精确恢复，须按\cref{eq:sampling-zoh-compensation} 补回幅度与相位。脉冲宽度不等于 $T$ 时，零频补偿增益还要改为 $T/\tau$。
@@ -537,7 +537,7 @@ $\Omega=0$ 处按极限取 $H_0(0)=\tau$。零点在 $\Omega=2k\pi/\tau$，$k\ne
   \label{fig:sampling-system-spectra}
 \end{figure}
 
-采样器本身不满足连续时间的时不变性：一个窄脉冲平移后可能落到采样点之间，从而完全漏采。上面的等效 LTI 关系依赖输入带限，\blue{带限条件保证系统等效}。对任意输入，不能把整条采样处理路线直接当作同一个连续 LTI 系统。
+采样器本身不满足连续时间的时不变性：一个窄脉冲平移后可能落到采样点之间，从而完全漏采。上面的等效 LTI 关系依赖输入带限。\blue{带限条件保证系统等效}；换成任意输入，整条采样处理路线就不对应同一个连续 LTI 系统。
 
 \subsection{离散脉冲响应为什么多一个周期}
 \label{subsec:sampling-impulse-response-link}
@@ -564,7 +564,7 @@ $\Omega=0$ 处按极限取 $H_0(0)=\tau$。零点在 $\Omega=2k\pi/\tau$，$k\ne
   y[n]=\sum_k x[k]\,T h((n-k)T)
       =\sum_k x[k]h_d[n-k].
 \]
-这里先用带限内插，再作精确卷积，不能把它理解成对任意函数都成立的数值积分近似。
+这里先用带限内插，再作精确卷积；它只对带限信号成立，不是对任意函数的数值积分近似。
 
 \begin{pitfall}[直接采样任意脉冲响应]
   任意 $h$ 的采样会使 $H$ 的副本相加，$T h(nT)$ 一般不满足\cref{eq:sampling-system-frequency-link}。\blue{先检查系统是否带限}。若 $H$ 不带限，可先截取主频带：
@@ -626,7 +626,7 @@ $\Omega=0$ 处按极限取 $H_0(0)=\tau$。零点在 $\Omega=2k\pi/\tau$，$k\ne
     0,&\text{其余},
   \end{cases}
 \]
-全部 $q(nT)=0$，样本能量为 $0$，连续能量却为 $T/2$。\blue{非带限信号不能照套}。它与零信号有完全相同的样本，说明这些样本既不足以恢复波形，也不足以确定连续能量。周期信号通常总能量无穷大，\blue{也不属于这里的有限能量条件}；它们的平均功率要另外计算。
+全部 $q(nT)=0$，样本能量为 $0$，连续能量却为 $T/2$。\blue{非带限信号照套会失效}。它与零信号有完全相同的样本，说明这些样本既不足以恢复波形，也不足以确定连续能量。周期信号通常总能量无穷大，\blue{也不属于这里的有限能量条件}；它们的平均功率要另外计算。
 \section{希尔伯特变换}
 \label{sec:sampling-hilbert}
 
@@ -712,7 +712,7 @@ $x_{\mathrm e}(t)=\e^{-|t|}/2$；因果性要求 $t<0$ 的整段为零，故 $t>
   \blue{无穷远处也须有适当收敛}。对有限能量信号，可等价地按下面的频域乘子定义，再以均方意义反演。
 \end{definition}
 
-\red{奇点两侧对称取主值}，两边的奇异贡献要一起取极限，不能各自当作普通反常积分计算。它的系统关系为
+\red{奇点两侧对称取主值}；两侧的奇异贡献要一起取极限，分别按普通反常积分算，发散不会自动抵消。它的系统关系为
 \[
   x(t)\longrightarrow\boxed{\pv\,1/(\pi t)}
        \longrightarrow\widehat{x}(t).
@@ -759,7 +759,7 @@ $x_{\mathrm e}(t)=\e^{-|t|}/2$；因果性要求 $t<0$ 的整段为零，故 $t>
           \frac{\widehat{x}(\tau)}{t-\tau}\dd\tau.
   \label{eq:sampling-inverse-hilbert}
 \end{equation}
-\red{变换两次得到负号}。\blue{若信号含常数直流项}，按 $G_{\mathrm H}(0)=0$ 的约定该项会被去掉，不能再靠反变换恢复；“两次变换等于负原信号”不能直接套到含直流的周期信号上。
+\red{变换两次得到负号}。\blue{若信号含常数直流项}，按 $G_{\mathrm H}(0)=0$ 的约定该项会被去掉，不能再靠反变换恢复；含直流的周期信号要按完整周期另算。
 
 由 $|G_{\mathrm H}|=1$ 几乎处处及帕塞瓦尔关系，
 \[
@@ -864,7 +864,7 @@ $a(t)$ 描述幅度变化，$\theta(t)$ 描述相对于载波的相位变化。�
   \widehat{x}(t)\approx a(t)\sin[\Omega_0t+\theta(t)],
   \label{eq:sampling-narrowband-approx}
 \end{equation}
-其前提是 $a,\theta$ 相对于载波变化缓慢，调制后的频带集中在 $\pm\Omega_0$ 附近，且远离零频。\blue{慢变条件先检查}。不能把一般乘积中的 $a(t)$ 随意移出主值积分。
+其前提是 $a,\theta$ 相对于载波变化缓慢，调制后的频带集中在 $\pm\Omega_0$ 附近，且远离零频。\blue{慢变条件先检查}。一般乘积里的 $a(t)$ 随手移出主值积分，这个近似就不成立。
 
 把余弦的和角公式展开：
 \[
@@ -903,7 +903,7 @@ $z(t)=A(t)\e^{\iu\varphi(t)}$。定义
 \end{equation}
 分别称为瞬时包络（instantaneous envelope）、瞬时相位（instantaneous phase）和\keyterm{瞬时角频率（instantaneous angular frequency）}。\blue{相位求导前须选连续分支}；若写成赫兹，则 $f_{\mathrm{inst}}=\Omega_{\mathrm{inst}}/(2\pi)$。
 
-\red{相位要保留象限}。$\arctan(\widehat{x}/x)$ 只给斜率，不能区别第一、第三象限；先用 $\operatorname{atan2}(\widehat{x},x)$ \hl{确定主值相位}，再把相位的 $2\pi$ 跳变展开为连续曲线。\red{求导前展开相位}，否则分支切换会造成虚假的频率尖峰。$A=0$ 处\blue{相位未定义，不能强行求导}；$x=0$ 而 $\widehat{x}\ne0$ 的普通过零点则没有这个问题。
+\red{相位要保留象限}。$\arctan(\widehat{x}/x)$ 只给斜率，不能区别第一、第三象限；先用 $\operatorname{atan2}(\widehat{x},x)$ \hl{确定主值相位}，再把相位的 $2\pi$ 跳变展开为连续曲线。\red{求导前展开相位}，否则分支切换会造成虚假的频率尖峰。$A=0$ 处\blue{相位未定义，求导没有意义}；$x=0$ 而 $\widehat{x}\ne0$ 的普通过零点则没有这个问题。
 
 若 $x,\widehat{x}$ 可微且 $A>0$，也可直接计算
 \begin{equation}

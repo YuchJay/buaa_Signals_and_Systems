@@ -6,16 +6,17 @@
 \section{系统的数学描述}
 \label{sec:system-description}
 
-\keyterm{系统（system）}接收输入信号，按照确定的规则产生输出信号。输入输出关系可用箭头流程图表示：
+\keyterm{系统（system）}接收输入，按固定规则产生输出。画成箭头：
 \begin{equation}
   x(t)\longrightarrow\boxed{\text{系统}}\longrightarrow y(t),
   \qquad
   x[n]\longrightarrow\boxed{\text{系统}}\longrightarrow y[n].
   \label{eq:system-flow}
 \end{equation}
-研究系统性质时，应检查\red{框中固定的输入输出规则}，不能只看一组特定的输入、输出波形。下文若写“$x$ 产生 $y$”，均指 $x$ 经过同一个待研究系统后得到 $y$。
-\begin{pitfall}[不能用一组输入输出判断系统性质]
-  看到某个输入恰好得到成比例的输出，并不能证明系统线性；看到某个输入平移后输出也恰好平移，也不能证明系统时不变。定义中的判据都要求对\blue{任意允许的输入}成立。
+讨论性质时，看的是\red{框中的固定规则}，不是某组特定的输入输出波形。下文说“$x$ 产生 $y$”，均指同一个系统。
+
+\begin{pitfall}[拿一组输入输出当证据]
+  某个输入恰好得到成比例的输出，不能说明线性；某个输入平移后输出也平移，也不能说明时不变。定义要求\blue{对任意允许的输入}都成立。
 \end{pitfall}
 
 \section{线性系统}
@@ -23,7 +24,7 @@
 
 \begin{definition}[线性系统]
   \label{def:linear-system}
-  设两组输入输出关系为
+  设
   \[
     x_1\longrightarrow\boxed{\text{系统}}\longrightarrow y_1,
     \qquad
@@ -36,85 +37,54 @@
     a y_1+b y_2,
     \label{eq:linearity-test}
   \end{equation}
-  则称该系统为\keyterm{线性系统（linear system）}。这一条件也称为叠加原理（superposition principle）。
+  则称该系统为\keyterm{线性系统（linear system）}。这一条件也称为叠加原理。
 \end{definition}
 
-\cref{eq:linearity-test}可以拆成两个缺一不可的条件：
+可拆成两个条件，缺一不可：
 \begin{itemize}
-  \item 若 $x\longrightarrow y$，则 $a x\longrightarrow a y$，称为\keyterm{齐次性（homogeneity）}；
-  \item 若 $x_1\longrightarrow y_1$、$x_2\longrightarrow y_2$，则 $x_1+x_2\longrightarrow y_1+y_2$，称为\keyterm{可加性（additivity）}。
+  \item $x\longrightarrow y$ 时 $a x\longrightarrow a y$，叫\keyterm{齐次性（homogeneity）}；
+  \item $x_1\longrightarrow y_1$、$x_2\longrightarrow y_2$ 时 $x_1+x_2\longrightarrow y_1+y_2$，叫\keyterm{可加性（additivity）}。
 \end{itemize}
 
-\noindent\textbf{判据 }
-对常见的显式系统公式，先检查：
+\noindent\textbf{快速判据}
 \begin{enumerate}
-  \item \blue{每一项都有输入信号}，不得有与输入无关的常数项；
-  \item \blue{每个输入均为一次}，不得有输入的乘积、平方、绝对值、指数等非线性运算。
+  \item \red{每一项都有输入}，没有与 $x$ 无关的常数项；
+  \item \red{每个输入都是一次}，没有平方、乘积、绝对值、指数这类运算。
 \end{enumerate}
-第一条也可先用零输入检验。令 $a=b=0$，线性系统必满足
+\hl{先代零输入}：线性系统必须给出零输出：
 \begin{equation}
   0\longrightarrow\boxed{\text{线性系统}}\longrightarrow0.
   \label{eq:zero-input-zero-output}
 \end{equation}
-若任一快速检查不通过，就可判定系统非线性；但检查通过仍须回到\cref{eq:linearity-test} 验证齐次性和可加性。\red{证明非线性只需一个反例}，证明线性则必须对一般的 $a x_1+b x_2$ 成立。
+这条\blue{只能用来否定}：零输入产生非零输出，一定非线性；零输入产生零输出，不能说明线性。
 
-\begin{intuition}
-  把输入拆成若干简单分量，分别求响应后相加，结果必须与完整输入的响应相同。后面用冲激分解研究 LTI 系统，靠的就是这一点。
-\end{intuition}
+\red{证明非线性只需一个反例；证明线性要对一般的 $ax_1+bx_2$ 成立。}
 
-\begin{example}[增益、微分与累加]
-  对增益系统 $y(t)=3x(t)$，分别代入缩放输入和相加输入：
+\begin{example}[增益、微分、积分、差分]
+  增益 $y(t)=3x(t)$：
   \[
     3(ax)=a(3x),\qquad
     3(x_1+x_2)=3x_1+3x_2.
   \]
-  齐次性与可加性均成立。微分系统
-  \[
-    y(t)=\frac{\dd x(t)}{\dd t}
-  \]
-  对一般线性组合给出
+  微分 $y(t)=x'(t)$：
   \[
     \frac{\dd(ax_1+bx_2)}{\dd t}
-    =a\frac{\dd x_1}{\dd t}+b\frac{\dd x_2}{\dd t}
-    =ay_1+by_2.
+    =a\frac{\dd x_1}{\dd t}+b\frac{\dd x_2}{\dd t}.
   \]
-  积分系统也有
-  \[
-    \int_{-\infty}^{t}(ax_1(\tau)+bx_2(\tau))\dd\tau
-    =a\int_{-\infty}^{t}x_1(\tau)\dd\tau
-     +b\int_{-\infty}^{t}x_2(\tau)\dd\tau.
-  \]
-  离散差分系统
-  \[
-    y[n]=x[n]-x[n-1]
-  \]
-  与累加系统
-  \[
-    y[n]=\sum_{k=-\infty}^{n}x[k]
-  \]
-  分别代入 $ax_1+bx_2$：
-  \begin{align*}
-    &(ax_1[n]+bx_2[n])-(ax_1[n-1]+bx_2[n-1])\\
-    &\qquad=a(x_1[n]-x_1[n-1])+b(x_2[n]-x_2[n-1])
-      =ay_1[n]+by_2[n],\\
-    &\sum_{k=-\infty}^{n}(ax_1[k]+bx_2[k])
-      =a\sum_{k=-\infty}^{n}x_1[k]+b\sum_{k=-\infty}^{n}x_2[k]
-      =ay_1[n]+by_2[n].
-  \end{align*}
-  积分与累加的检验\blue{限于相应积分、求和存在的输入}。判断线性应看\red{运算对线性组合的作用}。
+  积分、差分、累加同理。积分和累加的检验\blue{要求相应的积分、求和存在}。
 \end{example}
 
 \begin{example}[常数偏置与平方]
-  对 $y(t)=x(t)+1$，零输入产生 $y(t)=1$，所以系统非线性。对 $y(t)=x^2(t)$，虽然零输入产生零输出，但
+  $y(t)=x(t)+1$：零输入得到 $1$，非线性。
+
+  $y(t)=x^2(t)$：零输入得到零，但
   \[
     2x(t)\longrightarrow4x^2(t)\ne2x^2(t),
   \]
-  齐次性不成立，系统仍非线性。这也说明\red{零输入检验只能用于否定}，不可单独用于证明。
+  齐次性不成立，仍然非线性。
 \end{example}
 
-\begin{pitfall}[把“可加”误当成“线性”]
-  只验证“输入相加时输出也相加”还不够；系统还必须允许任意幅度缩放。遇到平方、绝对值、指数或输入之间的乘积时，\hl{优先检查齐次性}，通常能迅速找到矛盾。
-\end{pitfall}
+只验证“输入相加、输出也相加”不够，系统还必须允许任意缩放。遇到平方、绝对值、指数、输入相乘，\hl{先试齐次性}，通常能迅速发现矛盾。
 
 \section{时不变系统}
 \label{sec:time-invariant-systems}
@@ -125,139 +95,137 @@
   \[
     x(t)\longrightarrow\boxed{\text{系统}}\longrightarrow y(t),
   \]
-  并且对任意实数 $t_0$ 都有
+  且对任意实数 $t_0$ 都有
   \begin{equation}
     x(t-t_0)\longrightarrow\boxed{\text{同一系统}}\longrightarrow y(t-t_0),
     \label{eq:ct-time-invariance}
   \end{equation}
-  则称该连续时间系统为\keyterm{时不变系统（time-invariant system）}。离散时间系统的判据为：对任意整数 $n_0$，
+  则称该系统为\keyterm{时不变系统（time-invariant system）}。离散情形对任意整数 $n_0$：
   \begin{equation}
     x[n-n_0]\longrightarrow\boxed{\text{同一系统}}\longrightarrow y[n-n_0].
     \label{eq:dt-time-invariance}
   \end{equation}
 \end{definition}
 
-\noindent\textbf{判据 }
-对 $y(t)$ 直接由若干 $x(\varphi(t))$ 构成的常见系统公式，先检查：
+\noindent\textbf{快速判据}
 \begin{enumerate}
-  \item \blue{时间只出现在输入括号内}，公式中不应有裸露的 $t$；
-  \item 除固定平移外，输入括号内应\blue{保持时间尺度和方向}，即保留 $t$，不能换成 $2t$、$-t$、$t^2$ 等其他时间函数。
+  \item \red{$t$ 只在输入括号里}，公式中没有裸露的 $t$；
+  \item \red{括号里的 $t$ 只能是 $t$}，不能换成 $2t$、$-t$、$t^2$。
 \end{enumerate}
-这两条可用于快速筛查；含积分、求和等结构时，\blue{仍应使用定义作严格判断}。时不变性的含义是：\red{输入延迟多少，输出就只延迟同样多}，除此之外形状和幅值都不改变。严格判断时比较两条路径：
-\begin{enumerate}
-  \item 先把输入换成 $x(t-t_0)$，再代入系统规则，得到输出 $y_1(t)$；
-  \item 先由原输入得到 $y(t)$，再把输出中的\red{每一个显含时间变量}替换为 $t-t_0$，得到 $y_2(t)=y(t-t_0)$。
-\end{enumerate}
-若对任意输入和任意 $t_0$ 都有 $y_1=y_2$，系统才时不变。离散时间完全类似。
+含积分、求和的系统，\blue{仍应按定义验证}。
 
-\begin{example}[延迟与非线性不冲突]
-  对 $y(t)=x(t-1)$，输入 $x(t-t_0)$ 产生 $x(t-t_0-1)$，恰好等于 $y(t-t_0)$，所以系统时不变。系统
+严格判断走两条路径，\hl{先换输入，再换输出里的时间}：
+\begin{enumerate}
+  \item 把输入换成 $x(t-t_0)$，代入系统，得到 $y_1(t)$；
+  \item 先算原输出 $y(t)$，再把其中\red{每个显含的 $t$} 换成 $t-t_0$，得到 $y_2(t)$。
+\end{enumerate}
+对任意输入、任意 $t_0$ 都有 $y_1=y_2$，才满足时不变性。离散情形完全类似。
+
+\begin{example}[延迟与非线性的组合]
+  $y(t)=x(t-1)$：输入 $x(t-t_0)$ 得到 $x(t-t_0-1)$，恰为 $y(t-t_0)$，时不变。
+
+  $y(t)=\e^{x(t+1)}$：虽然非线性，还用了未来输入，但输入平移后得到
   \[
-    y(t)=\e^{x(t+1)}
+    \e^{x(t-t_0+1)}=y(t-t_0),
   \]
-  虽然非线性且使用未来输入，但输入平移后得到 $\e^{x(t-t_0+1)}=y(t-t_0)$，因此仍然时不变。可见\red{时不变与线性、因果性彼此独立}。
+  仍然时不变。\red{时不变性与线性、因果性相互独立}。
 \end{example}
 
 \begin{example}[显含时间与时间缩放]
-  对 $y(t)=t x(t)$，输入平移后得到 $t x(t-t_0)$，而输出平移为 $(t-t_0)x(t-t_0)$，一般不相等，所以系统时变。对 $y(t)=x(2t)$，两条路径分别给出
+  $y(t)=t x(t)$：设 $f(t)=x(t-t_0)$，系统给出
+  \[
+    t x(t-t_0),
+  \]
+  但 $y(t-t_0)=(t-t_0)x(t-t_0)$，一般不相等，所以时变。
+
+  $y(t)=x(2t)$：两条路径分别为
   \[
     x(2t-t_0),
     \qquad
     x(2t-2t_0),
   \]
-  也一般不相等。因此，系统内部的时间尺度变换通常会\red{破坏时不变性}。
-  取具体输入可直接看出差别。对 $y(t)=tx(t)$，令 $x(t)=\stepfun(t)$，延迟 $1$ 后的两条路径为
-  \[
-    y_1(t)=t\stepfun(t-1),\qquad
-    y_2(t)=(t-1)\stepfun(t-1).
-  \]
-  在 $t=2$，两者分别为 $2$ 和 $1$。
-
-  对 $y(t)=x(2t)$，令 $x(t)$ 为 $[0,1]$ 上高度为 $1$ 的矩形。原输出在 $[0,1/2]$ 上非零。把输入延迟 $1$ 后，$x(2t-1)$ 要求 $0\leq2t-1\leq1$，其非零区间是 $[1/2,1]$；把原输出延迟 $1$，非零区间却是 $[1,3/2]$。两个区间不同。
+  一般也不相等，时变。
 \end{example}
+
+取具体输入更直观。对 $y(t)=t x(t)$，令 $x(t)=\stepfun(t)$，延迟 $1$ 后：
+\[
+  y_1(t)=t\stepfun(t-1),\qquad
+  y_2(t)=(t-1)\stepfun(t-1).
+\]
+在 $t=2$ 处分别是 $2$ 和 $1$。
+
+对 $y(t)=x(2t)$，取 $[0,1]$ 上高度为 $1$ 的矩形。原输出非零区间是 $[0,1/2]$。输入延迟 $1$ 后，$x(2t-1)$ 的非零区间是 $[1/2,1]$；而原输出延迟 $1$ 的非零区间是 $[1,3/2]$，两者不一致。
+
+\red{公式中显含 $t$，或者把 $t$ 换成 $2t$、$-t$，通常会破坏时不变性}。
 
 \section{因果系统}
 \label{sec:causal-systems}
 
 \begin{definition}[因果系统]
   \label{def:causal-system}
-  若对任意时刻 $t_0$，只要两个输入在所有 $t\le t_0$ 上相同，相应输出在 $t_0$ 也必相同，则称连续时间系统为\keyterm{因果系统（causal system）}。等价地，$y(t_0)$ 只能依赖输入在\red{当前与过去}的取值，不能依赖 $t>t_0$ 的输入。
+  若对任意时刻 $t_0$，只要两个输入在所有 $t\le t_0$ 上相同，相应输出在 $t_0$ 也必相同，则称该系统为\keyterm{因果系统（causal system）}。$y(t_0)$ 只取当前和过去的输入，$t>t_0$ 的部分不参与：\red{输出不依赖未来输入}。
 
-  对离散时间系统，把条件改为两个输入在所有 $n\le n_0$ 上相同；此时 $y[n_0]$ 只能依赖 $x[k]$（$k\le n_0$）。
+  离散情形把条件改成两个输入在所有 $n\le n_0$ 上相同，$y[n_0]$ 只依赖 $x[k]$（$k\le n_0$）。
 \end{definition}
 
-\noindent\textbf{判据 }
-固定输出时刻 $t_0$ 或 $n_0$，列出计算该时刻输出所需的全部输入时刻。对直接出现的 $x(\varphi(t_0))$ 或 $x[\varphi(n_0)]$，必须分别满足
+\noindent\textbf{判据}
+固定输出时刻 $t_0$（或 $n_0$），列出计算该输出所需的输入时刻。直接出现的 $x(\varphi(t_0))$ 要满足
 \[
   \varphi(t_0)\le t_0,
   \qquad
   \varphi(n_0)\le n_0.
 \]
-即\red{输入括号内函数不晚于输出时刻}。积分或求和系统则\blue{检查整个读取区间}；只要存在一个严格晚于输出时刻且确实影响输出的输入，就能判定系统非因果。
+可概括为：\red{输入括号里的时刻不晚于输出时刻}。积分、求和则看\blue{整个读取区间}；只要有一个严格晚于输出时刻的输入确实影响输出，就非因果。
 
-\begin{example}[延迟、超前与无记忆运算]
-  $y(t)=x(t-1)$ 只读取过去输入，是因果系统；$y(t)=x(t+1)$ 读取未来输入，是非因果系统。$y(t)=x^2(t)$ 只依赖当前输入，因此虽非线性却因果。一般地，任何输出只依赖 $x(t)$ 或 $x[n]$ 当前值的\red{无记忆系统必然因果}。
+\begin{example}[延迟、超前与时间缩放]
+  $y(t)=x(t-1)$ 只使用过去输入，因果；$y(t)=x(t+1)$ 使用未来输入，非因果。
+
+  $y(t)=x(2t)$：取 $t_0=1$，输出使用 $x(2)$，非因果。
+  $y(t)=x(t/2)$：取 $t_0=-1$，输出使用 $x(-1/2)$，仍晚于 $-1$，非因果。
+
+  离散 $y[n]=x[3-n]$：取 $n_0=1$，$y[1]=x[2]$，非因果。
 \end{example}
 
 \begin{example}[积分与累加的上限]
-  系统
   \[
     y(t)=\int_{-\infty}^{t}x(\tau)\dd\tau,
     \qquad
     y[n]=\sum_{k=-\infty}^{n}x[k]
   \]
-  只汇总当前及过去输入，因而因果。若把上限改成 $t+1$ 或 $n+1$，当前输出就会使用未来输入，系统变为非因果。对积分、求和系统，\hl{先比较上限与观察时刻}通常最快。
+  只汇总当前和过去输入，因果。把上限改成 $t+1$ 或 $n+1$，当前输出就要使用未来输入，非因果。\hl{先比较上限和观察时刻}，通常最快。
 \end{example}
 
-\begin{example}[时间缩放系统]
-  对 $y(t)=x(2t)$，取 $t_0=1$，输出读取 $x(2)$，属于未来输入，故非因果。对 $y(t)=x(t/2)$，正时间上看似只读取过去，但取 $t_0=-1$，输出读取 $x(-1/2)$，仍晚于 $-1$，所以也非因果。
-
-  离散反转系统 $y[n]=x[3-n]$ 可取 $n_0=1$：$y[1]=x[2]$ 读取未来样值，故非因果。判据须覆盖\blue{正、负全部时刻}；\hl{找到一个违反定义的时刻即可}。
-\end{example}
-
-\begin{pitfall}[用输入的具体波形代替依赖关系]
-  某个特定输入可能在未来恒为零，使非因果系统看起来没有“利用未来”。但因果性是系统映射对所有输入的性质。正确检查应关注输出公式\red{可能读取哪些输入时刻}。
-\end{pitfall}
+因果性看的是系统映射对所有输入的性质，不是某个输入恰好在未来为零。检查时关注\red{公式可能读取哪些输入时刻}。
 
 \section{无记忆系统}
 \label{sec:memoryless-systems}
 
 \begin{definition}[无记忆系统]
   \label{def:memoryless-system}
-  若对任意时刻 $t_0$，输出 $y(t_0)$ 只依赖输入在同一时刻的值 $x(t_0)$，则称连续时间系统为\keyterm{无记忆系统（memoryless system）}。离散时间系统的定义相同：$y[n_0]$ 只能依赖 $x[n_0]$，不能读取其他下标的输入样值。
+  若对任意 $t_0$，$y(t_0)$ 只依赖同一时刻的 $x(t_0)$，则称该系统为\keyterm{无记忆系统（memoryless system）}。离散情形是 $y[n_0]$ 只依赖 $x[n_0]$。
 \end{definition}
 
-\noindent\textbf{判据 }
-逐项比较输入与输出的时间自变量：连续时间必须只读取 $x(t)$，离散时间必须只读取 $x[n]$，也就是\red{输入输出括号内函数完全相同}。只要读取了 $x(\varphi(t))$ 且 $\varphi(t)\ne t$，或读取了 $x[\varphi(n)]$ 且 $\varphi(n)\ne n$，系统就有记忆。
+\noindent\textbf{判据}
+$x$ 和 $y$ 括号里的自变量\red{完全一样}。连续时间只能出现 $x(t)$，离散时间只能出现 $x[n]$。只要出现 $x(\varphi(t))$ 且 $\varphi(t)\ne t$，就有记忆。
 
-这里的“记忆”专指计算当前输出时\red{是否需要当前时刻以外的输入}，与系统内部有没有存储器无关。$y(t)=t x(t)$ 虽然显含时间，仍然无记忆。
+这里的“记忆”只取决于\red{是否需要读取当前时刻以外的输入}，与系统内部有无存储器无关。$y(t)=t x(t)$ 虽然显含时间，仍然无记忆。
 
-\begin{intuition}
-  把系统看成逐点计算器：若每个输出点都能只用正下方的输入点算出，系统便无记忆；若必须向左或向右读取其他输入点，系统就有记忆。\red{无记忆性关注的是时间依赖范围}，与公式对幅值做平方、指数等非线性运算无关。
-\end{intuition}
-
-\begin{example}[逐点非线性与延迟]
-  系统
-  \[
-    y(t)=x^2(t)+\e^{x(t)}
-  \]
-  只使用当前值 $x(t)$，所以无记忆。$y(t)=x(t-1)$ 读取过去值，故有记忆。离散时间中，$y[n]=x^2[n]$ 无记忆；$y[n]=x[2n]$ 在多数下标处读取 $x[n]$ 以外的样值，所以有记忆。
+\begin{example}[逐点运算与延迟]
+  $y(t)=x^2(t)+\e^{x(t)}$ 只使用当前值，无记忆。
+  $y(t)=x(t-1)$ 使用过去值，有记忆。
+  $y[n]=x^2[n]$ 无记忆；$y[n]=x[2n]$ 在 $n=1$ 处需要使用 $x[2]$，有记忆。
 \end{example}
 
-\begin{remark}[无记忆与因果性的关系]
-  无记忆系统只读取当前输入，所以\red{无记忆系统一定因果}。反过来并不成立：延迟系统 $y(t)=x(t-1)$ 只读取过去输入，是因果系统，却有记忆。
-\end{remark}
+\red{无记忆系统一定因果}：只依赖当前输入，自然不涉及未来。反过来不成立，$y(t)=x(t-1)$ 因果但有记忆。
 
-\begin{pitfall}[只检查原点或个别下标]
-  对 $y[n]=x[2n]$，在 $n=0$ 时确有 $y[0]=x[0]$，但系统性质要求对任意时刻成立。取 $n=1$，输出需要 $x[2]$，已经足以判定系统有记忆。检查内部输入下标与当前输出下标是否对\blue{所有时刻恒相等}即可。
-\end{pitfall}
+只检查原点不够。$y[n]=x[2n]$ 在 $n=0$ 处确实只用 $x[0]$，换一个下标便不再成立。\blue{要对所有时刻成立}。
 
 \section{可逆系统}
 \label{sec:invertible-systems}
 
 \begin{definition}[可逆系统]
   \label{def:invertible-system}
-  若不同输入一定产生不同输出，也就是输出信号能够唯一确定输入信号，则称该系统为\keyterm{可逆系统（invertible system）}。此时可以在原系统之后接入\keyterm{逆系统}，使信号恢复为原输入：
+  若不同输入一定给出不同输出，也就是能由 $y$ 唯一确定 $x$，则称该系统为\keyterm{可逆系统（invertible system）}。这时可在原系统后接\keyterm{逆系统}：
   \begin{equation}
     x\longrightarrow\boxed{\text{原系统}}\longrightarrow y
     \longrightarrow\boxed{\text{逆系统}}\longrightarrow x.
@@ -265,30 +233,18 @@
   \end{equation}
 \end{definition}
 
-可逆系统必须\red{保留区分输入所需的信息}。若能从一般的 $y$ 唯一解出 $x$，恢复公式就是逆系统；若\red{两个不同输入产生同一输出}，系统不可逆，这也通常是举反例的一种方式。
+\red{能从一般的 $y$ 唯一解出 $x$，就可逆；两个不同输入产生同一输出，就不可逆}。后者通常是举反例的常用方法。
 
-\begin{example}[延迟与平方]
-  对 $y(t)=x(t-1)$，把输出超前 $1$ 即得
-  \[
-    x(t)=y(t+1),
-  \]
-  所以延迟系统可逆。对 $y(t)=x^2(t)$，输入 $x(t)$ 与 $-x(t)$ 产生同一输出，符号信息已经丢失，因此在全体实信号上不可逆。若事先把输入限制为非负信号，则可用 $x(t)=\sqrt{y(t)}$ 恢复；可见\red{可逆性依赖允许的信号集合}。
+\begin{example}[延迟、平方、累加]
+  $y(t)=x(t-1)$：$x(t)=y(t+1)$，可逆。
+
+  $y(t)=x^2(t)$：$x(t)$ 与 $-x(t)$ 给出同一输出，符号信息丢失，不可逆。若\blue{事先限定输入非负}，又可用 $\sqrt{y}$ 恢复——\red{可逆性依赖允许的信号集合}。
+
+  $y[n]=\sum_{k=-\infty}^{n}x[k]$：相邻输出相减得 $x[n]=y[n]-y[n-1]$，可逆。\hl{把恢复公式代回原关系}，可直接验证。
 \end{example}
 
-\begin{example}[累加与差分]
-  对离散累加系统
-  \[
-    y[n]=\sum_{k=-\infty}^{n}x[k],
-  \]
-  相邻输出相减可得
-  \[
-    x[n]=y[n]-y[n-1].
-  \]
-  因而在累加和存在的信号类上，它的逆系统是后向差分。验证逆系统时，应\hl{把恢复公式代回原关系}。
-\end{example}
-
-\begin{pitfall}[积分常数造成的不唯一]
-  若系统为 $y(t)=\dd x(t)/\dd t$，直接写 $x(t)=\int y(t)\dd t$ 会漏掉积分常数。事实上 $x(t)$ 与 $x(t)+C$ 有相同导数，所以微分系统在一般可微信号上不可逆；只有额外给定一个初值，才可能唯一恢复输入。看到积分或微分时，应检查\blue{边界条件是否足够}。
+\begin{pitfall}[积分常数]
+  $y(t)=x'(t)$ 直接反解成 $x(t)=\int y(t)\dd t$ 会遗漏常数。$x(t)$ 与 $x(t)+C$ 导数相同，所以在一般可微信号上不可逆；\blue{额外给定一个初值}后才能唯一恢复。
 \end{pitfall}
 
 \section{稳定系统}
@@ -296,52 +252,52 @@
 
 \begin{definition}[BIBO 稳定系统]
   \label{def:bibo-stable-system}
-  若\red{每一个有界输入}都产生有界输出，则称系统为\keyterm{有界输入有界输出稳定系统（bounded-input bounded-output stable system）}，简称 BIBO 稳定系统。连续时间的判据可写成
+  若\red{每一个有界输入}都产生有界输出，则称该系统为\keyterm{有界输入有界输出稳定系统（bounded-input bounded-output stable system）}，简称 BIBO 稳定。连续时间的判据：
   \[
     |x(t)|\le M_x<\infty,\ \forall t
     \quad\Longrightarrow\quad
     |y(t)|\le M_y<\infty,\ \forall t,
   \]
-  其中 $M_y$ 可以依赖输入及其界 $M_x$，但不能随 $t$ 增长。离散时间情形只需把 $t$ 换成 $n$。
+  $M_y$ 可以依赖输入和 $M_x$，但\blue{不能随时间增长}。离散把 $t$ 换成 $n$。
 \end{definition}
 
-证明稳定性，需要从任意输入界 $M_x$ 推出一个与时间无关的有限输出界；否定稳定性，只需找到一个使输出无界的有界输入。可概括为\blue{证明要一般、否定用反例}。
+“有界”指存在 $M$，对所有时刻均有 $|x(t)|<M$。
 
-\begin{example}[指数与多项式逐点系统]
-  对实输入系统 $y(t)=\e^{x(t)}$，若 $|x(t)|\le M_x$，则
+\red{证明稳定要一般，否定稳定用反例}：\hl{从任意界推统一上界}，或者找一个有界输入使输出无界。
+
+\begin{example}[逐点非线性仍然稳定]
+  $y(t)=\e^{x(t)}$：$|x(t)|\le M_x$ 时
   \[
     |y(t)|=\e^{x(t)}\le \e^{|x(t)|}\le \e^{M_x},
   \]
-  因而系统稳定。对
-  \[
-    y(t)=x^3(t)-2x^2(t)+x(t)+1,
-  \]
-  三角不等式给出
+  稳定。
+
+  $y(t)=x^3(t)-2x^2(t)+x(t)+1$：
   \[
     |y(t)|\le |x(t)|^3+2|x(t)|^2+|x(t)|+1
     \le M_x^3+2M_x^2+M_x+1,
   \]
-  右端是有限常数，所以系统也稳定。逐点非线性并不必然破坏稳定性。
+  右端是有限常数，也稳定。
 \end{example}
 
-\begin{example}[微分、积分与差分]
-  理想微分系统不满足 BIBO 稳定性：有界阶跃输入的导数包含单位冲激，输出不再是有界普通函数。积分器也不稳定；取有界输入 $x(t)=\stepfun(t)$，则
+\begin{example}[微分、积分、差分]
+  理想微分不稳定：有界阶跃的导数含冲激，输出不再是普通有界函数。
+
+  积分器也不稳定：取 $x(t)=\stepfun(t)$，
   \[
     y(t)=\int_{-\infty}^{t}\stepfun(\tau)\dd\tau=t\stepfun(t),
   \]
-  随时间无界增长。相反，离散差分系统满足
+  随时间无限增长。
+
+  离散差分
   \[
-    |x[n]-x[n-1]|\le |x[n]|+|x[n-1]|\le2M_x,
+    |x[n]-x[n-1]|\le |x[n]|+|x[n-1]|\le2M_x
   \]
-  所以稳定。系统名称不能决定稳定性；应检查它会不会把有界变化\red{累积或放大为无界输出}。
+  稳定。系统名称不能决定稳定性，应看它是否会把有界输入\red{累积或放大成无界输出}。
 \end{example}
 
-\begin{pitfall}[用一个表现良好的输入证明稳定]
-  某个有界输入得到有界输出，只能说明这一个输入没有触发问题，不能证明系统稳定。正确做法是推导对所有有界输入都成立的统一上界。反之，一个有界输入产生无界输出便足以否定稳定性。
-\end{pitfall}
-
-\begin{example}[同一个系统的多项性质]
-  性质应分别检验。下面三种系统采用实输入；微分器限于可微信号。
+\begin{example}[同一个系统，多项性质分别判断]
+  下面三个系统取实输入，微分器限于可微信号。
   \begin{center}
     \small
     \begin{tabular}{lcccccc}
@@ -354,12 +310,9 @@
       \bottomrule
     \end{tabular}
   \end{center}
-  第一行只读取当前值。延迟输入得到 $\e^{x(t-t_0)}=y(t-t_0)$，故时不变；$x=\ln y$ 可恢复实输入，稳定上界为 $\e^{M_x}$。零输入却产生 $1$，所以非线性。
+  $y=\e^x$：只使用当前输入，所以无记忆、因果；延迟输入得 $\e^{x(t-t_0)}$，时不变；$x=\ln y$ 可恢复；上界 $\e^{M_x}$。
 
-  第二行将输入乘以 $a$ 后，输出乘以 $a^2$，所以非线性。延迟 $n_0$ 后输出为
-  $x[n-n_0]x[n-1-n_0]=y[n-n_0]$，故时不变。它读取当前和前一个样值，因此因果且有记忆。输入恒为 $1$ 或恒为 $-1$ 都产生恒为 $1$ 的输出，故不可逆；$|y[n]|\le M_x^2$，故稳定。
+  $y[n]=x[n]x[n-1]$：输入乘 $a$，输出乘 $a^2$，非线性；输出相应延迟，时不变；使用当前和前一样值，有记忆；恒为 $1$ 和恒为 $-1$ 都给出恒为 $1$ 的输出，不可逆；$|y|\le M_x^2$，稳定。
 
-  微分器的线性与时不变性由求导规则成立。对可微信号，当前导数可用左侧差商
-  $\lim_{\varepsilon\to0^+}[x(t)-x(t-\varepsilon)]/\varepsilon$ 求出，故因果，但需要当前点附近的输入，因而有记忆。加性常数无法由导数恢复。即使限制为光滑输入，取 $x(t)=\sin(t^2)$，仍有
-  $y(t)=2t\cos(t^2)$ 无界，证明它不稳定。
+  微分器：线性和时不变由求导规则给出；当前导数可用左侧差商计算，因果但有记忆；常数项丢失，不可逆；取 $x(t)=\sin(t^2)$，输出 $2t\cos(t^2)$ 无界，不稳定。
 \end{example}
